@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/key_q"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/q"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_w"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/w"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_e"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/e"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_r"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/r"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_t"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/t"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_y"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/y"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_u"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/u"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_i"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/i"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_o"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/o"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_p"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/p"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/key_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/a"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_s"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/s"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_d"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/d"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_f"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/f"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_g"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/g"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_h"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/h"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_j"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/j"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_k"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/k"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_l"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/l"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/key_return"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_round_keyboard_return_24"
+            app:srcCompat="@drawable/ic_round_keyboard_return_24"/>
+
+        <TextView
+            android:id="@+id/key_z"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/z"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_x"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/x"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_c"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/c"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_v"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/v"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/b"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_n"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/n"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <TextView
+            android:id="@+id/key_m"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/m"
+            style="@style/Widget.MaterialComponents.TextView.Key" />
+
+        <ImageView
+            android:id="@+id/key_backspace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_round_keyboard_backspace_24"
+            app:srcCompat="@drawable/ic_round_keyboard_backspace_24"/>
+
+    </LinearLayout>
+
+</merge>

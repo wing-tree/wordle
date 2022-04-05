@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="a" translatable="false">A</string>
+    <string name="b" translatable="false">B</string>
+    <string name="c" translatable="false">C</string>
+    <string name="d" translatable="false">D</string>
+    <string name="e" translatable="false">E</string>
+    <string name="f" translatable="false">F</string>
+    <string name="g" translatable="false">G</string>
+    <string name="h" translatable="false">H</string>
+    <string name="i" translatable="false">I</string>
+    <string name="j" translatable="false">J</string>
+    <string name="k" translatable="false">K</string>
+    <string name="l" translatable="false">L</string>
+    <string name="m" translatable="false">M</string>
+    <string name="n" translatable="false">N</string>
+    <string name="o" translatable="false">O</string>
+    <string name="p" translatable="false">P</string>
+    <string name="q" translatable="false">Q</string>
+    <string name="r" translatable="false">R</string>
+    <string name="s" translatable="false">S</string>
+    <string name="t" translatable="false">T</string>
+    <string name="u" translatable="false">U</string>
+    <string name="v" translatable="false">V</string>
+    <string name="w" translatable="false">W</string>
+    <string name="x" translatable="false">X</string>
+    <string name="y" translatable="false">Y</string>
+    <string name="z" translatable="false">Z</string>
+</resources>
