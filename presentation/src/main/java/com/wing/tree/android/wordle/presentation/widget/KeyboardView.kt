@@ -6,10 +6,10 @@ import android.view.Gravity
 import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import com.wing.tree.android.wordle.presentation.R
-import com.wing.tree.android.wordle.presentation.databinding.KeyboardBinding
+import com.wing.tree.android.wordle.presentation.databinding.KeyboardViewBinding
 
-class Keyboard : LinearLayout {
-    private val viewBinding: KeyboardBinding = KeyboardBinding.bind(inflate(context, R.layout.keyboard, this))
+class KeyboardView : LinearLayout {
+    private val viewBinding: KeyboardViewBinding = KeyboardViewBinding.bind(inflate(context, R.layout.keyboard_view, this))
 
     private var onKeyListener: OnKeyListener? = null
 
@@ -41,35 +41,35 @@ class Keyboard : LinearLayout {
     private fun bind() {
         val onClickListener = OnClickListener {
             val key = when(it.id) {
-                R.id.key_a -> Key.Alphabet("A")
-                R.id.key_b -> Key.Alphabet("B")
-                R.id.key_c -> Key.Alphabet("C")
-                R.id.key_d -> Key.Alphabet("D")
-                R.id.key_e -> Key.Alphabet("E")
-                R.id.key_f -> Key.Alphabet("F")
-                R.id.key_g -> Key.Alphabet("G")
-                R.id.key_h -> Key.Alphabet("H")
-                R.id.key_i -> Key.Alphabet("I")
-                R.id.key_j -> Key.Alphabet("J")
-                R.id.key_k -> Key.Alphabet("K")
-                R.id.key_l -> Key.Alphabet("L")
-                R.id.key_m -> Key.Alphabet("M")
-                R.id.key_n -> Key.Alphabet("N")
-                R.id.key_o -> Key.Alphabet("O")
-                R.id.key_p -> Key.Alphabet("P")
-                R.id.key_q -> Key.Alphabet("Q")
-                R.id.key_r -> Key.Alphabet("R")
-                R.id.key_s -> Key.Alphabet("S")
-                R.id.key_t -> Key.Alphabet("T")
-                R.id.key_u -> Key.Alphabet("U")
-                R.id.key_v -> Key.Alphabet("V")
-                R.id.key_w -> Key.Alphabet("W")
-                R.id.key_x -> Key.Alphabet("X")
-                R.id.key_y -> Key.Alphabet("Y")
-                R.id.key_z -> Key.Alphabet("Z")
+                R.id.key_a -> Key.Alphabet("a")
+                R.id.key_b -> Key.Alphabet("b")
+                R.id.key_c -> Key.Alphabet("c")
+                R.id.key_d -> Key.Alphabet("d")
+                R.id.key_e -> Key.Alphabet("e")
+                R.id.key_f -> Key.Alphabet("f")
+                R.id.key_g -> Key.Alphabet("g")
+                R.id.key_h -> Key.Alphabet("h")
+                R.id.key_i -> Key.Alphabet("i")
+                R.id.key_j -> Key.Alphabet("j")
+                R.id.key_k -> Key.Alphabet("k")
+                R.id.key_l -> Key.Alphabet("l")
+                R.id.key_m -> Key.Alphabet("m")
+                R.id.key_n -> Key.Alphabet("n")
+                R.id.key_o -> Key.Alphabet("o")
+                R.id.key_p -> Key.Alphabet("p")
+                R.id.key_q -> Key.Alphabet("q")
+                R.id.key_r -> Key.Alphabet("r")
+                R.id.key_s -> Key.Alphabet("s")
+                R.id.key_t -> Key.Alphabet("t")
+                R.id.key_u -> Key.Alphabet("u")
+                R.id.key_v -> Key.Alphabet("v")
+                R.id.key_w -> Key.Alphabet("w")
+                R.id.key_x -> Key.Alphabet("x")
+                R.id.key_y -> Key.Alphabet("y")
+                R.id.key_z -> Key.Alphabet("z")
                 R.id.key_return -> Key.Return
                 R.id.key_backspace -> Key.Backspace
-                else -> throw IllegalArgumentException("it.id :${it.id}")
+                else -> throw IllegalArgumentException("${it.id}")
             }
 
             onKeyListener?.onKey(key)
@@ -105,6 +105,14 @@ class Keyboard : LinearLayout {
             keyReturn.setOnClickListener(onClickListener)
             keyBackspace.setOnClickListener(onClickListener)
         }
+    }
+
+    fun disable() {
+        isEnabled = false
+    }
+
+    fun enable() {
+        isEnabled = true
     }
 
     fun setOnKeyListener(onKeyListener: OnKeyListener) {

@@ -2,92 +2,72 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
     tools:parentTag="android.widget.LinearLayout">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <TextView
+        <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_q"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/q"
+            app:key="@string/q"
             style="@style/Widget.MaterialComponents.TextView.Key" />
 
         <TextView
             android:id="@+id/key_w"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/w"
             style="@style/Widget.MaterialComponents.TextView.Key" />
 
         <TextView
             android:id="@+id/key_e"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/e"
             style="@style/Widget.MaterialComponents.TextView.Key" />
 
         <TextView
             android:id="@+id/key_r"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/r"
             style="@style/Widget.MaterialComponents.TextView.Key" />
 
         <TextView
             android:id="@+id/key_t"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/t"
             style="@style/Widget.MaterialComponents.TextView.Key" />
 
         <TextView
             android:id="@+id/key_y"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/y"
             style="@style/Widget.MaterialComponents.TextView.Key" />
 
         <TextView
             android:id="@+id/key_u"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/u"
             style="@style/Widget.MaterialComponents.TextView.Key" />
 
         <TextView
             android:id="@+id/key_i"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/i"
             style="@style/Widget.MaterialComponents.TextView.Key" />
 
         <TextView
             android:id="@+id/key_o"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/o"
             style="@style/Widget.MaterialComponents.TextView.Key" />
 
         <TextView
             android:id="@+id/key_p"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/p"
             style="@style/Widget.MaterialComponents.TextView.Key" />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical">
@@ -158,7 +138,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical">

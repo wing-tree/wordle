@@ -2,53 +2,52 @@ package com.wing.tree.android.wordle.presentation.adapter.play
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isEmpty
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.wing.tree.android.wordle.android.constant.BLANK
-import com.wing.tree.android.wordle.presentation.constant.Word
 import com.wing.tree.android.wordle.presentation.databinding.LettersItemBinding
-import com.wing.tree.android.wordle.presentation.extention.scale
-import java.lang.NullPointerException
-import com.wing.tree.android.wordle.presentation.model.Letters as PresentationModel
+import com.wing.tree.android.wordle.presentation.model.play.Letter
+import com.wing.tree.android.wordle.presentation.model.play.Letters as Model
 
-class LettersListAdapter : ListAdapter<AdapterItem, LettersListAdapter.ViewHolder>(DiffCallback()) {
+class LettersListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterItem, LettersListAdapter.ViewHolder>(DiffCallback()) {
+    interface Callbacks {
+        fun onLetterClick(index: Int)
+        fun onFlipped(letters: AdapterItem.Letters)
+    }
+
     inner class ViewHolder(private val viewBinding: LettersItemBinding) : RecyclerView.ViewHolder(viewBinding.root) {
         fun bind(item: AdapterItem) {
             when(item) {
-                is AdapterItem.Letters -> with(viewBinding) {
+                is AdapterItem.Letters -> with(viewBinding.letters) {
                     with(item) {
-                        letters.forEachIndexed { index, letter ->
-                            with(get(index)) {
-                                text = "$letter"
+                        if (submitted) {
+                            setOnLetterClickListener(null)
 
-                                if (action == Action.Add) {
-                                    if (index == letters.lastIndex) {
-                                        scale(1.5F, 240L) {
-                                            scale(1.0F, 240L)
-                                        }
-                                    }
-                                }
+                            letters.forEachIndexed { index, letter ->
+                                set(index, letter)
                             }
-                        }
 
-                        if (action == Action.Remove) {
-                            repeat(Word.LENGTH - letters.length) {
-                                get(Word.LENGTH.dec() - it).text = BLANK
+                            flip { callbacks.onFlipped(item) }
+                        } else {
+                            setOnLetterClickListener { view, index ->
+                                callbacks.onLetterClick(index)
+                            }
+
+                            letters.zip(previousLetters).forEachIndexed { index, (letter, previousLetter) ->
+                                println("lllllllL$letter,,,,$previousLetter")
+                                set(index, letter)
+
+                                if (previousLetter.isBlank && letter.isNotBlank) {
+                                    scaleAt(index)
+                                } else if (previousLetter.isNotBlank && letter.isBlank) {
+
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-
-        private fun LettersItemBinding.get(index: Int) = when(index) {
-            0 -> firstLetter
-            1 -> secondLetter
-            2 -> thirdLetter
-            3 -> fourthLetter
-            4 -> fifthLetter
-            else -> throw IllegalArgumentException("index :$index")
         }
     }
 
@@ -79,28 +78,37 @@ sealed class AdapterItem {
 
     data class Letters(
         override val index: Int,
-        val letters: String,
-        val previousLetters: String,
+        val letters: Array<Letter>,
+        val previousLetters: Array<Letter>,
         val submitted: Boolean = false
     ) : AdapterItem() {
-        val action: Action
-            get() = if (letters.length > previousLetters.length) {
-                Action.Add
-            } else {
-                Action.Remove
-            }
-
         companion object {
-            fun from(index: Int, letters: PresentationModel) = Letters(
+            fun from(index: Int, letters: Model) = Letters(
                 index = index,
-                letters = letters.letters,
-                previousLetters = letters.previousLetters
+                letters = letters.letters.copyOf(),
+                previousLetters = letters.previousLetters.copyOf(),
+                submitted = letters.submitted
             )
         }
-    }
-}
 
-enum class Action {
-    Add,
-    Remove
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is Letters) return false
+
+            if (index != other.index) return false
+            if (!letters.contentEquals(other.letters)) return false
+            if (!previousLetters.contentEquals(other.previousLetters)) return false
+            if (submitted != other.submitted) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = index
+            result = 31 * result + letters.contentHashCode()
+            result = 31 * result + previousLetters.contentHashCode()
+            result = 31 * result + submitted.hashCode()
+            return result
+        }
+    }
 }

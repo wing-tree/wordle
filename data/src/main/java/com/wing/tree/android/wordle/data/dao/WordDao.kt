@@ -9,8 +9,11 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WordDao {
     @Query("SELECT COUNT(`index`) FROM word")
-    fun count(): Flow<Int>
+    suspend fun count(): Int
 
     @Query("SELECT * FROM word WHERE `index` IS :index")
-    fun get(index: Int): Flow<Word>
+    suspend fun get(index: Int): Word
+
+    @Query("SELECT * FROM word WHERE word IS :letters")
+    suspend fun get(letters: String): Word?
 }

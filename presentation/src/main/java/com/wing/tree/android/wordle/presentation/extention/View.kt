@@ -10,3 +10,11 @@ fun View.scale(value: Float, duration: Long, withEndAction: Runnable = Runnable 
         withEndAction(withEndAction)
     }
 }
+
+fun View.visible() {
+    visibility = View.VISIBLE
+}
+
+fun View.gone() {
+    visibility = View.GONE
+}

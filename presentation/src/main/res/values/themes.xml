@@ -24,12 +24,20 @@
     <style name="Theme.Wordle.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="Widget.MaterialComponents.TextView.Key" parent="Widget.MaterialComponents.TextView">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_gravity">center</item>
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="Widget.MaterialComponents.TextView.KeyView" >
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
     <style name="Widget.MaterialComponents.TextView.Letter" parent="Widget.MaterialComponents.TextView">
-        <item name="android:width">48dp</item>
-        <item name="android:height">48dp</item>
         <item name="android:gravity">center</item>
         <item name="android:textSize">20sp</item>
         <item name="android:background">@color/purple_500</item>
