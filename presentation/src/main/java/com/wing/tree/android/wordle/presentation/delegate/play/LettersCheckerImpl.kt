@@ -2,6 +2,7 @@ package com.wing.tree.android.wordle.presentation.delegate.play
 
 import androidx.annotation.MainThread
 import com.wing.tree.android.wordle.android.constant.BLANK
+import com.wing.tree.android.wordle.android.exception.WordNotFoundException
 import com.wing.tree.android.wordle.domain.usecase.core.Result
 import com.wing.tree.android.wordle.domain.usecase.core.map
 import com.wing.tree.android.wordle.domain.usecase.word.ContainUseCase
@@ -35,10 +36,8 @@ class LettersCheckerImpl(private val containUseCase: ContainUseCase) : LettersCh
                         }
 
                         letters.filterIsState<Letter.State.Unknown>().forEach {
-                            println("ououououou:$word")
                             if (word.contains(it.letter)) {
                                 word = word.replaceFirst(it.letter, BLANK)
-                                println("wordininin:$word")
 
                                 it.state = Letter.State.Correct.InWrongPlace()
                             }
@@ -49,18 +48,15 @@ class LettersCheckerImpl(private val containUseCase: ContainUseCase) : LettersCh
                         }
 
                         withContext(mainDispatcher) {
-                            onSuccess.invoke(letters)
+                            onSuccess(letters)
                         }
                     } else {
                         // 단어가 없다.
                         // no word exception 만들어서 던져라!.
+                        onFailure(WordNotFoundException(word))
                     }
                 }
             }
         }
-
-
-
-        // 제출. onSubmiited
     }
 }

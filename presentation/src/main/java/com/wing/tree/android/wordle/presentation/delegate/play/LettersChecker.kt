@@ -7,7 +7,7 @@ interface LettersChecker {
     suspend fun submit(
         word: String,
         letters: Letters,
-        @MainThread onError: (Throwable) -> Unit,
+        @MainThread onFailure: (Throwable) -> Unit,
         @MainThread onSuccess: (Letters) -> Unit
     )
 }
