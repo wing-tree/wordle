@@ -2,7 +2,7 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:parentTag="android.widget.FrameLayout">
 
     <TextView
@@ -10,12 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        style="@style/Widget.MaterialComponents.TextView.Key" />
+        style="@style/Widget.MaterialComponents.TextView.KeyView" />
 
     <TextView
         android:id="@+id/key_front"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        style="@style/Widget.MaterialComponents.TextView.Key" />
+        style="@style/Widget.MaterialComponents.TextView.KeyView" />
 
 </merge>
