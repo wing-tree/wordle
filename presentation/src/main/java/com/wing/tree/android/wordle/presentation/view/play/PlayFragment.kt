@@ -19,9 +19,10 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
     private val viewModel by viewModels<PlayViewModel>()
     private val lettersListAdapter = LettersListAdapter(
         object : LettersListAdapter.Callbacks {
-            override fun onLetterClick(index: Int) {
-                viewModel.removeAt(index)
+            override fun onLetterClick(adapterPosition: Int, index: Int) {
+                viewModel.removeAt(adapterPosition, index)
             }
+
             override fun onFlipped(letters: AdapterItem.Letters) {
                 viewModel.match()
                 viewModel.enableKeyboard()

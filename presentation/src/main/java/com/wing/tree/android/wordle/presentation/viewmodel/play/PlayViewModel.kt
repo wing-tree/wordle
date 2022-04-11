@@ -73,7 +73,7 @@ class PlayViewModel @Inject constructor(
         }
     }
 
-    fun removeAt(index: Int) {
+    fun removeAt(`try`: Int, index: Int) {
         _letters.value?.let {
             try {
                 with(it[`try`]) {
@@ -84,7 +84,7 @@ class PlayViewModel @Inject constructor(
                     }
                 }
             } catch (e: ArrayIndexOutOfBoundsException) {
-
+                Timber.e(e)
             }
         }
     }

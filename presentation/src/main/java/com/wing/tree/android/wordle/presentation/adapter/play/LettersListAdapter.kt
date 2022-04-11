@@ -12,7 +12,7 @@ import com.wing.tree.android.wordle.presentation.model.play.Letters as Model
 
 class LettersListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterItem, LettersListAdapter.ViewHolder>(DiffCallback()) {
     interface Callbacks {
-        fun onLetterClick(index: Int)
+        fun onLetterClick(adapterPosition: Int, index: Int)
         fun onFlipped(letters: AdapterItem.Letters)
     }
 
@@ -30,8 +30,8 @@ class LettersListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapter
 
                             flip { callbacks.onFlipped(item) }
                         } else {
-                            setOnLetterClickListener { view, index ->
-                                callbacks.onLetterClick(index)
+                            setOnLetterClickListener { _, index ->
+                                callbacks.onLetterClick(adapterPosition, index)
                             }
 
                             letters.zip(previousLetters).forEachIndexed { index, (letter, previousLetter) ->
