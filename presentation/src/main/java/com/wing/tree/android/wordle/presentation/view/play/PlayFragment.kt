@@ -9,6 +9,7 @@ import com.wing.tree.android.wordle.presentation.adapter.play.LettersListAdapter
 import com.wing.tree.android.wordle.presentation.constant.Try
 import com.wing.tree.android.wordle.presentation.constant.Word
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
+import com.wing.tree.android.wordle.presentation.model.play.Result
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
 import com.wing.tree.android.wordle.presentation.widget.KeyboardView
@@ -24,7 +25,6 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
             }
 
             override fun onFlipped(letters: AdapterItem.Letters) {
-                viewModel.match()
                 viewModel.enableKeyboard()
             }
         }
@@ -83,11 +83,12 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
                 }
             )
         }
-    }
 
-    companion object {
-        fun newInstance(): PlayFragment {
-            return PlayFragment()
+        viewModel.result.observe(viewLifecycleOwner) {
+            when(it) {
+                Result.Lose -> {}
+                Result.Win -> {}
+            }
         }
     }
 }

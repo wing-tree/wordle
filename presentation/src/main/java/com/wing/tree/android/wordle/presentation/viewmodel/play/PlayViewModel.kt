@@ -7,38 +7,32 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.wing.tree.android.wordle.domain.model.Word
-import com.wing.tree.android.wordle.domain.usecase.core.Result
-import com.wing.tree.android.wordle.domain.usecase.core.map
 import com.wing.tree.android.wordle.domain.usecase.statistics.UpdateStatisticsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.ContainUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetCountUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetWordUseCase
 import com.wing.tree.android.wordle.presentation.constant.Try
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
-import com.wing.tree.android.wordle.presentation.delegate.play.KeyboardActionDelegate
-import com.wing.tree.android.wordle.presentation.delegate.play.KeyboardActionDelegateImpl
-import com.wing.tree.android.wordle.presentation.delegate.play.LettersChecker
-import com.wing.tree.android.wordle.presentation.delegate.play.LettersCheckerImpl
-import com.wing.tree.android.wordle.presentation.model.play.GameResult
+import com.wing.tree.android.wordle.presentation.delegate.play.*
 import com.wing.tree.android.wordle.presentation.model.play.Letters
+import com.wing.tree.android.wordle.presentation.model.play.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
-import kotlin.random.Random
 
 @HiltViewModel
 class PlayViewModel @Inject constructor(
     private val containUseCase: ContainUseCase,
-    private val getCountUseCase: GetCountUseCase,
-    private val getWordUseCase: GetWordUseCase,
+    getCountUseCase: GetCountUseCase,
+    getWordUseCase: GetWordUseCase,
     private val updateStatisticsUseCase: UpdateStatisticsUseCase,
     application: Application
 ) : AndroidViewModel(application),
     KeyboardActionDelegate by KeyboardActionDelegateImpl(),
-    LettersChecker by LettersCheckerImpl(containUseCase)
+    LettersChecker by LettersCheckerImpl(containUseCase),
+    WordLoader by WordLoaderImpl(getCountUseCase, getWordUseCase)
 {
     private lateinit var word: Word
 
@@ -51,8 +45,8 @@ class PlayViewModel @Inject constructor(
     private val _letters = MutableLiveData(Array(Try.MAXIMUM) { Letters() })
     val letters: LiveData<Array<Letters>> get() = _letters
 
-    private val _gameResult = MutableLiveData<GameResult>()
-    val gameResult: LiveData<GameResult> get() = _gameResult
+    private val _result = MutableLiveData<Result>()
+    val result: LiveData<Result> get() = _result
 
     // todo trial 단어 체크.
     private var _try = 0
@@ -107,7 +101,7 @@ class PlayViewModel @Inject constructor(
             submit(
                 word,
                 letters,
-                onError = {
+                onFailure = {
 
                 },
                 onSuccess = {
@@ -116,59 +110,36 @@ class PlayViewModel @Inject constructor(
 
                         _letters.value = it
                     }
+
+                    currentLetters?.let {
+                        if (it.matches(word)) {
+                            win()
+                        } else {
+                            if (`try` >= Try.MAXIMUM) {
+                                lose()
+                            } else {
+                                incrementTry()
+                                enableKeyboard()
+                            }
+                        }
+                    }
                 }
             )
         }
     }
 
-    fun match() {
-        currentLetters?.let {
-            if (it.matches(word.word)) {
-                win()
-            } else {
-                if (`try` >= Try.MAXIMUM) {
-                    lose()
-                } else {
-                    incrementTry()
-                    enableKeyboard()
-                }
-            }
-        }
-    }
-
     fun load(@MainThread onLoaded: (Word) -> Unit) {
         viewModelScope.launch(ioDispatcher) {
-            getCountUseCase.invoke(Unit).map { result ->
-                when (result) {
-                    is Result.Error -> _error.postValue(result.throwable)
-                    is Result.Success -> {
-                        withContext(mainDispatcher) {
-                            val index = Random.nextInt(result.data).inc()
-
-                            setWord(index, onLoaded)
-                        }
-                    }
+            load(
+                onSuccess = {
+                    word = it
+                    onLoaded(word)
+                },
+                onFailure = {
+                    Timber.e(it)
+                    _error.value = it
                 }
-            }
-        }
-    }
-
-    private fun setWord(index: Int, @MainThread onSuccess: (word: Word) -> Unit) {
-        viewModelScope.launch(ioDispatcher) {
-            getWordUseCase.invoke(GetWordUseCase.Parameter(index)).map { result ->
-                when(result) {
-                    is Result.Error -> _error.postValue(result.throwable)
-                    is Result.Success -> {
-                        word = result.data
-
-                        Timber.d("aaaaaaa $word")
-
-                        withContext(mainDispatcher) {
-                            onSuccess(word)
-                        }
-                    }
-                }
-            }
+            )
         }
     }
 
@@ -177,10 +148,10 @@ class PlayViewModel @Inject constructor(
     }
 
     private fun lose() {
-        _gameResult.value = GameResult.Lose
+        _result.value = Result.Lose
     }
 
     private fun win() {
-        _gameResult.value = GameResult.Win
+        _result.value = Result.Win
     }
 }
