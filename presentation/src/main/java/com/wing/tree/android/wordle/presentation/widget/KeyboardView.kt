@@ -7,6 +7,7 @@ import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.KeyboardViewBinding
+import com.wing.tree.android.wordle.presentation.model.play.Letters
 
 class KeyboardView : LinearLayout {
     private val viewBinding: KeyboardViewBinding = KeyboardViewBinding.bind(inflate(context, R.layout.keyboard_view, this))
@@ -107,12 +108,52 @@ class KeyboardView : LinearLayout {
         }
     }
 
+    private fun findViewByKey(key: String): KeyView? {
+        return with(viewBinding) {
+            when (key.lowercase()) {
+                "a" -> keyA
+                "b" -> keyB
+                "c" -> keyC
+                "d" -> keyD
+                "e" -> keyE
+                "f" -> keyF
+                "g" -> keyG
+                "h" -> keyH
+                "i" -> keyI
+                "j" -> keyJ
+                "k" -> keyK
+                "l" -> keyL
+                "m" -> keyM
+                "n" -> keyN
+                "o" -> keyO
+                "p" -> keyP
+                "q" -> keyQ
+                "r" -> keyR
+                "s" -> keyS
+                "t" -> keyT
+                "u" -> keyU
+                "v" -> keyV
+                "w" -> keyW
+                "x" -> keyX
+                "y" -> keyY
+                "z" -> keyZ
+                else -> null
+            }
+        }
+    }
+
     fun disable() {
         isEnabled = false
     }
 
     fun enable() {
         isEnabled = true
+    }
+
+    fun applyState(letters: Letters) {
+        letters.forEach {
+            findViewByKey(it.letter)?.updateState(it.state)
+        }
     }
 
     fun setOnKeyListener(onKeyListener: OnKeyListener) {
