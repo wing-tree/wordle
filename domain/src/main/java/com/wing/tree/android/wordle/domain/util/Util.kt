@@ -7,6 +7,8 @@ import kotlin.reflect.KProperty
 val Any?.isNull get() = this == null
 val Any?.notNull: Boolean get() = isNull.not()
 
+val Int.float get() = toFloat()
+
 fun <T> weakReference(referent: T? = null): ReadWriteProperty<Any?, T?> {
     return object : ReadWriteProperty<Any?, T?> {
         var weakReference = WeakReference<T?>(referent)

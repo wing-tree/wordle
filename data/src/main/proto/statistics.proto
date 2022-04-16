@@ -6,8 +6,8 @@ option java_multiple_files = true;
 message Statistics {
   int32 maximum_win_streak = 1;
   int32 played = 2;
-  int32 win = 3;
-  int32 winning_streak = 4;
+  int32 winning_streak = 3;
+  int32 won = 4;
   Guesses guesses = 5;
 }
 

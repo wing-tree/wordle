@@ -13,10 +13,10 @@ internal object StatisticsMapper {
             get() = statistics.maximumWinStreak
         override val played: Int
             get() = statistics.played
-        override val win: Int
-            get() = statistics.win
         override val winningStreak: Int
             get() = statistics.winningStreak
+        override val won: Int
+            get() = statistics.won
         override val guesses: Guesses
             get() = statistics.guesses.toDomainModel()
     }

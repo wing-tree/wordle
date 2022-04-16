@@ -1,28 +1,16 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
-import android.graphics.Color
 import com.wing.tree.android.wordle.android.constant.BLANK
 
-data class Letter(
-    val letter: String = BLANK,
-    var state: State = State.Unknown()
-) {
+data class Letter(val position: Int, val value: String = BLANK) {
+    constructor(position: Int, value: Char): this(position, "$value")
+
     val isBlank: Boolean
-        get() = letter.isBlank()
+        get() = value.isBlank()
 
     val isNotBlank: Boolean
-        get() = letter.isNotBlank()
+        get() = value.isNotBlank()
 
-    sealed class State {
-        abstract val color: Int
-
-        data class Incorrect(override val color: Int = Color.BLACK): State()
-        data class Unknown(override val color: Int = Color.BLACK): State()
-
-        sealed class Correct : State() {
-            data class InRightPlace(override val color: Int = Color.GREEN) : Correct()
-            data class InWrongPlace(override val color: Int = Color.YELLOW) : Correct()
-        }
-
-    }
+    var state: State = State.Unknown()
+    var submitted: Boolean = false
 }

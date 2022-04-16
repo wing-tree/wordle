@@ -6,6 +6,7 @@ import androidx.core.view.isEmpty
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.databinding.LettersItemBinding
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.Letters as Model
@@ -19,7 +20,7 @@ class LettersListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapter
     inner class ViewHolder(private val viewBinding: LettersItemBinding) : RecyclerView.ViewHolder(viewBinding.root) {
         fun bind(item: AdapterItem) {
             when(item) {
-                is AdapterItem.Letters -> with(viewBinding.letters) {
+                is AdapterItem.Letters -> with(viewBinding.lettersView) {
                     with(item) {
                         if (submitted) {
                             setOnLetterClickListener(null)
@@ -35,13 +36,21 @@ class LettersListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapter
                             }
 
                             letters.zip(previousLetters).forEachIndexed { index, (letter, previousLetter) ->
-                                println("lllllllL$letter,,,,$previousLetter")
                                 set(index, letter)
 
-                                if (previousLetter.isBlank && letter.isNotBlank) {
-                                    scaleAt(index)
-                                } else if (previousLetter.isNotBlank && letter.isBlank) {
+                                if (letter.submitted) {
+                                    with(get(index)) {
+                                        if (flippable) {
+                                            front.text = BLANK
+                                            flipAt(index) { flippable = false }
+                                        }
+                                    }
+                                } else {
+                                    if (previousLetter.isBlank && letter.isNotBlank) {
+                                        scaleAt(index)
+                                    } else if (previousLetter.isNotBlank && letter.isBlank) {
 
+                                    }
                                 }
                             }
                         }

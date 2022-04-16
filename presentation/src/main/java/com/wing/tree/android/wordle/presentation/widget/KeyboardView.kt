@@ -7,7 +7,7 @@ import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.KeyboardViewBinding
-import com.wing.tree.android.wordle.presentation.model.play.Letters
+import com.wing.tree.android.wordle.presentation.model.play.Letter
 
 class KeyboardView : LinearLayout {
     private val viewBinding: KeyboardViewBinding = KeyboardViewBinding.bind(inflate(context, R.layout.keyboard_view, this))
@@ -150,9 +150,9 @@ class KeyboardView : LinearLayout {
         isEnabled = true
     }
 
-    fun applyState(letters: Letters) {
+    fun applyState(letters: List<Letter>) {
         letters.forEach {
-            findViewByKey(it.letter)?.updateState(it.state)
+            findViewByKey(it.value)?.updateState(it.state)
         }
     }
 

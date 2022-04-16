@@ -6,8 +6,8 @@ import com.wing.tree.android.wordle.android.exception.WordNotFoundException
 import com.wing.tree.android.wordle.domain.usecase.core.Result
 import com.wing.tree.android.wordle.domain.usecase.core.map
 import com.wing.tree.android.wordle.domain.usecase.word.ContainUseCase
-import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.Letters
+import com.wing.tree.android.wordle.presentation.model.play.State
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -29,22 +29,22 @@ class LettersCheckerImpl(private val containUseCase: ContainUseCase) : LettersCh
                             var word = word
 
                         word.forEachIndexed { index, letter ->
-                            if (letters[index].letter == "$letter") {
+                            if (letters[index].value == "$letter") {
                                 word = word.replaceFirst("$letter", BLANK)
-                                letters[index].state = Letter.State.Correct.InRightPlace()
+                                letters[index].state = State.Correct.InRightPlace()
                             }
                         }
 
-                        letters.filterIsState<Letter.State.Unknown>().forEach {
-                            if (word.contains(it.letter)) {
-                                word = word.replaceFirst(it.letter, BLANK)
+                        letters.filterIsState<State.Unknown>().forEach {
+                            if (word.contains(it.value)) {
+                                word = word.replaceFirst(it.value, BLANK)
 
-                                it.state = Letter.State.Correct.InWrongPlace()
+                                it.state = State.Correct.InWrongPlace()
                             }
                         }
 
-                        letters.filterIsState<Letter.State.Unknown>().forEach {
-                            it.state = Letter.State.Incorrect()
+                        letters.filterIsState<State.Unknown>().forEach {
+                            it.state = State.Incorrect()
                         }
 
                         withContext(mainDispatcher) {

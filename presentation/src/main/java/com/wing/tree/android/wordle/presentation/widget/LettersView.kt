@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.MainThread
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.doOnEnd
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.LettersViewBinding
 import com.wing.tree.android.wordle.presentation.extention.scale
@@ -47,7 +48,7 @@ class LettersView : ConstraintLayout {
         }
     }
 
-    fun flip(@MainThread onFlipped: () -> Unit) {
+    fun flip(@MainThread doOnEnd: (() -> Unit)? = null) {
         with(viewBinding) {
             coroutineScope.launch {
                 firstLetter.flip()
@@ -58,11 +59,15 @@ class LettersView : ConstraintLayout {
                 delay(120L)
                 fourthLetter.flip()
                 delay(120L)
-                fifthLetter.flip()
-
-                onFlipped.invoke()
+                fifthLetter.flip {
+                    doOnEnd?.invoke()
+                }
             }
         }
+    }
+
+    fun flipAt(index: Int, @MainThread doOnEnd: ((LetterView) -> Unit)? = null) {
+        get(index).flip(doOnEnd)
     }
 
     fun get(index: Int): LetterView = with(viewBinding) {
@@ -87,11 +92,11 @@ class LettersView : ConstraintLayout {
     fun set(index: Int, letter: Letter) {
         with(viewBinding) {
             when(index) {
-                0 -> firstLetter.set(letter)
-                1 -> secondLetter.set(letter)
-                2 -> thirdLetter.set(letter)
-                3 -> fourthLetter.set(letter)
-                4 -> fifthLetter.set(letter)
+                0 -> firstLetter.letter = letter
+                1 -> secondLetter.letter = letter
+                2 -> thirdLetter.letter = letter
+                3 -> fourthLetter.letter = letter
+                4 -> fifthLetter.letter = letter
             }
         }
     }

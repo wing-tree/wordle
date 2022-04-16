@@ -8,7 +8,7 @@ import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.extention.gone
 import com.wing.tree.android.wordle.presentation.extention.visible
 
-fun flip(`in`: View, `out`: View, onFlipped: (() -> Unit)? = null) {
+fun flip(`in`: View, `out`: View, doOnEnd: (() -> Unit)? = null) {
     val context = `in`.context
 
     `in`.visible()
@@ -24,6 +24,6 @@ fun flip(`in`: View, `out`: View, onFlipped: (() -> Unit)? = null) {
 
     flipInAnimationSet.doOnEnd {
         `out`.gone()
-        onFlipped?.invoke()
+        doOnEnd?.invoke()
     }
 }

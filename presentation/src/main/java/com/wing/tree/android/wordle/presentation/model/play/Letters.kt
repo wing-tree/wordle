@@ -2,8 +2,9 @@ package com.wing.tree.android.wordle.presentation.model.play
 
 import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
+import java.util.*
 
-data class Letters(val letters: Array<Letter> = Array(LENGTH) { Letter() }) {
+data class Letters(val letters: Array<Letter> = Array(LENGTH) { Letter(position = it) }) : Iterable<Letter> {
     val isNotEmpty: Boolean
         get() = length > 0
 
@@ -11,9 +12,9 @@ data class Letters(val letters: Array<Letter> = Array(LENGTH) { Letter() }) {
         get() = letters.count { it.isNotBlank }
 
     val string: String
-        get() = letters.joinToString(BLANK) { it.letter }
+        get() = letters.joinToString(BLANK) { it.value }
 
-    var previousLetters: Array<Letter> = Array(LENGTH) { Letter() }
+    var previousLetters: Array<Letter> = Array(LENGTH) { Letter(position = it) }
     var submitted: Boolean = false
 
     private fun backup() {
@@ -22,18 +23,26 @@ data class Letters(val letters: Array<Letter> = Array(LENGTH) { Letter() }) {
 
     operator fun get(index: Int) = letters[index]
 
-    inline fun <reified R: Letter.State> filterIsState(): List<Letter> {
-        return letters.filter { it.state is R }
+    operator fun set(index: Int, letter: Letter) {
+        letters[index] = letter
+    }
+
+    inline fun <reified R: State> filterIsState(): List<Letter> {
+        return letters.filterIsState<R>()
+    }
+
+    inline fun <reified R: State> Array<Letter>.filterIsState(): List<Letter> {
+        return this.filter { it.state is R }
     }
 
     fun add(letter: String) {
-        backup()
-
         if (length < LENGTH) {
-            val index = letters.indexOfFirst { it.letter.isBlank() }
+            backup()
 
-            if (index > -1) {
-                letters[index] = Letter(letter)
+            val index = letters.indexOfFirst { it.value.isBlank() }
+
+            if (index in 0 until LENGTH) {
+                letters[index] = Letter(index, letter)
             }
         }
     }
@@ -41,23 +50,26 @@ data class Letters(val letters: Array<Letter> = Array(LENGTH) { Letter() }) {
     fun matches(letters: String) = letters == string
 
     fun removeAt(index: Int) {
-        backup()
-
         if (isNotEmpty) {
             if (index in 0 until LENGTH) {
-                letters[index] = Letter(BLANK)
+                val letter = get(index)
+                val submitted = letter.submitted
+
+                if (submitted.not()) {
+                    backup()
+                    set(index, Letter(index, BLANK))
+                }
             }
         }
     }
 
     fun removeLast() {
-        backup()
-
         if (isNotEmpty) {
-            val index = letters.indexOfLast { it.letter.isNotBlank() }
+            val index = letters.indexOfLast { it.submitted.not() && it.value.isNotBlank()  }
 
-            if (index > -1) {
-                letters[index] = Letter(BLANK)
+            if (index in 0 until LENGTH) {
+                backup()
+                set(index, Letter(index, BLANK))
             }
         }
     }
@@ -78,5 +90,19 @@ data class Letters(val letters: Array<Letter> = Array(LENGTH) { Letter() }) {
         result = 31 * result + previousLetters.contentHashCode()
         result = 31 * result + submitted.hashCode()
         return result
+    }
+
+    override fun iterator(): Iterator<Letter> {
+        return object : Iterator<Letter> {
+            private var index = 0
+
+            override fun hasNext(): Boolean {
+                return index <= letters.lastIndex
+            }
+
+            override fun next(): Letter {
+                return letters[index++]
+            }
+        }
     }
 }
