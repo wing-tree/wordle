@@ -18,6 +18,7 @@ class KeyView : FrameLayout, Flippable<KeyView> {
     private var state: State = State.Unknown()
 
     override var flippable = true
+    override var isRunning = false
 
     var back = viewBinding.keyBack
     var front = viewBinding.keyFront
@@ -61,19 +62,24 @@ class KeyView : FrameLayout, Flippable<KeyView> {
 
     override fun flip(doOnEnd: ((KeyView)-> Unit)?) {
         with(viewBinding) {
-            root.isClickable = false
+            if (isRunning.not()) {
+                isRunning = true
+                root.isClickable = false
 
-            if (keyBack.isVisible) {
-                flip(keyFront, keyBack) {
-                    back = keyBack
-                    front = keyFront
-                    doOnEnd?.invoke(this@KeyView)
-                }
-            } else {
-                flip(keyBack, keyFront) {
-                    back = keyFront
-                    front = keyBack
-                    doOnEnd?.invoke(this@KeyView)
+                if (keyBack.isVisible) {
+                    flip(keyFront, keyBack) {
+                        back = keyBack
+                        front = keyFront
+                        doOnEnd?.invoke(this@KeyView)
+                        isRunning = false
+                    }
+                } else {
+                    flip(keyBack, keyFront) {
+                        back = keyFront
+                        front = keyBack
+                        doOnEnd?.invoke(this@KeyView)
+                        isRunning = false
+                    }
                 }
             }
         }

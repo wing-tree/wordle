@@ -31,7 +31,7 @@ class LettersCheckerImpl(private val containUseCase: ContainUseCase) : LettersCh
                         word.forEachIndexed { index, letter ->
                             if (letters[index].value == "$letter") {
                                 word = word.replaceFirst("$letter", BLANK)
-                                letters[index].state = State.Correct.InRightPlace()
+                                letters[index].state = State.In.CorrectSpot()
                             }
                         }
 
@@ -39,12 +39,12 @@ class LettersCheckerImpl(private val containUseCase: ContainUseCase) : LettersCh
                             if (word.contains(it.value)) {
                                 word = word.replaceFirst(it.value, BLANK)
 
-                                it.state = State.Correct.InWrongPlace()
+                                it.state = State.In.WrongSpot()
                             }
                         }
 
                         letters.filterIsState<State.Unknown>().forEach {
-                            it.state = State.Incorrect()
+                            it.state = State.NotIn()
                         }
 
                         withContext(mainDispatcher) {

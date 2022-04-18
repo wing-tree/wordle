@@ -34,7 +34,7 @@
 
     <style name="Widget.MaterialComponents.TextView.LetterView" parent="Widget.MaterialComponents.TextView">
         <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:background">@color/purple_500</item>
     </style>
 </resources>

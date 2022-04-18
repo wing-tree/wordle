@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.MainThread
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.animation.doOnEnd
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.LettersViewBinding
 import com.wing.tree.android.wordle.presentation.extention.scale
@@ -49,25 +48,29 @@ class LettersView : ConstraintLayout {
     }
 
     fun flip(@MainThread doOnEnd: (() -> Unit)? = null) {
-        with(viewBinding) {
-            coroutineScope.launch {
-                firstLetter.flip()
-                delay(120L)
-                secondLetter.flip()
-                delay(120L)
-                thirdLetter.flip()
-                delay(120L)
-                fourthLetter.flip()
-                delay(120L)
-                fifthLetter.flip {
-                    doOnEnd?.invoke()
-                }
-            }
+        coroutineScope.launch {
+            flip(0)
+            flip(1)
+            flip(2)
+            flip(3)
+            flip(4)
+
+            delay(600L)
+            doOnEnd?.invoke()
         }
     }
 
     fun flipAt(index: Int, @MainThread doOnEnd: ((LetterView) -> Unit)? = null) {
         get(index).flip(doOnEnd)
+    }
+
+    private suspend fun flip(index: Int) {
+        with(get(index)) {
+            if (flippable) {
+                flip()
+                delay(240L)
+            }
+        }
     }
 
     fun get(index: Int): LetterView = with(viewBinding) {
@@ -83,8 +86,8 @@ class LettersView : ConstraintLayout {
 
     fun scaleAt(index: Int) {
         with(get(index)) {
-            scale(1.25F, 240L) {
-                scale(1.0F, 240L)
+            front.scale(1.0F, 1.5F, 240L) {
+                front.scale(1.5F, 1.0F, 240L)
             }
         }
     }

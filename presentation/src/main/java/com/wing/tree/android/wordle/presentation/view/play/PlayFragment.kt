@@ -3,24 +3,18 @@ package com.wing.tree.android.wordle.presentation.view.play
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.wing.tree.android.wordle.domain.model.Result
 import com.wing.tree.android.wordle.presentation.adapter.play.AdapterItem
 import com.wing.tree.android.wordle.presentation.adapter.play.LettersListAdapter
-import com.wing.tree.android.wordle.presentation.constant.Try
+import com.wing.tree.android.wordle.presentation.constant.Attempt
 import com.wing.tree.android.wordle.presentation.constant.Word
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
 import com.wing.tree.android.wordle.presentation.widget.KeyboardView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class PlayFragment: BaseFragment<FragmentPlayBinding>() {
@@ -31,8 +25,12 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
                 viewModel.removeAt(adapterPosition, index)
             }
 
-            override fun onFlipped(letters: AdapterItem.Letters) {
-                checkResult()
+            override fun onAnimationEnd() {
+                viewModel.flipIsRunning.postValue(false)
+            }
+
+            override fun onAnimationStart() {
+                viewModel.flipIsRunning.postValue(true)
             }
         }
     )
@@ -49,7 +47,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
                 adapter = lettersListAdapter
                 itemAnimator = null
                 layoutManager = LinearLayoutManager(context).apply {
-                    initialPrefetchItemCount = Try.MAXIMUM
+                    initialPrefetchItemCount = Attempt.MAXIMUM
                 }
             }
 
@@ -71,6 +69,10 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
 
             textViewHint.setOnClickListener {
                 viewModel.useHint()
+            }
+
+            textViewDart.setOnClickListener {
+                viewModel.useDart()
             }
         }
     }
@@ -99,25 +101,9 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
         viewModel.keys.observe(viewLifecycleOwner) {
             viewBinding.keyboardView.applyState(it)
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
-        checkResult()
-    }
-
-    private fun checkResult() {
-        val directions = PlayFragmentDirections.actionPlayFragmentToResultFragment()
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            delay(250)
-
-            withContext(Dispatchers.Main.immediate) {
-                when (viewModel.checkResult()) {
-                    Result.Lose -> navigate(directions)
-                    Result.Win -> navigate(directions)
-                }
-            }
+        viewModel.directions.observe(viewLifecycleOwner) {
+            navigate(it)
         }
     }
 

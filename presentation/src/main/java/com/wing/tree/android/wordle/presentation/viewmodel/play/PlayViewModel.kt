@@ -3,25 +3,28 @@ package com.wing.tree.android.wordle.presentation.viewmodel.play
 import android.app.Application
 import androidx.annotation.MainThread
 import androidx.lifecycle.*
-import com.wing.tree.android.wordle.android.constant.BLANK
+import androidx.navigation.NavDirections
 import com.wing.tree.android.wordle.domain.model.Result
 import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.domain.usecase.statistics.UpdateStatisticsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.ContainUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetCountUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetWordUseCase
-import com.wing.tree.android.wordle.presentation.constant.Try
+import com.wing.tree.android.wordle.domain.util.notNull
+import com.wing.tree.android.wordle.presentation.constant.Attempt
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 import com.wing.tree.android.wordle.presentation.delegate.play.*
+import com.wing.tree.android.wordle.presentation.model.play.Board
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.Letters
 import com.wing.tree.android.wordle.presentation.model.play.State
+import com.wing.tree.android.wordle.presentation.util.alphabet
+import com.wing.tree.android.wordle.presentation.view.play.PlayFragmentDirections
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
-import java.util.concurrent.atomic.AtomicReference
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,9 +46,15 @@ class PlayViewModel @Inject constructor(
     private val _error = MutableLiveData<Throwable>()
     val error: LiveData<Throwable> get() = _error
 
-    // todo 더 좋은 네이밍 구상.
-    private val _letters = MutableLiveData(Array(Try.MAXIMUM) { Letters() })
+    val flipIsRunning = MutableLiveData<Boolean>()
+
+    // todo 더 좋은 네이밍 구상. 전용 클래스 필요. excluded 등 다 관리해야함.
+    private val _letters = MutableLiveData(Array(Attempt.MAXIMUM) { Letters() })
     val letters: LiveData<Array<Letters>> get() = _letters
+
+    // 위 letters 대체.
+    private val _board = MutableLiveData(Board())
+    val board: LiveData<Board> get() = _board
 
     private val excludedLetters = MutableLiveData<List<Letter>>()
 
@@ -53,7 +62,12 @@ class PlayViewModel @Inject constructor(
     private val _keys = MediatorLiveData<List<Letter>>()
     val keys: LiveData<List<Letter>> get() = _keys
 
-    private val result = AtomicReference<Result?>(null)
+    private val _result = MutableLiveData<Result>()
+    val result: LiveData<Result> get() = _result
+
+    // todo. 인터페이스 구현할것 delegate.. + 네이밍 체크. navigator 등. 쫌 이상하네 여기 없는게 맞다.
+    private val _directions = MediatorLiveData<NavDirections>()
+    val directions: LiveData<NavDirections> get() = _directions
 
     private var `try` = AtomicInteger(0)
 
@@ -61,13 +75,12 @@ class PlayViewModel @Inject constructor(
         get() = letters.value?.get(`try`.get())
 
     // todo 청소.. 정답 레터들.
-    val matchedLetters: List<Letter> = letters.value?.map { it.filterIsState<State.Correct.InRightPlace>() }?.flatten()?.distinct() ?: emptyList()
-    val notMatchedYetLetters by lazy {
-        run {
+    val matchedLetters: List<Letter> get() = letters.value?.map { it.filterIsState<State.In.CorrectSpot>() }?.flatten()?.distinct() ?: emptyList()
+    val notMatchedYetLetters: List<Letter>
+        get() = run {
             val w = word.word // 이걸로 레터 구성, 매치드 레터의 인덱스 위치의 값을 제거. 리스트 반환
             val arr = mutableListOf<Letter>()
             val mi = matchedLetters.map { it.position }
-
 
             w.forEachIndexed { index, c ->
                 if (mi.contains(index).not()) {
@@ -77,7 +90,6 @@ class PlayViewModel @Inject constructor(
 
             arr
         }
-    }
 
     init {
         // 레터의 변경을 통지 받는다. 레터테이블. 플레이 테이블?? 뭔가 깔삼한 클래스 만드는것도 todo
@@ -101,8 +113,20 @@ class PlayViewModel @Inject constructor(
                     value.add(it)
                 }
             }
-
+            println("whatwhatwhat:$letters")
             _keys.value = value
+        }
+
+        _directions.addSource(flipIsRunning) { isRunning ->
+            if (isRunning.not() && result.value.notNull) {
+                _directions.value = PlayFragmentDirections.actionPlayFragmentToResultFragment()
+            }
+        }
+
+        _directions.addSource(result) {
+            if (flipIsRunning.value == false) {
+                _directions.value = PlayFragmentDirections.actionPlayFragmentToResultFragment()
+            }
         }
     }
 
@@ -116,9 +140,9 @@ class PlayViewModel @Inject constructor(
                 }
             }
         }
-    }
 
-    fun checkResult() = result.get()
+        _board.value = board.value?.apply { add(letter) }
+    }
 
     fun removeAt(`try`: Int, index: Int) {
         _letters.value?.let {
@@ -144,7 +168,7 @@ class PlayViewModel @Inject constructor(
 
     fun submit(letters: Letters, @MainThread onSuccess: (Letters) -> Unit) {
         val word = word.word
-
+        println("yasyas:${letters}")
         viewModelScope.launch(ioDispatcher) {
             submit(
                 word,
@@ -164,12 +188,15 @@ class PlayViewModel @Inject constructor(
                     // 여기서 리절트 등록 해줘야함.
                     currentLetters?.let {
                         if (it.matches(word)) {
+                            println("winwinwin")
                             win()
                         } else {
-                            if (`try`.get() >= Try.MAXIMUM.dec()) {
+                            if (`try`.get() >= Attempt.MAXIMUM.dec()) {
                                 lose()
+                                println("loseloselose")
                             } else {
                                 // 여기서 뭐 해줘야함.
+                                println("nnnnnnnnnnn")
                                 incrementTry()
                                 enableKeyboard()
                             }
@@ -202,13 +229,13 @@ class PlayViewModel @Inject constructor(
 
     private fun lose() {
         updateStatistics(Result.Lose) {
-            result.set(Result.Lose)
+            _result.postValue(Result.Lose)
         }
     }
 
     private fun win() {
         updateStatistics(Result.Win) {
-            result.set(Result.Win)
+            _result.postValue(Result.Win)
         }
     }
 
@@ -229,7 +256,7 @@ class PlayViewModel @Inject constructor(
                 set(
                     letter.position,
                     letter.apply {
-                        state = State.Correct.InRightPlace()
+                        state = State.In.CorrectSpot()
                         submitted = true
                     }
                 )
@@ -240,6 +267,25 @@ class PlayViewModel @Inject constructor(
     }
 
     fun useHint() {
-        submitLetter(notMatchedYetLetters.random())
+        if (matchedLetters.count() < LENGTH) {
+            submitLetter(notMatchedYetLetters.random())
+        }
+    }
+
+    fun useDart() {
+        val ex = excludedLetters.value?.map { letter -> letter.value } ?: emptyList()
+        with(
+            alphabet
+            .filterNot { word.word.contains(it) }
+                // todo to stringList 함수 만들것.
+            .filterNot { ex.contains(it) }
+                .shuffled()
+        ) {
+            val value = excludedLetters.value?.toMutableList() ?: mutableListOf()
+
+            value.addAll(take(3).map { Letter(0, it).apply { state = State.NotIn() } })
+            println("lololo: ${take(3)},,, $value")
+            excludedLetters.value = value
+        }
     }
 }

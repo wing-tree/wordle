@@ -8,25 +8,32 @@ sealed class State {
 
     val notUnknown: Boolean get() = this !is Unknown
 
-    sealed class Correct : State() {
-        data class InRightPlace(
+    sealed class In : State() {
+        data class CorrectSpot(
             override val color: Int = Color.GREEN,
-            override val priority: Int = 3
-        ) : Correct()
+            override val priority: Int = Priority.CORRECT_SPOT
+        ) : In()
 
-        data class InWrongPlace(
+        data class WrongSpot(
             override val color: Int = Color.MAGENTA,
-            override val priority: Int = 2
-        ) : Correct()
+            override val priority: Int = Priority.WRONG_SPOT
+        ) : In()
     }
 
-    data class Incorrect(
-        override val color: Int = Color.BLACK,
-        override val priority: Int = 1
+    data class NotIn(
+        override val color: Int = Color.RED,
+        override val priority: Int = Priority.NOT_IN
     ): State()
 
     data class Unknown(
         override val color: Int = Color.BLACK,
-        override val priority: Int = 0
+        override val priority: Int = Priority.UNKNOWN
     ): State()
+
+    private object Priority {
+        const val UNKNOWN = 0
+        const val NOT_IN = 1
+        const val WRONG_SPOT = 2
+        const val CORRECT_SPOT = 3
+    }
 }

@@ -2,7 +2,6 @@ package com.wing.tree.android.wordle.presentation.adapter.play
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isEmpty
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +13,8 @@ import com.wing.tree.android.wordle.presentation.model.play.Letters as Model
 class LettersListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterItem, LettersListAdapter.ViewHolder>(DiffCallback()) {
     interface Callbacks {
         fun onLetterClick(adapterPosition: Int, index: Int)
-        fun onFlipped(letters: AdapterItem.Letters)
+        fun onAnimationEnd()
+        fun onAnimationStart()
     }
 
     inner class ViewHolder(private val viewBinding: LettersItemBinding) : RecyclerView.ViewHolder(viewBinding.root) {
@@ -29,7 +29,8 @@ class LettersListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapter
                                 set(index, letter)
                             }
 
-                            flip { callbacks.onFlipped(item) }
+                            callbacks.onAnimationStart()
+                            flip { callbacks.onAnimationEnd() }
                         } else {
                             setOnLetterClickListener { _, index ->
                                 callbacks.onLetterClick(adapterPosition, index)

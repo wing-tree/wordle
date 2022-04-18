@@ -1,8 +1,8 @@
 package com.wing.tree.android.wordle.presentation.util
 
 import android.animation.AnimatorInflater
-import android.animation.AnimatorSet
 import android.view.View
+import androidx.core.animation.doOnCancel
 import androidx.core.animation.doOnEnd
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.extention.gone
@@ -25,5 +25,9 @@ fun flip(`in`: View, `out`: View, doOnEnd: (() -> Unit)? = null) {
     flipInAnimationSet.doOnEnd {
         `out`.gone()
         doOnEnd?.invoke()
+    }
+
+    flipInAnimationSet.doOnCancel {
+        `out`.gone()
     }
 }

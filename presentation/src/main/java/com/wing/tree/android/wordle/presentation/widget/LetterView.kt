@@ -15,6 +15,7 @@ class LetterView : FrameLayout, Flippable<LetterView> {
     private val viewBinding: LetterViewBinding = LetterViewBinding.bind(inflate(context, R.layout.letter_view, this))
 
     override var flippable = true
+    override var isRunning = false
 
     var back = viewBinding.letterBack
     var front = viewBinding.letterFront
@@ -35,18 +36,22 @@ class LetterView : FrameLayout, Flippable<LetterView> {
 
     override fun flip(doOnEnd: ((LetterView) -> Unit)?) {
         with(viewBinding) {
-            if (flippable) {
+            if (flippable && isRunning.not()) {
+                isRunning = true
+
                 if (letterBack.isVisible) {
                     flip(letterFront, letterBack) {
                         back = letterBack
                         front = letterFront
                         doOnEnd?.invoke(this@LetterView)
+                        isRunning = false
                     }
                 } else {
                     flip(letterBack, letterFront) {
                         back = letterFront
                         front = letterBack
                         doOnEnd?.invoke(this@LetterView)
+                        isRunning = false
                     }
                 }
             }

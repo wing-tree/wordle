@@ -1,6 +1,6 @@
 package com.wing.tree.android.wordle.presentation.constant
 
-internal object Try {
+internal object Attempt {
     const val MAXIMUM = 6
 }
 
