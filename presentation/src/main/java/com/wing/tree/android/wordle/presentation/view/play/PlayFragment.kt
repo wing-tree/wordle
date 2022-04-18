@@ -91,11 +91,11 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
         }
 
         viewModel.letters.observe(viewLifecycleOwner) {
-            lettersListAdapter.submitList(
-                it.mapIndexed { index, letters ->
-                    AdapterItem.Letters.from(index, letters)
-                }
-            )
+//            lettersListAdapter.submitList(
+//                it.mapIndexed { index, letters ->
+//                    AdapterItem.Letters.from(index, letters)
+//                }
+//            )
         }
 
         viewModel.keys.observe(viewLifecycleOwner) {
@@ -104,6 +104,14 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
 
         viewModel.directions.observe(viewLifecycleOwner) {
             navigate(it)
+        }
+
+        viewModel.board.observe(viewLifecycleOwner) {
+            lettersListAdapter.submitList(
+                it.lettersList.mapIndexed { index, letters ->
+                    AdapterItem.Letters.from(index, letters)
+                }
+            )
         }
     }
 

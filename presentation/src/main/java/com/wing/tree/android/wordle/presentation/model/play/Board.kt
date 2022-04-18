@@ -7,13 +7,13 @@ import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 
 class Board {
-    val board = arrayListOf<Letters>()
+    val lettersList = arrayListOf<Letters>()
     val attempt = AtomicInteger(0)
     val currentLetters: Letters
-        get() = board[attempt.get()]
+        get() = lettersList[attempt.get()]
 
     private val correctLettersInRightPlace: List<Letter> // 이미 맞춰진, 정확한.
-        get() = board.flatMap { it }.filter { it.state == State.In.CorrectSpot() }
+        get() = lettersList.flatMap { it }.filter { it.state == State.In.CorrectSpot() }
 
     // 상태기반 필터로직.
 
@@ -33,16 +33,15 @@ class Board {
 //            arr
 //        }
 
-    val notUnknownLetters: List<Letter> get() = board.flatten().filter { it.state.notUnknown }
+    val notUnknownLetters: List<Letter> get() = lettersList.flatten().filter { it.state.notUnknown }
 
     init {
         repeat(Attempt.MAXIMUM) {
-            board.add(Letters())
+            lettersList.add(Letters())
         }
     }
 
     fun add(letter: String) {
-        currentLetters.add(letter)
         with(currentLetters) {
             if (length < LENGTH) {
                 add(letter)
