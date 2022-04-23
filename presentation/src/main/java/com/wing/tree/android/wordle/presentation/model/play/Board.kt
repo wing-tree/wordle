@@ -4,16 +4,18 @@ import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.presentation.constant.Attempt
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 import timber.log.Timber
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class Board {
     private val attempt = AtomicInteger(0)
+    private val maximumAttempt = AtomicInteger(Attempt.MAXIMUM)
+    val attemptIncremented = AtomicBoolean(false)
 
     private val _lettersList = mutableListOf<Letters>()
     val lettersList: List<Letters> get() = _lettersList
 
-    val currentLetters: Letters
-        get() = lettersList[attempt.get()]
+    val currentLetters: Letters get() = lettersList[attempt.get()]
 
     val lettersMatched = lettersWithState(State.Included.Matched())
 
@@ -61,6 +63,17 @@ class Board {
 
     fun submit() {
         currentLetters.submit()
+    }
+
+    val attemptExceeded: Boolean get() = attempt.get() >= maximumAttempt.get().dec()
+
+
+    fun addAttempt() {
+        if (attemptIncremented.compareAndSet(false, true)) {
+            Timber.d("${maximumAttempt.incrementAndGet()}")
+            incrementAttempt()
+            _lettersList.add(Letters())
+        }
     }
 
     fun incrementAttempt() {

@@ -2,8 +2,10 @@ package com.wing.tree.android.wordle.presentation.viewmodel.play
 
 import android.app.Application
 import androidx.annotation.MainThread
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.*
 import androidx.navigation.NavDirections
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wing.tree.android.wordle.domain.model.Result
 import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.domain.usecase.statistics.UpdateStatisticsUseCase
@@ -48,11 +50,6 @@ class PlayViewModel @Inject constructor(
 
     val flipIsRunning = MutableLiveData<Boolean>()
 
-    // todo 더 좋은 네이밍 구상. 전용 클래스 필요. excluded 등 다 관리해야함.
-//    private val _letters = MutableLiveData(Array(Attempt.MAXIMUM) { Letters() })
-//    val letters: LiveData<Array<Letters>> get() = _letters
-
-    // 위 letters 대체.
     private val _board = MutableLiveData(Board())
     val board: LiveData<Board> get() = _board
 
@@ -64,6 +61,8 @@ class PlayViewModel @Inject constructor(
 
     private val _result = MutableLiveData<Result>()
     val result: LiveData<Result> get() = _result
+
+    val showAddAttemptDialog = MutableLiveData<Boolean>()
 
     // todo. 인터페이스 구현할것 delegate.. + 네이밍 체크. navigator 등. 쫌 이상하네 여기 없는게 맞다.
     private val _directions = MediatorLiveData<NavDirections>()
@@ -142,10 +141,13 @@ class PlayViewModel @Inject constructor(
                         if (it.matches(word)) {
                             win()
                         } else {
-                            if (`try`.get() >= Attempt.MAXIMUM.dec()) {
-                                lose()
+                            if (board.attemptExceeded) {
+                                if (board.attemptIncremented.get()) {
+                                    lose()
+                                } else {
+                                    showAddAttemptDialog.value = true
+                                }
                             } else {
-                                incrementTry()
                                 board.incrementAttempt()
                                 enableKeyboard()
                             }
@@ -172,11 +174,7 @@ class PlayViewModel @Inject constructor(
         }
     }
 
-    private fun incrementTry() {
-        Timber.d("${`try`.incrementAndGet()}")
-    }
-
-    private fun lose() {
+    fun lose() {
         updateStatistics(Result.Lose) {
             _result.postValue(Result.Lose)
         }
@@ -230,6 +228,13 @@ class PlayViewModel @Inject constructor(
 
             value.addAll(take(3).map { Letter(0, it, State.Excluded()) })
             excludedLetters.value = value
+        }
+    }
+
+    fun addAttempt() {
+        board.value?.let {
+            it.addAttempt()
+            _board.value = it
         }
     }
 }

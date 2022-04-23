@@ -5,7 +5,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wing.tree.android.wordle.presentation.adapter.play.AdapterItem
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.play.LettersListAdapter
@@ -45,8 +47,13 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
                 addItemDecoration(ItemDecoration())
                 recycledViewPool.setMaxRecycledViews(0, 0)
 
+                with(itemAnimator) {
+                    if (this is DefaultItemAnimator) {
+                        supportsChangeAnimations = false
+                    }
+                }
+
                 adapter = lettersListAdapter
-                itemAnimator = null
                 layoutManager = LinearLayoutManager(context).apply {
                     initialPrefetchItemCount = Attempt.MAXIMUM
                 }
@@ -55,16 +62,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
             keyboardView.setOnKeyListener { key ->
                 when(key) {
                     is KeyboardView.Key.Alphabet -> viewModel.add(key.letter)
-                    is KeyboardView.Key.Return -> {
-                        viewModel.submit {  }
-//                        viewModel.currentLetters?.let {
-//                            if (it.length == Word.LENGTH) {
-//                                viewModel.submit(it) { letters ->
-//
-//                                }
-//                            }
-//                        }
-                    }
+                    is KeyboardView.Key.Return -> { viewModel.submit {  } }
                     is KeyboardView.Key.Backspace -> viewModel.removeLast()
                 }
             }
@@ -82,6 +80,18 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
     override fun initData() {
         viewModel.board.observe(viewLifecycleOwner) {
             lettersListAdapter.submitBoard(it)
+        }
+
+        viewModel.showAddAttemptDialog.observe(viewLifecycleOwner) {
+            MaterialAlertDialogBuilder(requireActivity())
+                .setTitle("기회 추가")
+                .setPositiveButton("구매") { _, _ ->
+                    viewModel.addAttempt()
+                }
+                .setNegativeButton("꺼져") { _, _ ->
+                    viewModel.lose()
+                }
+                .show()
         }
 
         viewModel.load {
