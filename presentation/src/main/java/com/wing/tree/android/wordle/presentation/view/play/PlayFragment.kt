@@ -7,9 +7,9 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wing.tree.android.wordle.presentation.adapter.play.AdapterItem
+import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.play.LettersListAdapter
 import com.wing.tree.android.wordle.presentation.constant.Attempt
-import com.wing.tree.android.wordle.presentation.constant.Word
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
@@ -42,6 +42,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
     override fun bind(viewBinding: FragmentPlayBinding) {
         with(viewBinding) {
             recyclerView.apply {
+                addItemDecoration(ItemDecoration())
                 recycledViewPool.setMaxRecycledViews(0, 0)
 
                 adapter = lettersListAdapter
@@ -55,13 +56,14 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
                 when(key) {
                     is KeyboardView.Key.Alphabet -> viewModel.add(key.letter)
                     is KeyboardView.Key.Return -> {
-                        viewModel.currentLetters?.let {
-                            if (it.length == Word.LENGTH) {
-                                viewModel.submit(it) { letters ->
-
-                                }
-                            }
-                        }
+                        viewModel.submit {  }
+//                        viewModel.currentLetters?.let {
+//                            if (it.length == Word.LENGTH) {
+//                                viewModel.submit(it) { letters ->
+//
+//                                }
+//                            }
+//                        }
                     }
                     is KeyboardView.Key.Backspace -> viewModel.removeLast()
                 }
@@ -78,6 +80,10 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
     }
 
     override fun initData() {
+        viewModel.board.observe(viewLifecycleOwner) {
+            lettersListAdapter.submitBoard(it)
+        }
+
         viewModel.load {
             viewModel.enableKeyboard()
         }
@@ -90,28 +96,12 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
             }
         }
 
-        viewModel.letters.observe(viewLifecycleOwner) {
-//            lettersListAdapter.submitList(
-//                it.mapIndexed { index, letters ->
-//                    AdapterItem.Letters.from(index, letters)
-//                }
-//            )
-        }
-
         viewModel.keys.observe(viewLifecycleOwner) {
             viewBinding.keyboardView.applyState(it)
         }
 
         viewModel.directions.observe(viewLifecycleOwner) {
             navigate(it)
-        }
-
-        viewModel.board.observe(viewLifecycleOwner) {
-            lettersListAdapter.submitList(
-                it.lettersList.mapIndexed { index, letters ->
-                    AdapterItem.Letters.from(index, letters)
-                }
-            )
         }
     }
 

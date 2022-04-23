@@ -7,37 +7,35 @@ import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 
 class Board {
-    val lettersList = arrayListOf<Letters>()
-    val attempt = AtomicInteger(0)
+    private val attempt = AtomicInteger(0)
+
+    private val _lettersList = mutableListOf<Letters>()
+    val lettersList: List<Letters> get() = _lettersList
+
     val currentLetters: Letters
         get() = lettersList[attempt.get()]
 
-    private val correctLettersInRightPlace: List<Letter> // 이미 맞춰진, 정확한.
-        get() = lettersList.flatMap { it }.filter { it.state == State.In.CorrectSpot() }
+    val lettersMatched = lettersWithState(State.Included.Matched())
 
-    // 상태기반 필터로직.
+    private fun lettersWithState(vararg state: State) = lettersList.flatten().filter { state.contains(it.state) }
 
-    // 아니면 목적 지향적 추상화. dart target 등..
-//    val notMatchedYetLetters: List<Letter>
-//        get() = run {
-//            val w = word.word // 이걸로 레터 구성, 매치드 레터의 인덱스 위치의 값을 제거. 리스트 반환
-//            val arr = mutableListOf<Letter>()
-//            val mi = correctLettersInRightPlace.map { it.position }
-//
-//            w.forEachIndexed { index, c ->
-//                if (mi.contains(index).not()) {
-//                    arr.add(Letter(index, c))
-//                }
-//            }
-//
-//            arr
-//        }
+    fun getNotMatchedYetLetters(word: Word): List<Letter> {
+        val matchedPositions = lettersMatched.map { it.position }
+
+        return mutableListOf<Letter>().apply {
+            word.word.forEachIndexed { index, letter ->
+                if (matchedPositions.contains(index).not()) {
+                    add(Letter(index, letter))
+                }
+            }
+        }
+    }
 
     val notUnknownLetters: List<Letter> get() = lettersList.flatten().filter { it.state.notUnknown }
 
     init {
         repeat(Attempt.MAXIMUM) {
-            lettersList.add(Letters())
+            _lettersList.add(Letters())
         }
     }
 
@@ -47,6 +45,22 @@ class Board {
                 add(letter)
             }
         }
+    }
+
+    fun removeAt(attempt: Int, index: Int) {
+        try {
+            lettersList[attempt].removeAt(index)
+        } catch (e: ArrayIndexOutOfBoundsException) {
+            Timber.e(e)
+        }
+    }
+
+    fun removeLast() {
+        currentLetters.removeLast()
+    }
+
+    fun submit() {
+        currentLetters.submit()
     }
 
     fun incrementAttempt() {

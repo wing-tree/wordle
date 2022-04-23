@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.databinding.LettersItemBinding
+import com.wing.tree.android.wordle.presentation.model.play.Board
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.Letters as Model
 
@@ -72,6 +73,14 @@ class LettersListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapter
         holder.bind(getItem(position))
     }
 
+    fun submitBoard(board: Board) {
+        val list = board.lettersList.mapIndexed { index, letters ->
+            AdapterItem.Letters.from(index, letters)
+        }
+
+        submitList(list)
+    }
+
     class DiffCallback: DiffUtil.ItemCallback<AdapterItem>() {
         override fun areItemsTheSame(oldItem: AdapterItem, newItem: AdapterItem): Boolean {
             return oldItem.index == newItem.index
@@ -95,7 +104,7 @@ sealed class AdapterItem {
         companion object {
             fun from(index: Int, letters: Model) = Letters(
                 index = index,
-                letters = letters.letters.copyOf(),
+                letters = letters.value.copyOf(),
                 previousLetters = letters.previousLetters.copyOf(),
                 submitted = letters.submitted
             )

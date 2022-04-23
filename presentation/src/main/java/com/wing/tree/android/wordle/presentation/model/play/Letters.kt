@@ -2,33 +2,32 @@ package com.wing.tree.android.wordle.presentation.model.play
 
 import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
-import java.util.*
 
-data class Letters(val letters: Array<Letter> = Array(LENGTH) { Letter(position = it) }) : Iterable<Letter> {
-    val isNotEmpty: Boolean
+data class Letters(val value: Array<Letter> = Array(LENGTH) { Letter(position = it) }) : Iterable<Letter> {
+    private val isNotEmpty: Boolean
         get() = length > 0
 
     val length: Int
-        get() = letters.count { it.isNotBlank }
+        get() = value.count { it.isNotBlank }
 
     val string: String
-        get() = letters.joinToString(BLANK) { it.value }
+        get() = value.joinToString(BLANK) { it.value }
 
     var previousLetters: Array<Letter> = Array(LENGTH) { Letter(position = it) }
     var submitted: Boolean = false
 
     private fun backup() {
-        previousLetters = Array(LENGTH) { letters[it] }
+        previousLetters = Array(LENGTH) { value[it] }
     }
 
-    operator fun get(index: Int) = letters[index]
+    operator fun get(index: Int) = value[index]
 
     operator fun set(index: Int, letter: Letter) {
-        letters[index] = letter
+        value[index] = letter
     }
 
     inline fun <reified R: State> filterIsState(): List<Letter> {
-        return letters.filterIsState<R>()
+        return value.filterIsState<R>()
     }
 
     inline fun <reified R: State> Array<Letter>.filterIsState(): List<Letter> {
@@ -39,10 +38,10 @@ data class Letters(val letters: Array<Letter> = Array(LENGTH) { Letter(position 
         if (length < LENGTH) {
             backup()
 
-            val index = letters.indexOfFirst { it.value.isBlank() }
+            val index = value.indexOfFirst { it.value.isBlank() }
 
             if (index in 0 until LENGTH) {
-                letters[index] = Letter(index, letter)
+                value[index] = Letter(index, letter)
             }
         }
     }
@@ -65,7 +64,7 @@ data class Letters(val letters: Array<Letter> = Array(LENGTH) { Letter(position 
 
     fun removeLast() {
         if (isNotEmpty) {
-            val index = letters.indexOfLast { it.submitted.not() && it.value.isNotBlank()  }
+            val index = value.indexOfLast { it.submitted.not() && it.isNotBlank  }
 
             if (index in 0 until LENGTH) {
                 backup()
@@ -74,11 +73,15 @@ data class Letters(val letters: Array<Letter> = Array(LENGTH) { Letter(position 
         }
     }
 
+    fun submit() {
+        submitted = true
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is Letters) return false
 
-        if (!letters.contentEquals(other.letters)) return false
+        if (!value.contentEquals(other.value)) return false
         if (!previousLetters.contentEquals(other.previousLetters)) return false
         if (submitted != other.submitted) return false
 
@@ -86,7 +89,7 @@ data class Letters(val letters: Array<Letter> = Array(LENGTH) { Letter(position 
     }
 
     override fun hashCode(): Int {
-        var result = letters.contentHashCode()
+        var result = value.contentHashCode()
         result = 31 * result + previousLetters.contentHashCode()
         result = 31 * result + submitted.hashCode()
         return result
@@ -97,11 +100,11 @@ data class Letters(val letters: Array<Letter> = Array(LENGTH) { Letter(position 
             private var index = 0
 
             override fun hasNext(): Boolean {
-                return index <= letters.lastIndex
+                return index <= value.lastIndex
             }
 
             override fun next(): Letter {
-                return letters[index++]
+                return value[index++]
             }
         }
     }

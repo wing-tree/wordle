@@ -8,21 +8,21 @@ sealed class State {
 
     val notUnknown: Boolean get() = this !is Unknown
 
-    sealed class In : State() {
-        data class CorrectSpot(
+    sealed class Included : State() {
+        data class Matched(
             override val color: Int = Color.GREEN,
-            override val priority: Int = Priority.CORRECT_SPOT
-        ) : In()
+            override val priority: Int = Priority.MATCHED
+        ) : Included()
 
-        data class WrongSpot(
+        data class NotMatched(
             override val color: Int = Color.MAGENTA,
-            override val priority: Int = Priority.WRONG_SPOT
-        ) : In()
+            override val priority: Int = Priority.NOT_MATCHED
+        ) : Included()
     }
 
-    data class NotIn(
+    data class Excluded(
         override val color: Int = Color.RED,
-        override val priority: Int = Priority.NOT_IN
+        override val priority: Int = Priority.EXCLUDED
     ): State()
 
     data class Unknown(
@@ -32,8 +32,8 @@ sealed class State {
 
     private object Priority {
         const val UNKNOWN = 0
-        const val NOT_IN = 1
-        const val WRONG_SPOT = 2
-        const val CORRECT_SPOT = 3
+        const val EXCLUDED = 1
+        const val NOT_MATCHED = 2
+        const val MATCHED = 3
     }
 }

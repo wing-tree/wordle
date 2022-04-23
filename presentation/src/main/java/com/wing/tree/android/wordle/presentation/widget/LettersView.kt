@@ -86,8 +86,8 @@ class LettersView : ConstraintLayout {
 
     fun scaleAt(index: Int) {
         with(get(index)) {
-            front.scale(1.0F, 1.5F, 240L) {
-                front.scale(1.5F, 1.0F, 240L)
+            front.scale(1.0F, 1.25F, 240L) {
+                front.scale(1.25F, 1.0F, 240L)
             }
         }
     }
