@@ -20,10 +20,10 @@ internal class ItemDecoration : RecyclerView.ItemDecoration() {
         val value = 4.0F
         val displayMetrics = view.context.resources.displayMetrics
 
-        val bottom = TypedValue.applyDimension(unit, value, displayMetrics).roundToInt()
+        val bottom = TypedValue.applyDimension(unit, value, displayMetrics)
 
         if (childLayoutPosition < itemCount) {
-            outRect.bottom = bottom
+            outRect.bottom = bottom.roundToInt()
         }
     }
 }
