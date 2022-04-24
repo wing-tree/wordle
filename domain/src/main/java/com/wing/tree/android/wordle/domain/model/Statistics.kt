@@ -6,4 +6,14 @@ interface Statistics {
     val winningStreak: Int
     val won: Int
     val guesses: Guesses
+
+    companion object {
+        val Default = object : Statistics {
+            override val maximumWinStreak: Int = 0
+            override val played: Int = 0
+            override val winningStreak: Int = 0
+            override val won: Int = 0
+            override val guesses: Guesses = Guesses.Default
+        }
+    }
 }
