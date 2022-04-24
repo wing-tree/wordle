@@ -43,8 +43,10 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         }
     }
 
-    override suspend fun earnGold(gold: Int) {
+    override suspend fun purchaseGold(gold: Int) {
         dataStore.edit {
+            val s = listOf(12,1,3,)
+            s.groupBy {  }
             with(it[Key.gold]) {
                 it[Key.gold] = this?.plus(gold) ?: gold
             }
