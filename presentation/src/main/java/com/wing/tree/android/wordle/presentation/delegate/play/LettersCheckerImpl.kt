@@ -56,6 +56,7 @@ class LettersCheckerImpl(private val containUseCase: ContainUseCase) : LettersCh
                         onFailure(WordNotFoundException(word))
                     }
                 }
+                Result.Loading -> Unit
             }
         }
     }

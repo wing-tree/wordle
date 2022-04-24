@@ -27,6 +27,7 @@ class WordLoaderImpl(
                         load(index, onSuccess, onFailure)
                     }
                 }
+                Result.Loading -> Unit
             }
         }
     }
@@ -44,6 +45,7 @@ class WordLoaderImpl(
                         onSuccess(result.data)
                     }
                 }
+                Result.Loading -> Unit
             }
         }
     }
