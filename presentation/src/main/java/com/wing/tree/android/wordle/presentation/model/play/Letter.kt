@@ -1,10 +1,8 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
-import android.graphics.Color
 import androidx.annotation.ColorRes
 import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.R
-import dagger.hilt.android.lifecycle.HiltViewModel
 
 data class Letter(val position: Int, val value: String = BLANK, var state: State = State.Unknown()) {
     constructor(position: Int, value: Char): this(position, "$value")
