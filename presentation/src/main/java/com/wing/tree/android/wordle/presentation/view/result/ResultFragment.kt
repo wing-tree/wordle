@@ -3,6 +3,7 @@ package com.wing.tree.android.wordle.presentation.view.result
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.wing.tree.android.wordle.presentation.databinding.FragmentResultBinding
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.result.ResultViewModel
@@ -23,5 +24,10 @@ class ResultFragment : BaseFragment<FragmentResultBinding>() {
     }
 
     override fun bind(viewBinding: FragmentResultBinding) {
+        with(viewBinding) {
+            materialButtonNextWord.setOnClickListener {
+                findNavController().navigate(ResultFragmentDirections.actionResultFragmentToPlayFragment())
+            }
+        }
     }
 }

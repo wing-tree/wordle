@@ -9,9 +9,10 @@ import com.wing.tree.android.wordle.domain.model.Statistics
 import com.wing.tree.android.wordle.domain.usecase.core.Result
 import com.wing.tree.android.wordle.domain.usecase.statistics.GetStatisticsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel(
+class MainFragmentViewModel @Inject constructor(
     getStatisticsUseCase: GetStatisticsUseCase,
     application: Application
 ) : AndroidViewModel(application) {

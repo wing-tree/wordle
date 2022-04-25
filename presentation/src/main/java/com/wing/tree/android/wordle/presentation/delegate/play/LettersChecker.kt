@@ -1,13 +1,13 @@
 package com.wing.tree.android.wordle.presentation.delegate.play
 
 import androidx.annotation.MainThread
-import com.wing.tree.android.wordle.presentation.model.play.Letters
+import com.wing.tree.android.wordle.presentation.model.play.Line
 
 interface LettersChecker {
     suspend fun submit(
         word: String,
-        letters: Letters,
+        line: Line,
         @MainThread onFailure: (Throwable) -> Unit,
-        @MainThread onSuccess: (Letters) -> Unit
+        @MainThread onSuccess: (Line) -> Unit
     )
 }

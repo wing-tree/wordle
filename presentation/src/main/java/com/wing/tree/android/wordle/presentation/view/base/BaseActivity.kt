@@ -7,6 +7,7 @@ import androidx.viewbinding.ViewBinding
 
 abstract class BaseActivity<VB: ViewBinding>  : AppCompatActivity() {
     abstract fun inflate(): VB
+    abstract fun initData()
     abstract fun bind(viewBinding: VB)
 
     protected val viewBinding: VB by lazy { inflate() }
@@ -15,6 +16,7 @@ abstract class BaseActivity<VB: ViewBinding>  : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
+        initData()
         bind(viewBinding)
     }
 }

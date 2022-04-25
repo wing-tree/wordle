@@ -3,6 +3,7 @@ package com.wing.tree.android.wordle.presentation.model.play
 import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.presentation.constant.Attempt
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
+import com.wing.tree.android.wordle.presentation.util.increment
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -10,16 +11,20 @@ import java.util.concurrent.atomic.AtomicInteger
 class Board {
     private val attempt = AtomicInteger(0)
     private val maximumAttempt = AtomicInteger(Attempt.MAXIMUM)
+
+    val attemptExceeded: Boolean get() = attempt.get() >= maximumAttempt.get().dec()
     val attemptIncremented = AtomicBoolean(false)
 
-    private val _lettersList = mutableListOf<Letters>()
-    val lettersList: List<Letters> get() = _lettersList
+    private val _lines = mutableListOf<Line>()
+    val lines: List<Line> get() = _lines
 
-    val currentLetters: Letters get() = lettersList[attempt.get()]
+    val letters = lines.flatten()
+
+    val currentLine: Line get() = lines[attempt.get()]
 
     val lettersMatched = lettersWithState(State.Included.Matched())
 
-    private fun lettersWithState(vararg state: State) = lettersList.flatten().filter { state.contains(it.state) }
+    private fun lettersWithState(vararg state: State) = letters.filter { state.contains(it.state) }
 
     fun getNotMatchedYetLetters(word: Word): List<Letter> {
         val matchedPositions = lettersMatched.map { it.position }
@@ -33,16 +38,16 @@ class Board {
         }
     }
 
-    val notUnknownLetters: List<Letter> get() = lettersList.flatten().filter { it.state.notUnknown }
+    val notUnknownLetters: List<Letter> get() = letters.filter { it.state.notUnknown }
 
     init {
         repeat(Attempt.MAXIMUM) {
-            _lettersList.add(Letters())
+            _lines.add(Line())
         }
     }
 
     fun add(letter: String) {
-        with(currentLetters) {
+        with(currentLine) {
             if (length < LENGTH) {
                 add(letter)
             }
@@ -51,32 +56,29 @@ class Board {
 
     fun removeAt(attempt: Int, index: Int) {
         try {
-            lettersList[attempt].removeAt(index)
+            lines[attempt].removeAt(index)
         } catch (e: ArrayIndexOutOfBoundsException) {
             Timber.e(e)
         }
     }
 
     fun removeLast() {
-        currentLetters.removeLast()
+        currentLine.removeLast()
     }
 
     fun submit() {
-        currentLetters.submit()
+        currentLine.submit()
     }
-
-    val attemptExceeded: Boolean get() = attempt.get() >= maximumAttempt.get().dec()
-
 
     fun addAttempt() {
         if (attemptIncremented.compareAndSet(false, true)) {
-            Timber.d("${maximumAttempt.incrementAndGet()}")
+            maximumAttempt.increment()
             incrementAttempt()
-            _lettersList.add(Letters())
+            _lines.add(Line())
         }
     }
 
     fun incrementAttempt() {
-        Timber.d("${attempt.incrementAndGet()}")
+        attempt.increment()
     }
 }

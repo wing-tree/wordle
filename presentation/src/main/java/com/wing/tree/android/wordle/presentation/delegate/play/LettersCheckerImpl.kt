@@ -6,7 +6,7 @@ import com.wing.tree.android.wordle.android.exception.WordNotFoundException
 import com.wing.tree.android.wordle.domain.usecase.core.Result
 import com.wing.tree.android.wordle.domain.usecase.core.map
 import com.wing.tree.android.wordle.domain.usecase.word.ContainUseCase
-import com.wing.tree.android.wordle.presentation.model.play.Letters
+import com.wing.tree.android.wordle.presentation.model.play.Line
 import com.wing.tree.android.wordle.presentation.model.play.State
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -16,11 +16,11 @@ class LettersCheckerImpl(private val containUseCase: ContainUseCase) : LettersCh
 
     override suspend fun submit(
         word: String,
-        letters: Letters,
+        line: Line,
         @MainThread onFailure: (Throwable) -> Unit,
-        @MainThread onSuccess: (Letters) -> Unit
+        @MainThread onSuccess: (Line) -> Unit
     ) {
-        containUseCase.invoke(ContainUseCase.Parameter(letters.string)).map { result ->
+        containUseCase.invoke(ContainUseCase.Parameter(line.string)).map { result ->
             when(result) {
                 is Result.Error -> withContext(mainDispatcher) { onFailure(result.throwable) }
                 is Result.Success -> {
@@ -29,13 +29,13 @@ class LettersCheckerImpl(private val containUseCase: ContainUseCase) : LettersCh
                             var word = word
 
                         word.forEachIndexed { index, letter ->
-                            if (letters[index].value == "$letter") {
+                            if (line[index].value == "$letter") {
                                 word = word.replaceFirst("$letter", BLANK)
-                                letters[index].state = State.Included.Matched()
+                                line[index].state = State.Included.Matched()
                             }
                         }
 
-                        letters.filterIsState<State.Unknown>().forEach {
+                        line.filterIsState<State.Unknown>().forEach {
                             if (word.contains(it.value)) {
                                 word = word.replaceFirst(it.value, BLANK)
 
@@ -43,12 +43,12 @@ class LettersCheckerImpl(private val containUseCase: ContainUseCase) : LettersCh
                             }
                         }
 
-                        letters.filterIsState<State.Unknown>().forEach {
+                        line.filterIsState<State.Unknown>().forEach {
                             it.state = State.Excluded()
                         }
 
                         withContext(mainDispatcher) {
-                            onSuccess(letters)
+                            onSuccess(line)
                         }
                     } else {
                         // 단어가 없다.

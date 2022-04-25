@@ -1,7 +1,9 @@
 package com.wing.tree.android.wordle.di
 
+import com.wing.tree.android.wordle.data.repository.PreferencesRepositoryImpl
 import com.wing.tree.android.wordle.data.repository.StatisticsRepositoryImpl
 import com.wing.tree.android.wordle.data.repository.WordRepositoryImpl
+import com.wing.tree.android.wordle.domain.repository.PreferencesRepository
 import com.wing.tree.android.wordle.domain.repository.StatisticsRepository
 import com.wing.tree.android.wordle.domain.repository.WordRepository
 import dagger.Binds
@@ -16,6 +18,10 @@ internal abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsWordRepository(repository: WordRepositoryImpl): WordRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsPreferencesRepository(repository: PreferencesRepositoryImpl): PreferencesRepository
 
     @Binds
     @Singleton

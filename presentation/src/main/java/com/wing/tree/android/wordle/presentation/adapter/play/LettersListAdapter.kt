@@ -9,7 +9,7 @@ import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.databinding.LettersItemBinding
 import com.wing.tree.android.wordle.presentation.model.play.Board
 import com.wing.tree.android.wordle.presentation.model.play.Letter
-import com.wing.tree.android.wordle.presentation.model.play.Letters as Model
+import com.wing.tree.android.wordle.presentation.model.play.Line as Model
 
 class LettersListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterItem, LettersListAdapter.ViewHolder>(DiffCallback()) {
     interface Callbacks {
@@ -74,7 +74,7 @@ class LettersListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapter
     }
 
     fun submitBoard(board: Board) {
-        val list = board.lettersList.mapIndexed { index, letters ->
+        val list = board.lines.mapIndexed { index, letters ->
             AdapterItem.Letters.from(index, letters)
         }
 
@@ -104,7 +104,7 @@ sealed class AdapterItem {
         companion object {
             fun from(index: Int, letters: Model) = Letters(
                 index = index,
-                letters = letters.value.copyOf(),
+                letters = letters.letters.copyOf(),
                 previousLetters = letters.previousLetters.copyOf(),
                 submitted = letters.submitted
             )

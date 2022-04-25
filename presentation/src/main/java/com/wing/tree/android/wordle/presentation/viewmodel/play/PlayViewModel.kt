@@ -2,10 +2,8 @@ package com.wing.tree.android.wordle.presentation.viewmodel.play
 
 import android.app.Application
 import androidx.annotation.MainThread
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.*
 import androidx.navigation.NavDirections
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wing.tree.android.wordle.domain.model.Result
 import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.domain.usecase.statistics.UpdateStatisticsUseCase
@@ -13,12 +11,11 @@ import com.wing.tree.android.wordle.domain.usecase.word.ContainUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetCountUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetWordUseCase
 import com.wing.tree.android.wordle.domain.util.notNull
-import com.wing.tree.android.wordle.presentation.constant.Attempt
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 import com.wing.tree.android.wordle.presentation.delegate.play.*
 import com.wing.tree.android.wordle.presentation.model.play.Board
 import com.wing.tree.android.wordle.presentation.model.play.Letter
-import com.wing.tree.android.wordle.presentation.model.play.Letters
+import com.wing.tree.android.wordle.presentation.model.play.Line
 import com.wing.tree.android.wordle.presentation.model.play.State
 import com.wing.tree.android.wordle.presentation.util.alphabet
 import com.wing.tree.android.wordle.presentation.view.play.PlayFragmentDirections
@@ -117,9 +114,9 @@ class PlayViewModel @Inject constructor(
     }
 
     // 콜백 너무많다.. todo 콜백 좀 줄입시더.
-    fun submit(@MainThread onSuccess: (Letters) -> Unit) {
+    fun submit(@MainThread onSuccess: (Line) -> Unit) {
         val word = word.word
-        val currentLetters = board.value?.currentLetters ?: return
+        val currentLetters = board.value?.currentLine ?: return
 
         if (currentLetters.length < LENGTH) return
 
@@ -199,7 +196,7 @@ class PlayViewModel @Inject constructor(
 
     private fun submitLetter(letter: Letter) {
         board.value?.let {
-            it.currentLetters[letter.position] = letter.apply {
+            it.currentLine[letter.position] = letter.apply {
                 state = State.Included.Matched()
                 submitted = true
             }
