@@ -3,6 +3,7 @@ package com.wing.tree.android.wordle.presentation.model.play
 import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.presentation.constant.Attempt
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
+import com.wing.tree.android.wordle.presentation.util.alphabet
 import com.wing.tree.android.wordle.presentation.util.increment
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
@@ -18,19 +19,16 @@ class Board {
     private val _lines = mutableListOf<Line>()
     val lines: List<Line> get() = _lines
 
-    val letters = lines.flatten()
+    val letters get() = lines.flatten()
+    val lettersExcluded = mutableListOf<Letter>()
 
     val currentLine: Line get() = lines[attempt.get()]
 
-    val lettersMatched = lettersWithState(State.Included.Matched())
-
-    private fun lettersWithState(vararg state: State) = letters.filter { state.contains(it.state) }
-
     fun getNotMatchedYetLetters(word: Word): List<Letter> {
-        val matchedPositions = lettersMatched.map { it.position }
+        val matchedPositions = letters.filterWithState<Letter.State.Included.Matched>().map { it.position }.distinct()
 
         return mutableListOf<Letter>().apply {
-            word.word.forEachIndexed { index, letter ->
+            word.value.forEachIndexed { index, letter ->
                 if (matchedPositions.contains(index).not()) {
                     add(Letter(index, letter))
                 }
@@ -38,7 +36,7 @@ class Board {
         }
     }
 
-    val notUnknownLetters: List<Letter> get() = letters.filter { it.state.notUnknown }
+    val notUnknownLetters: List<Letter> get() = letters.filterNot { it.state.notUnknown }
 
     init {
         repeat(Attempt.MAXIMUM) {
@@ -48,9 +46,22 @@ class Board {
 
     fun add(letter: String) {
         with(currentLine) {
-            if (length < LENGTH) {
+            if (notBlankCount < LENGTH) {
                 add(letter)
             }
+        }
+    }
+
+    fun excludeLetters(word: Word, letters: List<Letter>) {
+        val lettersExcluded = lettersExcluded.map { it.value }
+
+        val shuffled = alphabet
+            .filterNot { word.value.contains(it) }
+            .filterNot { lettersExcluded.contains(it) }
+            .shuffled()
+
+        with(shuffled) {
+            this@Board.lettersExcluded.addAll(take(3).map { Letter(0, it, Letter.State.Excluded()) })
         }
     }
 
@@ -80,5 +91,13 @@ class Board {
 
     fun incrementAttempt() {
         attempt.increment()
+    }
+
+    inline fun <reified R: Letter.State> List<Letter>.filterWithState(): List<Letter> {
+        return filter { it.state is R }
+    }
+
+    inline fun <reified R: Letter.State> filterWithState(): List<Letter> {
+        return letters.filterWithState<R>()
     }
 }

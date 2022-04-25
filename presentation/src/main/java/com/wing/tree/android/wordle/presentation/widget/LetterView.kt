@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.core.view.isVisible
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.LetterViewBinding
@@ -63,7 +64,9 @@ class LetterView : FrameLayout, Flippable<LetterView> {
         val text = letter.value.uppercase()
 
         with(viewBinding) {
-            back.backgroundTintList = ColorStateList.valueOf(letter.state.color)
+            val color = context.getColor(letter.state.colorRes)
+
+            back.backgroundTintList = ColorStateList.valueOf(color)
             letterBack.text = text
             letterFront.text = text
         }

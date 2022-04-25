@@ -8,11 +8,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.wing.tree.android.wordle.presentation.adapter.play.AdapterItem
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.play.LettersListAdapter
 import com.wing.tree.android.wordle.presentation.constant.Attempt
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
+import com.wing.tree.android.wordle.presentation.model.play.State
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
 import com.wing.tree.android.wordle.presentation.widget.KeyboardView
@@ -28,11 +28,11 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
             }
 
             override fun onAnimationEnd() {
-                viewModel.flipIsRunning.postValue(false)
+                viewModel.animationIsRunning.postValue(false)
             }
 
             override fun onAnimationStart() {
-                viewModel.flipIsRunning.postValue(true)
+                viewModel.animationIsRunning.postValue(true)
             }
         }
     )
@@ -78,6 +78,20 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
     }
 
     override fun initData() {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when(state) {
+                is State.Error -> {}
+                is State.Play -> {}
+                is State.Ready -> {}
+                is State.Finish -> {
+                    when(state) {
+                        is State.Finish.Lose -> {}
+                        is State.Finish.Win -> {}
+                    }
+                }
+            }
+        }
+
         viewModel.board.observe(viewLifecycleOwner) {
             lettersListAdapter.submitBoard(it)
         }

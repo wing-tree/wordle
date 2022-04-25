@@ -14,6 +14,6 @@ interface WordDao {
     @Query("SELECT * FROM word WHERE `index` IS :index")
     suspend fun get(index: Int): Word
 
-    @Query("SELECT * FROM word WHERE word IS :letters")
+    @Query("SELECT * FROM word WHERE value IS :letters")
     suspend fun get(letters: String): Word?
 }

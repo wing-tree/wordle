@@ -3,19 +3,18 @@ package com.wing.tree.android.wordle.presentation.widget
 import android.content.Context
 import android.content.res.TypedArray
 import android.util.AttributeSet
-import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.KeyViewBinding
-import com.wing.tree.android.wordle.presentation.model.play.State
+import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.util.flip
 
 class KeyView : FrameLayout, Flippable<KeyView> {
     private val viewBinding: KeyViewBinding = KeyViewBinding.bind(inflate(context, R.layout.key_view, this))
 
-    private var state: State = State.Unknown()
+    private var state: Letter.State = Letter.State.Unknown()
 
     override var flippable = true
     override var isRunning = false
@@ -85,11 +84,13 @@ class KeyView : FrameLayout, Flippable<KeyView> {
         }
     }
 
-    fun updateState(state: State) {
+    fun updateState(state: Letter.State) {
         if (this.state.priority < state.priority) {
             this.state = state
 
-            back.setBackgroundColor(state.color)
+            val color = context.getColor(state.colorRes)
+
+            back.setBackgroundColor(color)
 
             flip {
                 viewBinding.root.isClickable = true

@@ -6,8 +6,8 @@ import com.wing.tree.android.wordle.android.exception.WordNotFoundException
 import com.wing.tree.android.wordle.domain.usecase.core.Result
 import com.wing.tree.android.wordle.domain.usecase.core.map
 import com.wing.tree.android.wordle.domain.usecase.word.ContainUseCase
+import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.Line
-import com.wing.tree.android.wordle.presentation.model.play.State
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -31,20 +31,20 @@ class LettersCheckerImpl(private val containUseCase: ContainUseCase) : LettersCh
                         word.forEachIndexed { index, letter ->
                             if (line[index].value == "$letter") {
                                 word = word.replaceFirst("$letter", BLANK)
-                                line[index].state = State.Included.Matched()
+                                line[index].state = Letter.State.Included.Matched()
                             }
                         }
 
-                        line.filterIsState<State.Unknown>().forEach {
+                        line.filterWithState<Letter.State.Unknown>().forEach {
                             if (word.contains(it.value)) {
                                 word = word.replaceFirst(it.value, BLANK)
 
-                                it.state = State.Included.NotMatched()
+                                it.state = Letter.State.Included.NotMatched()
                             }
                         }
 
-                        line.filterIsState<State.Unknown>().forEach {
-                            it.state = State.Excluded()
+                        line.filterWithState<Letter.State.Unknown>().forEach {
+                            it.state = Letter.State.Excluded()
                         }
 
                         withContext(mainDispatcher) {

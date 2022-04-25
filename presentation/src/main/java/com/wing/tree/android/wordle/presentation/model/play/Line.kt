@@ -5,19 +5,19 @@ import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 
 data class Line(val letters: Array<Letter> = Array(LENGTH) { Letter(position = it) }) : Iterable<Letter> {
     private val isNotEmpty: Boolean
-        get() = length > 0
+        get() = notBlankCount > 0
 
-    val length: Int
+    val notBlankCount: Int
         get() = letters.count { it.isNotBlank }
 
     val string: String
         get() = letters.joinToString(BLANK) { it.value }
 
-    var previousLetters: Array<Letter> = Array(LENGTH) { Letter(position = it) }
+    val previousLetters: Array<Letter> = Array(LENGTH) { Letter(position = it) }
     var submitted: Boolean = false
 
     private fun backup() {
-        previousLetters = Array(LENGTH) { letters[it] }
+        letters.copyInto(previousLetters)
     }
 
     operator fun get(index: Int) = letters[index]
@@ -26,16 +26,16 @@ data class Line(val letters: Array<Letter> = Array(LENGTH) { Letter(position = i
         letters[index] = letter
     }
 
-    inline fun <reified R: State> filterIsState(): List<Letter> {
-        return letters.filterIsState<R>()
+    inline fun <reified R: Letter.State> filterWithState(): List<Letter> {
+        return letters.filterWithState<R>()
     }
 
-    inline fun <reified R: State> Array<Letter>.filterIsState(): List<Letter> {
-        return this.filter { it.state is R }
+    inline fun <reified R: Letter.State> Array<Letter>.filterWithState(): List<Letter> {
+        return filter { it.state is R }
     }
 
     fun add(letter: String) {
-        if (length < LENGTH) {
+        if (notBlankCount < LENGTH) {
             backup()
 
             val index = letters.indexOfFirst { it.value.isBlank() }

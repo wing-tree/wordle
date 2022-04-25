@@ -8,5 +8,5 @@ import com.wing.tree.android.wordle.domain.model.Word
 data class Word(
     @PrimaryKey(autoGenerate = true)
     override val index: Int = 0,
-    override val word: String
+    override val value: String
 ) : Word

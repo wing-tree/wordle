@@ -18,6 +18,7 @@ import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.Line
 import com.wing.tree.android.wordle.presentation.model.play.State
 import com.wing.tree.android.wordle.presentation.util.alphabet
+import com.wing.tree.android.wordle.presentation.util.setValueWith
 import com.wing.tree.android.wordle.presentation.view.play.PlayFragmentDirections
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -42,10 +43,10 @@ class PlayViewModel @Inject constructor(
 
     private val ioDispatcher = Dispatchers.IO
 
-    private val _error = MutableLiveData<Throwable>()
-    val error: LiveData<Throwable> get() = _error
+    private val _state = MutableLiveData<State>(State.Ready)
+    val state: LiveData<State> get() = _state
 
-    val flipIsRunning = MutableLiveData<Boolean>()
+    val animationIsRunning = MutableLiveData<Boolean>()
 
     private val _board = MutableLiveData(Board())
     val board: LiveData<Board> get() = _board
@@ -62,6 +63,7 @@ class PlayViewModel @Inject constructor(
     val showAddAttemptDialog = MutableLiveData<Boolean>()
 
     // todo. 인터페이스 구현할것 delegate.. + 네이밍 체크. navigator 등. 쫌 이상하네 여기 없는게 맞다.
+    // 상태 머신으로 처리해야함. 위에 다이얼로그 스테이트도..
     private val _directions = MediatorLiveData<NavDirections>()
     val directions: LiveData<NavDirections> get() = _directions
 
@@ -88,37 +90,37 @@ class PlayViewModel @Inject constructor(
             _keys.value = value
         }
 
-        _directions.addSource(flipIsRunning) { isRunning ->
+        _directions.addSource(animationIsRunning) { isRunning ->
             if (isRunning.not() && result.value.notNull) {
                 _directions.value = PlayFragmentDirections.actionPlayFragmentToResultFragment()
             }
         }
 
         _directions.addSource(result) {
-            if (flipIsRunning.value == false) {
+            if (animationIsRunning.value == false) {
                 _directions.value = PlayFragmentDirections.actionPlayFragmentToResultFragment()
             }
         }
     }
 
     fun add(letter: String) {
-        _board.value = board.value?.apply { add(letter) }
+        _board.setValueWith { add(letter) }
     }
 
     fun removeAt(attempt: Int, index: Int) {
-        _board.value = board.value?.apply { removeAt(attempt, index) }
+        _board.setValueWith { removeAt(attempt, index) }
     }
 
     fun removeLast() {
-        _board.value = board.value?.apply { removeLast() }
+        _board.setValueWith { removeLast() }
     }
 
     // 콜백 너무많다.. todo 콜백 좀 줄입시더.
     fun submit(@MainThread onSuccess: (Line) -> Unit) {
-        val word = word.word
+        val word = word.value
         val currentLetters = board.value?.currentLine ?: return
 
-        if (currentLetters.length < LENGTH) return
+        if (currentLetters.notBlankCount < LENGTH) return
 
         viewModelScope.launch(ioDispatcher) {
             submit(
@@ -156,16 +158,17 @@ class PlayViewModel @Inject constructor(
     }
 
     fun load(@MainThread onLoaded: (Word) -> Unit) {
+        // 서스팬드로 넘기는게 맞지 않은가????
         viewModelScope.launch(ioDispatcher) {
             load(
                 onSuccess = {
-                    Timber.d(it.word) // todo 제거... 개발자 용임. 나중에 필요업으면..
+                    Timber.d(it.value) // todo 제거... 개발자 용임. 나중에 필요업으면..
                     word = it
                     onLoaded(word)
                 },
                 onFailure = {
                     Timber.e(it)
-                    _error.value = it
+                    //_error.value = it // todo state 처리.
                 }
             )
         }
@@ -195,19 +198,17 @@ class PlayViewModel @Inject constructor(
     }
 
     private fun submitLetter(letter: Letter) {
-        board.value?.let {
-            it.currentLine[letter.position] = letter.apply {
-                state = State.Included.Matched()
+        _board.setValueWith {
+            currentLine[letter.position] = letter.apply {
+                state = Letter.State.Included.Matched()
                 submitted = true
             }
-
-            _board.value = it
         }
     }
 
     fun useHint() {
         board.value?.let {
-            if (it.lettersMatched.count() < LENGTH.dec()) {
+            if (it.filterWithState<Letter.State.Included.Matched>().distinct().count() < LENGTH.dec()) {
                 submitLetter(it.getNotMatchedYetLetters(word).random())
             }
         }
@@ -217,13 +218,13 @@ class PlayViewModel @Inject constructor(
         val ex = excludedLetters.value?.map { letter -> letter.value } ?: emptyList()
         with(
             alphabet
-            .filterNot { word.word.contains(it) }
+            .filterNot { word.value.contains(it) }
             .filterNot { ex.contains(it) }
                 .shuffled()
         ) {
             val value = excludedLetters.value?.toMutableList() ?: mutableListOf()
 
-            value.addAll(take(3).map { Letter(0, it, State.Excluded()) })
+            value.addAll(take(3).map { Letter(0, it, Letter.State.Excluded()) })
             excludedLetters.value = value
         }
     }
