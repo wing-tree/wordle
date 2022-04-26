@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
-import com.wing.tree.android.wordle.presentation.adapter.play.LettersListAdapter
+import com.wing.tree.android.wordle.presentation.adapter.play.BoardListAdapter
 import com.wing.tree.android.wordle.presentation.constant.Attempt
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
 import com.wing.tree.android.wordle.presentation.model.play.State
@@ -21,8 +21,8 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class PlayFragment: BaseFragment<FragmentPlayBinding>() {
     private val viewModel by viewModels<PlayViewModel>()
-    private val lettersListAdapter = LettersListAdapter(
-        object : LettersListAdapter.Callbacks {
+    private val boardListAdapter = BoardListAdapter(
+        object : BoardListAdapter.Callbacks {
             override fun onLetterClick(adapterPosition: Int, index: Int) {
                 viewModel.removeAt(adapterPosition, index)
             }
@@ -53,7 +53,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
                     }
                 }
 
-                adapter = lettersListAdapter
+                adapter = boardListAdapter
                 layoutManager = LinearLayoutManager(context).apply {
                     initialPrefetchItemCount = Attempt.MAXIMUM
                 }
@@ -93,7 +93,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
         }
 
         viewModel.board.observe(viewLifecycleOwner) {
-            lettersListAdapter.submitBoard(it)
+            boardListAdapter.submitBoard(it)
         }
 
         viewModel.showAddAttemptDialog.observe(viewLifecycleOwner) {

@@ -17,7 +17,7 @@ internal class ItemDecoration : RecyclerView.ItemDecoration() {
         val itemCount = parent.adapter?.itemCount ?: 0
 
         val unit = TypedValue.COMPLEX_UNIT_DIP
-        val value = 4.0F
+        val value = 6.0F
         val displayMetrics = view.context.resources.displayMetrics
 
         val bottom = TypedValue.applyDimension(unit, value, displayMetrics)

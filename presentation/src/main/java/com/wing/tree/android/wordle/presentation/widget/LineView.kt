@@ -5,15 +5,15 @@ import android.util.AttributeSet
 import androidx.annotation.MainThread
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.wing.tree.android.wordle.presentation.R
-import com.wing.tree.android.wordle.presentation.databinding.LettersViewBinding
+import com.wing.tree.android.wordle.presentation.databinding.LineViewBinding
 import com.wing.tree.android.wordle.presentation.extention.scale
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import kotlinx.coroutines.*
 
-class LettersView : ConstraintLayout {
+class LineView : ConstraintLayout {
     private val job = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main.immediate + job)
-    private val viewBinding: LettersViewBinding = LettersViewBinding.bind(inflate(context, R.layout.letters_view, this))
+    private val viewBinding: LineViewBinding = LineViewBinding.bind(inflate(context, R.layout.line_view, this))
 
     private var onLetterClickListener: OnLetterClickListener? = null
 

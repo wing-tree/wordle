@@ -11,7 +11,7 @@ import com.wing.tree.android.wordle.presentation.model.play.Board
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.Line as Model
 
-class LettersListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterItem, LettersListAdapter.ViewHolder>(DiffCallback()) {
+class BoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterItem, BoardListAdapter.ViewHolder>(DiffCallback()) {
     interface Callbacks {
         fun onLetterClick(adapterPosition: Int, index: Int)
         fun onAnimationEnd()
