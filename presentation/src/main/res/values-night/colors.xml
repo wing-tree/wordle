@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="surface">#666666</color>
+    <color name="surface">@color/grey_900</color>
 </resources>

@@ -1,6 +1,5 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
-import android.content.Context
 import androidx.annotation.ColorRes
 import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.R
@@ -30,7 +29,7 @@ data class Letter(val position: Int, val value: String = BLANK, var state: State
             ) : Included()
 
             data class NotMatched(
-                override val colorRes: Int = R.color.yellow_600,
+                override val colorRes: Int = R.color.yellow_500,
                 override val priority: Int = Priority.NOT_MATCHED
             ) : Included()
         }

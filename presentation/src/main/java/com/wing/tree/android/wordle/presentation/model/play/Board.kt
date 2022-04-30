@@ -40,7 +40,7 @@ class Board {
 
     init {
         repeat(Attempt.MAXIMUM) {
-            _lines.add(Line())
+            _lines.add(Line(it))
         }
     }
 
@@ -83,9 +83,10 @@ class Board {
 
     fun addAttempt() {
         if (attemptIncremented.compareAndSet(false, true)) {
-            maximumAttempt.increment()
-            incrementAttempt()
-            _lines.add(Line())
+            with(maximumAttempt.getAndIncrement()) {
+                incrementAttempt()
+                _lines.add(Line(this))
+            }
         }
     }
 

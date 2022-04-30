@@ -11,8 +11,9 @@
     <color name="dark_grey">#121212</color>
 
     <color name="green_800">#2E7D32</color>
-    <color name="yellow_600">#FDD835</color>
+    <color name="yellow_500">#FFFFEB3B</color>
     <color name="grey_200">#FFEEEEEE</color>
+    <color name="grey_900">#FF212121</color>
 
     <color name="surface">@color/white</color>
 </resources>

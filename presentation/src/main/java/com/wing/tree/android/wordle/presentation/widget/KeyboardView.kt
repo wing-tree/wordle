@@ -162,7 +162,7 @@ class KeyboardView : LinearLayout {
 
     sealed class Key {
         data class Alphabet(val letter: String) : Key()
-        object Return : Key()
         object Backspace : Key()
+        object Return : Key()
     }
 }

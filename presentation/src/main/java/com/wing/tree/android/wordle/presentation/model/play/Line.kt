@@ -3,9 +3,11 @@ package com.wing.tree.android.wordle.presentation.model.play
 import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 
-data class Line(val letters: Array<Letter> = Array(LENGTH) { Letter(position = it) }) : Iterable<Letter> {
+data class Line(val value: Int) : Iterable<Letter> {
     private val isNotEmpty: Boolean
         get() = notBlankCount > 0
+
+    val letters: Array<Letter> = Array(LENGTH) { Letter(position = it) }
 
     val notBlankCount: Int
         get() = letters.count { it.isNotBlank }
@@ -75,24 +77,6 @@ data class Line(val letters: Array<Letter> = Array(LENGTH) { Letter(position = i
 
     fun submit() {
         submitted = true
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is Line) return false
-
-        if (!letters.contentEquals(other.letters)) return false
-        if (!previousLetters.contentEquals(other.previousLetters)) return false
-        if (submitted != other.submitted) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = letters.contentHashCode()
-        result = 31 * result + previousLetters.contentHashCode()
-        result = 31 * result + submitted.hashCode()
-        return result
     }
 
     override fun iterator(): Iterator<Letter> {

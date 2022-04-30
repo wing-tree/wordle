@@ -13,14 +13,14 @@ fun flip(`in`: View, `out`: View, doOnEnd: (() -> Unit)? = null) {
 
     `in`.visible()
 
-    val flipOutAnimatorSet = AnimatorInflater.loadAnimator(context, R.animator.flip_out)
     val flipInAnimationSet = AnimatorInflater.loadAnimator(context, R.animator.flip_in)
+    val flipOutAnimatorSet = AnimatorInflater.loadAnimator(context, R.animator.flip_out)
 
-    flipOutAnimatorSet.setTarget(`out`)
     flipInAnimationSet.setTarget(`in`)
+    flipOutAnimatorSet.setTarget(`out`)
 
-    flipOutAnimatorSet.start()
     flipInAnimationSet.start()
+    flipOutAnimatorSet.start()
 
     flipInAnimationSet.doOnEnd {
         `out`.gone()
