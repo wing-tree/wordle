@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name">Wordle</string>
 
+    <string name="eraser">지우개</string>
+    <string name="hint">힌트</string>
     <string name="next_word">NEXT WORD</string>
     <string name="play">PLAY</string>
     <string name="share_the_app">앱 공유하기</string>

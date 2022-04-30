@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Wordle</string>
 
+    <string name="eraser">ERASER</string>
+    <string name="hint">HINT</string>
     <string name="next_word">NEXT WORD</string>
     <string name="play">PLAY</string>
     <string name="share_the_app">Share the app</string>

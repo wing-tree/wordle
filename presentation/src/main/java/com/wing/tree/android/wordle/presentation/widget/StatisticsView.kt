@@ -49,15 +49,15 @@ class StatisticsView : ConstraintLayout {
     }
 
     private fun initHorizontalBarChart(horizontalBarChart: HorizontalBarChart, guesses: Guesses) {
-        val barEntries = ArrayList<BarEntry>()
+        val yVals = ArrayList<BarEntry>()
 
         repeat(Attempt.MAXIMUM) {
             val index = it.inc()
 
-            barEntries.add(BarEntry(index.float, guesses[index].float))
+            yVals.add(BarEntry(index.float, guesses[index].float))
         }
 
-        val barDataSet = BarDataSet(barEntries, BLANK)
+        val barDataSet = BarDataSet(yVals, BLANK)
 
         barDataSet.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
@@ -66,9 +66,10 @@ class StatisticsView : ConstraintLayout {
         }
 
         barDataSet.valueTextColor = Color.WHITE
-        barDataSet.valueTextSize = 20F
+        barDataSet.valueTextSize = 20.0F
 
         with(horizontalBarChart) {
+            data = BarData(barDataSet)
             description.isEnabled = false
             legend.isEnabled = false
 
@@ -83,13 +84,13 @@ class StatisticsView : ConstraintLayout {
             axisRight.setDrawGridLines(false)
             axisRight.setDrawLabels(false)
 
+            data.barWidth = 0.25F
+
             xAxis.position = XAxis.XAxisPosition.BOTTOM_INSIDE
             xAxis.setDrawAxisLine(false)
             xAxis.setDrawGridLines(false)
             xAxis.setDrawLabels(true)
             xAxis.textSize = 20F
-
-            data = BarData(barDataSet)
 
             invalidate()
         }

@@ -3,7 +3,7 @@ package com.wing.tree.android.wordle.presentation.model.play
 import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 
-data class Line(val value: Int) : Iterable<Letter> {
+data class Line(val number: Int) : Iterable<Letter> {
     private val isNotEmpty: Boolean
         get() = notBlankCount > 0
 
