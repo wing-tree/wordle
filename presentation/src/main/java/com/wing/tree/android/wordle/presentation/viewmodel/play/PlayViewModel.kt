@@ -60,8 +60,6 @@ class PlayViewModel @Inject constructor(
     private val _result = MutableLiveData<Result>()
     val result: LiveData<Result> get() = _result
 
-    val showAddAttemptDialog = MutableLiveData<Boolean>()
-
     // todo. 인터페이스 구현할것 delegate.. + 네이밍 체크. navigator 등. 쫌 이상하네 여기 없는게 맞다.
     // 상태 머신으로 처리해야함. 위에 다이얼로그 스테이트도..
     private val _directions = MediatorLiveData<NavDirections>()
@@ -70,10 +68,14 @@ class PlayViewModel @Inject constructor(
     private var `try` = AtomicInteger(0)
 
     init {
-        _keys.addSource(board) {
+        _keys.addSource(board) { board ->
             val value = _keys.value?.toMutableList() ?: mutableListOf()
 
-            value.addAll(it.notUnknownLetters)
+            board.notUnknownLetters.forEach {
+                if (value.contains(it).not()) {
+                    value.add(it)
+                }
+            }
 
             _keys.value = value
         }
@@ -141,11 +143,13 @@ class PlayViewModel @Inject constructor(
                             win()
                         } else {
                             if (board.attemptExceeded) {
-                                if (board.attemptIncremented.get()) {
-                                    lose()
-                                } else {
-                                    showAddAttemptDialog.value = true
-                                }
+                                _state.value = State.Finish.RoundOver(board.attemptIncremented.get())
+                                // todo 확인 및 제거.
+//                                if (board.attemptIncremented.get()) {
+//                                    lose()
+//                                } else {
+//                                    showAddAttemptDialog.value = true
+//                                }
                             } else {
                                 board.incrementAttempt()
                                 enableKeyboard()
@@ -214,7 +218,7 @@ class PlayViewModel @Inject constructor(
         }
     }
 
-    fun useDart() {
+    fun useEraser() {
         val ex = excludedLetters.value?.map { letter -> letter.value } ?: emptyList()
         with(
             alphabet

@@ -7,7 +7,6 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.play.BoardListAdapter
 import com.wing.tree.android.wordle.presentation.constant.Attempt
@@ -19,7 +18,7 @@ import com.wing.tree.android.wordle.presentation.widget.KeyboardView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PlayFragment: BaseFragment<FragmentPlayBinding>() {
+class PlayFragment: BaseFragment<FragmentPlayBinding>(), RoundOverDialogFragment.OnClickListener {
     private val viewModel by viewModels<PlayViewModel>()
     private val boardListAdapter = BoardListAdapter(
         object : BoardListAdapter.Callbacks {
@@ -72,7 +71,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
             }
 
             textViewDart.setOnClickListener {
-                viewModel.useDart()
+                viewModel.useEraser()
             }
         }
     }
@@ -85,7 +84,15 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
                 is State.Ready -> {}
                 is State.Finish -> {
                     when(state) {
-                        is State.Finish.Lose -> {}
+                        is State.Finish.RoundOver -> {
+                            if (state.isRoundAdded) {
+                                navigate(PlayFragmentDirections.actionPlayFragmentToResultFragment())
+                            } else {
+                                RoundOverDialogFragment.newInstance().also {
+                                    it.show(childFragmentManager, it.tag)
+                                }
+                            }
+                        }
                         is State.Finish.Win -> {}
                     }
                 }
@@ -94,18 +101,6 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
 
         viewModel.board.observe(viewLifecycleOwner) {
             boardListAdapter.submitBoard(it)
-        }
-
-        viewModel.showAddAttemptDialog.observe(viewLifecycleOwner) {
-            MaterialAlertDialogBuilder(requireActivity())
-                .setTitle("기회 추가")
-                .setPositiveButton("구매") { _, _ ->
-                    viewModel.addAttempt()
-                }
-                .setNegativeButton("꺼져") { _, _ ->
-                    viewModel.lose()
-                }
-                .show()
         }
 
         viewModel.load {
@@ -127,6 +122,18 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>() {
         viewModel.directions.observe(viewLifecycleOwner) {
             navigate(it)
         }
+    }
+
+    override fun onAddRoundClick() {
+        viewModel.addAttempt()
+    }
+
+    override fun onNoThanksClick() {
+        navigate(PlayFragmentDirections.actionPlayFragmentToResultFragment())
+    }
+
+    override fun onTryAgainClick() {
+
     }
 
     private fun navigate(directions: NavDirections) {

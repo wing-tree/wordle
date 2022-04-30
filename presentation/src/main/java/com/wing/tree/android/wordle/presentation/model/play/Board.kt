@@ -36,7 +36,7 @@ class Board {
         }
     }
 
-    val notUnknownLetters: List<Letter> get() = letters.filterNot { it.state.notUnknown }
+    val notUnknownLetters: List<Letter> get() = letters.filter { it.state.notUnknown }
 
     init {
         repeat(Attempt.MAXIMUM) {

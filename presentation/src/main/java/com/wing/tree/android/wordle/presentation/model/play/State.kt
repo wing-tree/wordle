@@ -6,7 +6,7 @@ sealed class State {
     object Ready: State()
 
     sealed class Finish : State() {
-        object Lose : Finish()
+        class RoundOver(val isRoundAdded: Boolean) : Finish()
         object Win : Finish()
     }
 }
