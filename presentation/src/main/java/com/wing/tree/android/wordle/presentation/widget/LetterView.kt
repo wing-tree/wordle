@@ -3,21 +3,20 @@ package com.wing.tree.android.wordle.presentation.widget
 import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
-import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.annotation.ColorInt
 import androidx.core.view.isVisible
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.LetterViewBinding
+import com.wing.tree.android.wordle.presentation.extention.scale
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.util.flip
 
 class LetterView : FrameLayout, Flippable<LetterView> {
     private val viewBinding: LetterViewBinding = LetterViewBinding.bind(inflate(context, R.layout.letter_view, this))
 
-    override var flippable = true
-    override var isRunning = false
+    override var isFlippable = true
+    override var isAnimating = false
 
     var back = viewBinding.letterBack
     var front = viewBinding.letterFront
@@ -38,22 +37,22 @@ class LetterView : FrameLayout, Flippable<LetterView> {
 
     override fun flip(doOnEnd: ((LetterView) -> Unit)?) {
         with(viewBinding) {
-            if (flippable && isRunning.not()) {
-                isRunning = true
+            if (isFlippable && isAnimating.not()) {
+                isAnimating = true
 
                 if (letterBack.isVisible) {
                     flip(letterFront, letterBack) {
                         back = letterBack
                         front = letterFront
                         doOnEnd?.invoke(this@LetterView)
-                        isRunning = false
+                        isAnimating = false
                     }
                 } else {
                     flip(letterBack, letterFront) {
                         back = letterFront
                         front = letterBack
                         doOnEnd?.invoke(this@LetterView)
-                        isRunning = false
+                        isAnimating = false
                     }
                 }
             }
@@ -73,8 +72,6 @@ class LetterView : FrameLayout, Flippable<LetterView> {
     }
 
     fun setTextFront(text: String) {
-        with(viewBinding) {
-            letterFront.text = text
-        }
+        front.text = text
     }
 }

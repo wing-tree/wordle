@@ -1,6 +1,7 @@
 package com.wing.tree.android.wordle.presentation.widget
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.content.res.TypedArray
 import android.util.AttributeSet
 import android.widget.FrameLayout
@@ -16,8 +17,8 @@ class KeyView : FrameLayout, Flippable<KeyView> {
 
     private var state: Letter.State = Letter.State.Unknown()
 
-    override var flippable = true
-    override var isRunning = false
+    override var isFlippable = true
+    override var isAnimating = false
 
     var back = viewBinding.keyBack
     var front = viewBinding.keyFront
@@ -61,8 +62,8 @@ class KeyView : FrameLayout, Flippable<KeyView> {
 
     override fun flip(doOnEnd: ((KeyView)-> Unit)?) {
         with(viewBinding) {
-            if (isRunning.not()) {
-                isRunning = true
+            if (isAnimating.not()) {
+                isAnimating = true
                 root.isClickable = false
 
                 if (keyBack.isVisible) {
@@ -70,14 +71,14 @@ class KeyView : FrameLayout, Flippable<KeyView> {
                         back = keyBack
                         front = keyFront
                         doOnEnd?.invoke(this@KeyView)
-                        isRunning = false
+                        isAnimating = false
                     }
                 } else {
                     flip(keyBack, keyFront) {
                         back = keyFront
                         front = keyBack
                         doOnEnd?.invoke(this@KeyView)
-                        isRunning = false
+                        isAnimating = false
                     }
                 }
             }
@@ -90,7 +91,7 @@ class KeyView : FrameLayout, Flippable<KeyView> {
 
             val color = context.getColor(state.colorRes)
 
-            back.setBackgroundColor(color)
+            back.backgroundTintList = ColorStateList.valueOf(color)
 
             flip {
                 viewBinding.root.isClickable = true

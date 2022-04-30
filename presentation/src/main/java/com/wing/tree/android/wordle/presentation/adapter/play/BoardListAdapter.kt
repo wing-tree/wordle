@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.android.wordle.android.constant.BLANK
-import com.wing.tree.android.wordle.presentation.databinding.LettersItemBinding
+import com.wing.tree.android.wordle.presentation.databinding.LineItemBinding
 import com.wing.tree.android.wordle.presentation.model.play.Board
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.Line as Model
@@ -18,10 +18,10 @@ class BoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterIt
         fun onAnimationStart()
     }
 
-    inner class ViewHolder(private val viewBinding: LettersItemBinding) : RecyclerView.ViewHolder(viewBinding.root) {
+    inner class ViewHolder(private val viewBinding: LineItemBinding) : RecyclerView.ViewHolder(viewBinding.root) {
         fun bind(item: AdapterItem) {
             when(item) {
-                is AdapterItem.Letters -> with(viewBinding.lettersView) {
+                is AdapterItem.Line -> with(viewBinding.lineView) {
                     with(item) {
                         if (submitted) {
                             setOnLetterClickListener(null)
@@ -31,6 +31,7 @@ class BoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterIt
                             }
 
                             callbacks.onAnimationStart()
+
                             flip { callbacks.onAnimationEnd() }
                         } else {
                             setOnLetterClickListener { _, index ->
@@ -42,9 +43,9 @@ class BoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterIt
 
                                 if (letter.submitted) {
                                     with(get(index)) {
-                                        if (flippable) {
-                                            front.text = BLANK
-                                            flipAt(index) { flippable = false }
+                                        if (isFlippable) {
+                                            setTextFront(BLANK)
+                                            flipAt(index) { isFlippable = false }
                                         }
                                     }
                                 } else {
@@ -64,7 +65,7 @@ class BoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterIt
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val viewBinding = LettersItemBinding.inflate(inflater, parent, false)
+        val viewBinding = LineItemBinding.inflate(inflater, parent, false)
 
         return ViewHolder(viewBinding)
     }
@@ -75,7 +76,7 @@ class BoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterIt
 
     fun submitBoard(board: Board) {
         val list = board.lines.mapIndexed { index, letters ->
-            AdapterItem.Letters.from(index, letters)
+            AdapterItem.Line.from(index, letters)
         }
 
         submitList(list)
@@ -95,14 +96,14 @@ class BoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterIt
 sealed class AdapterItem {
     abstract val index: Int
 
-    data class Letters(
+    data class Line(
         override val index: Int,
         val letters: Array<Letter>,
         val previousLetters: Array<Letter>,
         val submitted: Boolean = false
     ) : AdapterItem() {
         companion object {
-            fun from(index: Int, letters: Model) = Letters(
+            fun from(index: Int, letters: Model) = Line(
                 index = index,
                 letters = letters.letters.copyOf(),
                 previousLetters = letters.previousLetters.copyOf(),
@@ -112,7 +113,7 @@ sealed class AdapterItem {
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
-            if (other !is Letters) return false
+            if (other !is Line) return false
 
             if (index != other.index) return false
             if (!letters.contentEquals(other.letters)) return false

@@ -13,4 +13,6 @@
     <color name="green_800">#2E7D32</color>
     <color name="yellow_600">#FDD835</color>
     <color name="grey_200">#FFEEEEEE</color>
+
+    <color name="surface">@color/white</color>
 </resources>

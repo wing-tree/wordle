@@ -66,7 +66,7 @@ class LineView : ConstraintLayout {
 
     private suspend fun flip(index: Int) {
         with(get(index)) {
-            if (flippable) {
+            if (isFlippable) {
                 flip()
                 delay(240L)
             }
@@ -86,13 +86,13 @@ class LineView : ConstraintLayout {
 
     fun scaleAt(index: Int) {
         with(get(index)) {
-            front.scale(1.0F, 1.25F, 240L) {
-                front.scale(1.25F, 1.0F, 240L)
+            scale(1.0F, 1.15F, 240L) {
+                scale(1.15F, 1.0F, 240L)
             }
         }
     }
 
-    fun set(index: Int, letter: Letter) {
+    operator fun set(index: Int, letter: Letter) {
         with(viewBinding) {
             when(index) {
                 0 -> firstLetter.letter = letter

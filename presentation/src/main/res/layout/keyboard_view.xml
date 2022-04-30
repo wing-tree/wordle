@@ -17,58 +17,59 @@
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_q"
             app:key="@string/q"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_w"
             app:key="@string/w"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_e"
             app:key="@string/e"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_r"
             app:key="@string/r"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_t"
             app:key="@string/t"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_y"
             app:key="@string/y"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_u"
             app:key="@string/u"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_i"
             app:key="@string/i"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_o"
             app:key="@string/o"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_p"
             app:key="@string/p"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:orientation="horizontal"
         android:weightSum="10"
         android:gravity="center">
@@ -76,109 +77,117 @@
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_a"
             app:key="@string/a"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_s"
             app:key="@string/s"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_d"
             app:key="@string/d"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_f"
             app:key="@string/f"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_g"
             app:key="@string/g"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_h"
             app:key="@string/h"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_j"
             app:key="@string/j"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_k"
             app:key="@string/k"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_l"
             app:key="@string/l"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:orientation="horizontal"
         android:gravity="center"
-        android:weightSum="10">
+        android:weightSum="10"
+        android:showDividers="middle">
 
         <ImageView
             android:id="@+id/key_return"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"
             android:layout_weight="1"
             android:scaleType="center"
             android:src="@drawable/ic_round_keyboard_return_24"
-            app:srcCompat="@drawable/ic_round_keyboard_return_24"/>
+            app:srcCompat="@drawable/ic_round_keyboard_return_24"
+            tools:ignore="ContentDescription" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_z"
             app:key="@string/z"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_x"
             app:key="@string/x"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_c"
             app:key="@string/c"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_v"
             app:key="@string/v"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_b"
             app:key="@string/b"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_n"
             app:key="@string/n"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
             android:id="@+id/key_m"
             app:key="@string/m"
-            style="@style/Widget.MaterialComponents.TextView.KeyView" />
+            style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <ImageView
             android:id="@+id/key_backspace"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginEnd="2dp"
+            android:layout_marginStart="2dp"
             android:layout_weight="1"
             android:scaleType="center"
             android:src="@drawable/ic_round_keyboard_backspace_24"
-            app:srcCompat="@drawable/ic_round_keyboard_backspace_24"/>
+            app:srcCompat="@drawable/ic_round_keyboard_backspace_24"
+            tools:ignore="ContentDescription" />
 
     </LinearLayout>
 

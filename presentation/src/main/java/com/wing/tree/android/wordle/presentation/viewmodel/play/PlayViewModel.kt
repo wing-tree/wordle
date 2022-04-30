@@ -46,7 +46,7 @@ class PlayViewModel @Inject constructor(
     private val _state = MutableLiveData<State>(State.Ready)
     val state: LiveData<State> get() = _state
 
-    val animationIsRunning = MutableLiveData<Boolean>()
+    val isAnimating = MutableLiveData<Boolean>()
 
     private val _board = MutableLiveData(Board())
     val board: LiveData<Board> get() = _board
@@ -90,14 +90,14 @@ class PlayViewModel @Inject constructor(
             _keys.value = value
         }
 
-        _directions.addSource(animationIsRunning) { isRunning ->
+        _directions.addSource(isAnimating) { isRunning ->
             if (isRunning.not() && result.value.notNull) {
                 _directions.value = PlayFragmentDirections.actionPlayFragmentToResultFragment()
             }
         }
 
         _directions.addSource(result) {
-            if (animationIsRunning.value == false) {
+            if (isAnimating.value == false) {
                 _directions.value = PlayFragmentDirections.actionPlayFragmentToResultFragment()
             }
         }
