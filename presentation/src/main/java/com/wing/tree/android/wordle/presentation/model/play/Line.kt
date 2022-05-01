@@ -79,6 +79,14 @@ data class Line(val number: Int) : Iterable<Letter> {
         submitted = true
     }
 
+    fun submit(letter: Letter) {
+        backup()
+        set(letter.position, letter.apply {
+            state = Letter.State.Included.Matched()
+            submitted = true
+        })
+    }
+
     override fun iterator(): Iterator<Letter> {
         return object : Iterator<Letter> {
             private var index = 0

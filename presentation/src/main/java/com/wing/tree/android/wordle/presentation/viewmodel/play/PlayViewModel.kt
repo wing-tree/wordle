@@ -203,10 +203,7 @@ class PlayViewModel @Inject constructor(
 
     private fun submitLetter(letter: Letter) {
         _board.setValueWith {
-            currentLine[letter.position] = letter.apply {
-                state = Letter.State.Included.Matched()
-                submitted = true
-            }
+            currentLine.submit(letter)
         }
     }
 
