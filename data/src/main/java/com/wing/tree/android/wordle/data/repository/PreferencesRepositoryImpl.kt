@@ -23,7 +23,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         val removeAdsPurchased = booleanPreferencesKey(Name.REMOVE_ADS_PURCHASED)
     }
 
-    override fun getFirstTime(): Flow<Boolean> {
+    override fun isFirstTime(): Flow<Boolean> {
         return dataStore.data.map { it[Key.isFirstTime] ?: true }
     }
 
@@ -53,7 +53,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         }
     }
 
-    override suspend fun putIsFirstTime(isFirstTime: Boolean) {
+    override suspend fun putFirstTime(isFirstTime: Boolean) {
         dataStore.edit { it[Key.isFirstTime] = isFirstTime }
     }
 

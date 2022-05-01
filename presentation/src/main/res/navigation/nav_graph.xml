@@ -9,7 +9,14 @@
         android:label="MainFragment" >
         <action
             android:id="@+id/action_mainFragment_to_playFragment"
-            app:destination="@id/playFragment" />
+            app:destination="@id/playFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
+        <action
+            android:id="@+id/action_mainFragment_to_billingFragment"
+            app:destination="@id/billingFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/playFragment"
@@ -38,4 +45,8 @@
             app:popEnterAnim="@android:anim/fade_in"
             app:popExitAnim="@android:anim/fade_out" />
     </fragment>
+    <fragment
+        android:id="@+id/billingFragment"
+        android:name="com.wing.tree.android.wordle.presentation.view.billing.BillingFragment"
+        android:label="BillingFragment" />
 </navigation>

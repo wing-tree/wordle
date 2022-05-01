@@ -4,7 +4,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
+import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.FragmentMainBinding
 import com.wing.tree.android.wordle.presentation.util.increment
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
@@ -23,6 +25,10 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
     }
 
     override fun initData() {
+        viewModel.gold.observe(viewLifecycleOwner) { gold ->
+            viewBinding.textViewGold.text = "$gold"
+        }
+
         viewModel.statistics.observe(viewLifecycleOwner) {
             viewBinding.statisticsView.setStatistics(it)
         }
@@ -30,8 +36,20 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
 
     override fun bind(viewBinding: FragmentMainBinding) {
         with(viewBinding) {
+            textViewGold.setOnClickListener {
+                val navigatorExtras = FragmentNavigatorExtras(
+                    textViewGold to getString(R.string.text_view_gold)
+                )
+
+                val destinations = MainFragmentDirections.actionMainFragmentToBillingFragment()
+
+                findNavController().navigate(destinations, navigatorExtras)
+            }
+
             materialButtonPlay.setOnClickListener {
-                findNavController().navigate(MainFragmentDirections.actionMainFragmentToPlayFragment())
+                val destinations = MainFragmentDirections.actionMainFragmentToPlayFragment()
+
+                findNavController().navigate(destinations)
                 activityViewModel.played.increment()
             }
         }

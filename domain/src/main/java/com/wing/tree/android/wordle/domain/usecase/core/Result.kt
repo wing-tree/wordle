@@ -13,3 +13,11 @@ inline fun <R: Any, T: Any> Result<T>.map(transform: (T) -> R): Result<R> {
         Result.Loading -> Result.Loading
     }
 }
+
+fun <T: Any> Result<T>.getOrDefault(defaultValue: T): T {
+    return when(this) {
+        Result.Loading -> defaultValue
+        is Result.Error -> defaultValue
+        is Result.Success -> data
+    }
+}

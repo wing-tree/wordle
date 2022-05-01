@@ -4,8 +4,10 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.wing.tree.android.wordle.domain.usecase.billing.GetGoldUseCase
 import com.wing.tree.android.wordle.domain.usecase.billing.GetRemoveAdsPurchased
 import com.wing.tree.android.wordle.domain.usecase.core.Result
+import com.wing.tree.android.wordle.domain.usecase.core.getOrDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import java.util.concurrent.atomic.AtomicInteger
