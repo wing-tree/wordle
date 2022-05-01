@@ -13,10 +13,7 @@ import com.wing.tree.android.wordle.domain.usecase.word.GetWordUseCase
 import com.wing.tree.android.wordle.domain.util.notNull
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 import com.wing.tree.android.wordle.presentation.delegate.play.*
-import com.wing.tree.android.wordle.presentation.model.play.Board
-import com.wing.tree.android.wordle.presentation.model.play.Letter
-import com.wing.tree.android.wordle.presentation.model.play.Line
-import com.wing.tree.android.wordle.presentation.model.play.State
+import com.wing.tree.android.wordle.presentation.model.play.*
 import com.wing.tree.android.wordle.presentation.util.alphabet
 import com.wing.tree.android.wordle.presentation.util.setValueWith
 import com.wing.tree.android.wordle.presentation.view.play.PlayFragmentDirections
@@ -53,8 +50,11 @@ class PlayViewModel @Inject constructor(
     private val excludedLetters = MutableLiveData<List<Letter>>()
 
     // 키보드 상태 네이밍 .. todo.
-    private val _keys = MediatorLiveData<List<Letter>>()
-    val keys: LiveData<List<Letter>> get() = _keys
+//    private val _keys = MediatorLiveData<List<Letter>>()
+//    val keys: LiveData<List<Letter>> get() = _keys
+
+    private val _keyboard = MediatorLiveData<KeyBoard>()
+    val keyboard: LiveData<KeyBoard> get() = _keyboard
 
     private val _result = MutableLiveData<Result>()
     val result: LiveData<Result> get() = _result
@@ -65,28 +65,29 @@ class PlayViewModel @Inject constructor(
     val directions: LiveData<NavDirections> get() = _directions
 
     init {
-        _keys.addSource(board) { board ->
-            val value = _keys.value?.toMutableList() ?: mutableListOf()
+        _keyboard.addSource(board) { board ->
+            // state 반영하기. 레터와 같은 스테이트로 변경.
+            val value = _keyboard.value ?: KeyBoard()
+            val alphabetKeys = value.alphabetKeys
 
-            board.notUnknownLetters.forEach {
-                if (value.contains(it).not()) {
-                    value.add(it)
-                }
+            board.notUnknownLetters.forEach { letter ->
+                alphabetKeys.find { it.letter == letter.value }?.updateState(letter.state)
             }
 
-            _keys.value = value
+            _keyboard.value = value
         }
 
-        _keys.addSource(excludedLetters) { letters ->
-            val value = _keys.value?.toMutableList() ?: mutableListOf()
+        _keyboard.addSource(excludedLetters) { letters ->
+            val value = _keyboard.value ?: KeyBoard()
+            val alphabetKeys = value.alphabetKeys
 
-            letters.forEach {
-                if (it.state.notUnknown) {
-                    value.add(it)
+            letters.forEach { letter ->
+                if (letter.state.notUnknown) {
+                    alphabetKeys.find { it.letter == letter.value }?.updateState(letter.state)
                 }
             }
 
-            _keys.value = value
+            _keyboard.value = value
         }
 
         _directions.addSource(isAnimating) { isRunning ->
@@ -242,7 +243,7 @@ class PlayViewModel @Inject constructor(
     // keys 가 기본 스테이트를 가진 key 여야한다.
     fun tryAgain() {
         _board.value = Board()
-        _keys.value = emptyList()
+        _keyboard.value = KeyBoard()
         excludedLetters.value = emptyList()
     }
 }

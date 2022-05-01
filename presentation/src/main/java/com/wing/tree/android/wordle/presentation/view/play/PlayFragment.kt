@@ -13,6 +13,7 @@ import com.wing.tree.android.wordle.presentation.constant.Attempt
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegate
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegateImpl
+import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.model.play.State
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
@@ -65,9 +66,9 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
             keyboardView.setOnKeyListener { key ->
                 when(key) {
-                    is KeyboardView.Key.Alphabet -> viewModel.add(key.letter)
-                    is KeyboardView.Key.Return -> { viewModel.submit {  } }
-                    is KeyboardView.Key.Backspace -> viewModel.removeLast()
+                    is Key.Alphabet -> viewModel.add(key.letter)
+                    is Key.Return -> { viewModel.submit {  } }
+                    is Key.Backspace -> viewModel.removeLast()
                 }
             }
 
@@ -118,8 +119,8 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
         }
 
-        viewModel.keys.observe(viewLifecycleOwner) {
-            viewBinding.keyboardView.applyState(it)
+        viewModel.keyboard.observe(viewLifecycleOwner) {
+            viewBinding.keyboardView.applyState(it.alphabetKeys)
         }
 
         viewModel.directions.observe(viewLifecycleOwner) {

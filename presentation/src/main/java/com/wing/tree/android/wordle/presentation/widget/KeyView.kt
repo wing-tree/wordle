@@ -9,13 +9,13 @@ import androidx.core.view.isVisible
 import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.KeyViewBinding
-import com.wing.tree.android.wordle.presentation.model.play.Letter
+import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.util.flip
 
 class KeyView : FrameLayout, Flippable<KeyView> {
     private val viewBinding: KeyViewBinding = KeyViewBinding.bind(inflate(context, R.layout.key_view, this))
 
-    private var state: Letter.State = Letter.State.Unknown()
+    private var state: Key.State = Key.State.Unknown()
 
     override var isFlippable = true
     override var isAnimating = false
@@ -85,7 +85,7 @@ class KeyView : FrameLayout, Flippable<KeyView> {
         }
     }
 
-    fun updateState(state: Letter.State) {
+    fun updateState(state: Key.State) {
         if (this.state.priority < state.priority) {
             this.state = state
 
