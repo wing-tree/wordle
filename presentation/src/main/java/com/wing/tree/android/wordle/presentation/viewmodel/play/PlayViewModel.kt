@@ -24,7 +24,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 @HiltViewModel
@@ -64,8 +63,6 @@ class PlayViewModel @Inject constructor(
     // 상태 머신으로 처리해야함. 위에 다이얼로그 스테이트도..
     private val _directions = MediatorLiveData<NavDirections>()
     val directions: LiveData<NavDirections> get() = _directions
-
-    private var `try` = AtomicInteger(0)
 
     init {
         _keys.addSource(board) { board ->
@@ -191,7 +188,9 @@ class PlayViewModel @Inject constructor(
     }
 
     private fun updateStatistics(result: Result, onComplete: () -> Unit) {
-        val parameter = UpdateStatisticsUseCase.Parameter(result, `try`.get()) {
+        val attempt = board.value?.attempt ?: 0
+
+        val parameter = UpdateStatisticsUseCase.Parameter(result, attempt) {
             // todo finally 달아줘야함.
             onComplete.invoke()
         }
@@ -238,5 +237,12 @@ class PlayViewModel @Inject constructor(
             it.addAttempt()
             _board.value = it
         }
+    }
+
+    // keys 가 기본 스테이트를 가진 key 여야한다.
+    fun tryAgain() {
+        _board.value = Board()
+        _keys.value = emptyList()
+        excludedLetters.value = emptyList()
     }
 }

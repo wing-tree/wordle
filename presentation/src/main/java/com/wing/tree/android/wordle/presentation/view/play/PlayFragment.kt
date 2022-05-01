@@ -7,18 +7,23 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.play.BoardListAdapter
+import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.constant.Attempt
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
+import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegate
+import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegateImpl
 import com.wing.tree.android.wordle.presentation.model.play.State
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
 import com.wing.tree.android.wordle.presentation.widget.KeyboardView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
-class PlayFragment: BaseFragment<FragmentPlayBinding>(), RoundOverDialogFragment.OnClickListener {
+class PlayFragment: BaseFragment<FragmentPlayBinding>(),
+    RoundOverDialogFragment.OnClickListener, InterstitialAdDelegate by InterstitialAdDelegateImpl()
+{
     private val viewModel by viewModels<PlayViewModel>()
     private val boardListAdapter = BoardListAdapter(
         object : BoardListAdapter.Callbacks {
@@ -77,6 +82,8 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(), RoundOverDialogFragment
     }
 
     override fun initData() {
+        loadInterstitialAd(requireContext())
+
         viewModel.state.observe(viewLifecycleOwner) { state ->
             when(state) {
                 is State.Error -> {}
@@ -129,7 +136,16 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(), RoundOverDialogFragment
     }
 
     override fun onTryAgainClick() {
-
+        showInterstitialAd(
+            requireActivity(),
+            onAdDismissedFullScreenContent = {
+                viewModel.tryAgain()
+            },
+            onAdFailedToShowFullScreenContent = {
+                Timber.e("$it")
+                viewModel.tryAgain()
+            }
+        )
     }
 
     private fun navigate(directions: NavDirections) {

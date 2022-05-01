@@ -10,10 +10,12 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class Board {
-    private val attempt = AtomicInteger(0)
+    private val _attempt = AtomicInteger(0)
+    val attempt: Int get() = _attempt.get()
+
     private val maximumAttempt = AtomicInteger(Attempt.MAXIMUM)
 
-    val attemptExceeded: Boolean get() = attempt.get() >= maximumAttempt.get().dec()
+    val attemptExceeded: Boolean get() = attempt >= maximumAttempt.get().dec()
     val attemptIncremented = AtomicBoolean(false)
 
     private val _lines = mutableListOf<Line>()
@@ -22,7 +24,7 @@ class Board {
     val letters get() = lines.flatten()
     val lettersExcluded = mutableListOf<Letter>()
 
-    val currentLine: Line get() = lines[attempt.get()]
+    val currentLine: Line get() = lines[_attempt.get()]
 
     fun getNotMatchedYetLetters(word: Word): List<Letter> {
         val matchedPositions = letters.filterWithState<Letter.State.Included.Matched>().map { it.position }.distinct()
@@ -91,7 +93,7 @@ class Board {
     }
 
     fun incrementAttempt() {
-        attempt.increment()
+        _attempt.increment()
     }
 
     inline fun <reified R: Letter.State> List<Letter>.filterWithState(): List<Letter> {
