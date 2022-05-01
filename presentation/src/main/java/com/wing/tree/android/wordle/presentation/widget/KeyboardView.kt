@@ -41,8 +41,8 @@ class KeyboardView : LinearLayout {
     }
 
     private fun bind() {
-        val onClickListener = OnClickListener {
-            val key = when(it.id) {
+        val onClickListener = OnClickListener { view ->
+            val key = when(view.id) {
                 R.id.key_a -> Key.Alphabet("a")
                 R.id.key_b -> Key.Alphabet("b")
                 R.id.key_c -> Key.Alphabet("c")
@@ -71,9 +71,10 @@ class KeyboardView : LinearLayout {
                 R.id.key_z -> Key.Alphabet("z")
                 R.id.key_return -> Key.Return
                 R.id.key_backspace -> Key.Backspace
-                else -> throw IllegalArgumentException("${it.id}")
+                else -> throw IllegalArgumentException("${view.id}")
             }
 
+            (view as? KeyView)?.scale()
             onKeyListener?.onKey(key)
         }
 

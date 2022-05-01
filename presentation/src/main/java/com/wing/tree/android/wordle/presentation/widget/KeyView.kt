@@ -9,6 +9,7 @@ import androidx.core.view.isVisible
 import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.KeyViewBinding
+import com.wing.tree.android.wordle.presentation.extention.scale
 import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.util.flip
 
@@ -96,6 +97,12 @@ class KeyView : FrameLayout, Flippable<KeyView> {
             flip {
                 viewBinding.root.isClickable = true
             }
+        }
+    }
+
+    fun scale() {
+        scale(1.0F, 1.15F, 240L) {
+            scale(1.15F, 1.0F, 240L)
         }
     }
 }
