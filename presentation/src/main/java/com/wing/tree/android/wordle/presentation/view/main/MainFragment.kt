@@ -41,15 +41,15 @@ class MainFragment : BaseFragment<FragmentMainBinding>() {
                     textViewGold to getString(R.string.text_view_gold)
                 )
 
-                val destinations = MainFragmentDirections.actionMainFragmentToBillingFragment()
+                val directions = MainFragmentDirections.actionMainFragmentToBillingFragment()
 
-                findNavController().navigate(destinations, navigatorExtras)
+                findNavController().navigate(directions, navigatorExtras)
             }
 
             materialButtonPlay.setOnClickListener {
-                val destinations = MainFragmentDirections.actionMainFragmentToPlayFragment()
+                val directions = MainFragmentDirections.actionMainFragmentToPlayFragment()
 
-                findNavController().navigate(destinations)
+                findNavController().navigate(directions)
                 activityViewModel.played.increment()
             }
         }

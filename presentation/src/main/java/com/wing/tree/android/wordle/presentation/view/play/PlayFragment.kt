@@ -85,12 +85,8 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(), RoundOverDialogFragment
                 is State.Finish -> {
                     when(state) {
                         is State.Finish.RoundOver -> {
-                            if (state.isRoundAdded) {
-                                navigate(PlayFragmentDirections.actionPlayFragmentToResultFragment())
-                            } else {
-                                RoundOverDialogFragment.newInstance().also {
-                                    it.show(childFragmentManager, it.tag)
-                                }
+                            RoundOverDialogFragment.newInstance(state.isRoundAdded).also {
+                                it.show(childFragmentManager, it.tag)
                             }
                         }
                         is State.Finish.Win -> {}

@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.wing.tree.android.wordle.presentation.databinding.FragmentRoundOverDialogBinding
+import com.wing.tree.android.wordle.presentation.extention.gone
+import com.wing.tree.android.wordle.presentation.extention.visible
 import com.wing.tree.android.wordle.presentation.view.base.BaseDialogFragment
 
 class RoundOverDialogFragment : BaseDialogFragment<FragmentRoundOverDialogBinding>() {
@@ -16,6 +18,8 @@ class RoundOverDialogFragment : BaseDialogFragment<FragmentRoundOverDialogBindin
         fun onNoThanksClick()
         fun onTryAgainClick()
     }
+
+    private val roundAdded by lazy { arguments?.getBoolean(Key.ROUND_ADDED) ?: false }
 
     private var onClickListener: OnClickListener? = null
 
@@ -32,9 +36,15 @@ class RoundOverDialogFragment : BaseDialogFragment<FragmentRoundOverDialogBindin
 
     override fun bind(viewBinding: FragmentRoundOverDialogBinding) {
         with(viewBinding) {
-            materialButtonAddRound.setOnClickListener {
-                onClickListener?.onAddRoundClick()
-                dismiss()
+            if (roundAdded) {
+                materialButtonAddRound.gone()
+            } else {
+                materialButtonAddRound.visible()
+
+                materialButtonAddRound.setOnClickListener {
+                    onClickListener?.onAddRoundClick()
+                    dismiss()
+                }
             }
 
             materialButtonTryAgain.setOnClickListener {
@@ -77,9 +87,17 @@ class RoundOverDialogFragment : BaseDialogFragment<FragmentRoundOverDialogBindin
     }
 
     companion object {
-        fun newInstance(): RoundOverDialogFragment {
-            return RoundOverDialogFragment().apply {
+        private object Key {
+            private const val OBJECT_NAME = "Key"
 
+            const val ROUND_ADDED = "$OBJECT_NAME.ROUND_ADDED"
+        }
+
+        fun newInstance(roundAdded: Boolean): RoundOverDialogFragment {
+            return RoundOverDialogFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(Key.ROUND_ADDED, roundAdded)
+                }
             }
         }
     }
