@@ -18,7 +18,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.domain.model.Guesses
 import com.wing.tree.android.wordle.domain.util.float
-import com.wing.tree.android.wordle.presentation.constant.Attempt
+import com.wing.tree.android.wordle.presentation.constant.Round
 
 
 class StatisticsView : ConstraintLayout {
@@ -51,7 +51,7 @@ class StatisticsView : ConstraintLayout {
     private fun initHorizontalBarChart(horizontalBarChart: HorizontalBarChart, guesses: Guesses) {
         val yVals = ArrayList<BarEntry>()
 
-        repeat(Attempt.MAXIMUM) {
+        repeat(Round.MAXIMUM) {
             val index = it.inc()
 
             yVals.add(BarEntry(index.float, guesses[index].float))

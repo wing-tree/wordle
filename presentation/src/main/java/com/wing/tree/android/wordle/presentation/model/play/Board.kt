@@ -1,33 +1,33 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
 import com.wing.tree.android.wordle.domain.model.Word
-import com.wing.tree.android.wordle.presentation.constant.Attempt
+import com.wing.tree.android.wordle.presentation.constant.Round
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
-import com.wing.tree.android.wordle.presentation.util.alphabet
 import com.wing.tree.android.wordle.presentation.util.increment
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class Board {
-    private val _attempt = AtomicInteger(0)
-    val attempt: Int get() = _attempt.get()
+    private val _round = AtomicInteger(0)
+    val round: Int get() = _round.get()
 
-    private val maximumAttempt = AtomicInteger(Attempt.MAXIMUM)
+    private val maximumRound = AtomicInteger(Round.MAXIMUM)
 
-    val attemptExceeded: Boolean get() = attempt >= maximumAttempt.get().dec()
-    val attemptIncremented = AtomicBoolean(false)
+    val isRoundAdded = AtomicBoolean(false)
+    val isRoundExceeded: Boolean get() = round >= maximumRound.get().dec()
 
-    private val _lines = mutableListOf<Line>()
+    private val _lines = MutableList(Round.MAXIMUM) { Line(it) }
     val lines: List<Line> get() = _lines
 
     val letters get() = lines.flatten()
-    val lettersExcluded = mutableListOf<Letter>()
 
-    val currentLine: Line get() = lines[_attempt.get()]
+    val currentLine: Line get() = lines[_round.get()]
+
+    val notUnknownLetters: List<Letter> get() = letters.filter { it.state.notUnknown }
 
     fun getNotMatchedYetLetters(word: Word): List<Letter> {
-        val matchedPositions = letters.filterWithState<Letter.State.Included.Matched>().map { it.position }.distinct()
+        val matchedPositions = letters.filterWithState<Letter.State.In.Matched>().map { it.position }.distinct()
 
         return mutableListOf<Letter>().apply {
             word.value.forEachIndexed { index, letter ->
@@ -38,32 +38,11 @@ class Board {
         }
     }
 
-    val notUnknownLetters: List<Letter> get() = letters.filter { it.state.notUnknown }
-
-    init {
-        repeat(Attempt.MAXIMUM) {
-            _lines.add(Line(it))
-        }
-    }
-
     fun add(letter: String) {
         with(currentLine) {
             if (notBlankCount < LENGTH) {
                 add(letter)
             }
-        }
-    }
-
-    fun excludeLetters(word: Word, letters: List<Letter>) {
-        val lettersExcluded = lettersExcluded.map { it.value }
-
-        val shuffled = alphabet
-            .filterNot { word.value.contains(it) }
-            .filterNot { lettersExcluded.contains(it) }
-            .shuffled()
-
-        with(shuffled) {
-            this@Board.lettersExcluded.addAll(take(3).map { Letter(0, it, Letter.State.Excluded()) })
         }
     }
 
@@ -83,17 +62,17 @@ class Board {
         currentLine.submit()
     }
 
-    fun addAttempt() {
-        if (attemptIncremented.compareAndSet(false, true)) {
-            with(maximumAttempt.getAndIncrement()) {
-                incrementAttempt()
+    fun addRound() {
+        if (isRoundAdded.compareAndSet(false, true)) {
+            with(maximumRound.getAndIncrement()) {
+                incrementRound()
                 _lines.add(Line(this))
             }
         }
     }
 
-    fun incrementAttempt() {
-        _attempt.increment()
+    fun incrementRound() {
+        _round.increment()
     }
 
     inline fun <reified R: Letter.State> List<Letter>.filterWithState(): List<Letter> {

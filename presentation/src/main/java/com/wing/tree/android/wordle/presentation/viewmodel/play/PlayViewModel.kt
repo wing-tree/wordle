@@ -14,7 +14,6 @@ import com.wing.tree.android.wordle.domain.util.notNull
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 import com.wing.tree.android.wordle.presentation.delegate.play.*
 import com.wing.tree.android.wordle.presentation.model.play.*
-import com.wing.tree.android.wordle.presentation.util.alphabet
 import com.wing.tree.android.wordle.presentation.util.setValueWith
 import com.wing.tree.android.wordle.presentation.view.play.PlayFragmentDirections
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,8 +46,6 @@ class PlayViewModel @Inject constructor(
     private val _board = MutableLiveData(Board())
     val board: LiveData<Board> get() = _board
 
-    private val excludedLetters = MutableLiveData<List<Letter>>()
-
     // 키보드 상태 네이밍 .. todo.
 //    private val _keys = MediatorLiveData<List<Letter>>()
 //    val keys: LiveData<List<Letter>> get() = _keys
@@ -65,26 +62,14 @@ class PlayViewModel @Inject constructor(
     val directions: LiveData<NavDirections> get() = _directions
 
     init {
+        _keyboard.value = KeyBoard()
+
         _keyboard.addSource(board) { board ->
-            // state 반영하기. 레터와 같은 스테이트로 변경.
-            val value = _keyboard.value ?: KeyBoard()
-            val alphabetKeys = value.alphabetKeys
+            val value = _keyboard.value ?: return@addSource
+            val alphabetKeys = value.alphabets
 
             board.notUnknownLetters.forEach { letter ->
                 alphabetKeys.find { it.letter == letter.value }?.updateState(letter.state)
-            }
-
-            _keyboard.value = value
-        }
-
-        _keyboard.addSource(excludedLetters) { letters ->
-            val value = _keyboard.value ?: KeyBoard()
-            val alphabetKeys = value.alphabetKeys
-
-            letters.forEach { letter ->
-                if (letter.state.notUnknown) {
-                    alphabetKeys.find { it.letter == letter.value }?.updateState(letter.state)
-                }
             }
 
             _keyboard.value = value
@@ -140,8 +125,8 @@ class PlayViewModel @Inject constructor(
                         if (it.matches(word)) {
                             win()
                         } else {
-                            if (board.attemptExceeded) {
-                                _state.value = State.Finish.RoundOver(board.attemptIncremented.get())
+                            if (board.isRoundExceeded) {
+                                _state.value = State.Finish.RoundOver(board.isRoundAdded.get())
                                 // todo 확인 및 제거.
 //                                if (board.attemptIncremented.get()) {
 //                                    lose()
@@ -149,7 +134,7 @@ class PlayViewModel @Inject constructor(
 //                                    showAddAttemptDialog.value = true
 //                                }
                             } else {
-                                board.incrementAttempt()
+                                board.incrementRound()
                                 enableKeyboard()
                             }
                         }
@@ -171,6 +156,7 @@ class PlayViewModel @Inject constructor(
                 onFailure = {
                     Timber.e(it)
                     //_error.value = it // todo state 처리.
+                    _state.postValue(State.Error(it))
                 }
             )
         }
@@ -189,7 +175,7 @@ class PlayViewModel @Inject constructor(
     }
 
     private fun updateStatistics(result: Result, onComplete: () -> Unit) {
-        val attempt = board.value?.attempt ?: 0
+        val attempt = board.value?.round ?: 0
 
         val parameter = UpdateStatisticsUseCase.Parameter(result, attempt) {
             // todo finally 달아줘야함.
@@ -209,38 +195,29 @@ class PlayViewModel @Inject constructor(
 
     fun useHint() {
         board.value?.let {
-            if (it.filterWithState<Letter.State.Included.Matched>().distinct().count() < LENGTH.dec()) {
+            if (it.filterWithState<Letter.State.In.Matched>().distinct().count() < LENGTH.dec()) {
                 submitLetter(it.getNotMatchedYetLetters(word).random())
             }
         }
     }
 
     fun useEraser() {
-        val ex = excludedLetters.value?.map { letter -> letter.value } ?: emptyList()
-        with(
-            alphabet
-            .filterNot { word.value.contains(it) }
-            .filterNot { ex.contains(it) }
-                .shuffled()
-        ) {
-            val value = excludedLetters.value?.toMutableList() ?: mutableListOf()
+        keyboard.value?.let {
+            it.excludeKeys(word)
 
-            value.addAll(take(3).map { Letter(0, it, Letter.State.Excluded()) })
-            excludedLetters.value = value
+            _keyboard.value = it
         }
     }
 
     fun addAttempt() {
         board.value?.let {
-            it.addAttempt()
+            it.addRound()
             _board.value = it
         }
     }
 
-    // keys 가 기본 스테이트를 가진 key 여야한다.
     fun tryAgain() {
         _board.value = Board()
         _keyboard.value = KeyBoard()
-        excludedLetters.value = emptyList()
     }
 }

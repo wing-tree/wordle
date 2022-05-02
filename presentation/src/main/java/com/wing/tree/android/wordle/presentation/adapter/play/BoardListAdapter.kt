@@ -41,7 +41,7 @@ class BoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterIt
                             letters.zip(previousLetters).forEachIndexed { index, (letter, previousLetter) ->
                                 set(index, letter)
 
-                                if (letter.submitted) {
+                                if (letter.isSubmitted) {
                                     with(get(index)) {
                                         if (isFlippable) {
                                             setTextFront(BLANK)
@@ -107,7 +107,7 @@ sealed class AdapterItem {
                 index = index,
                 letters = letters.letters.copyOf(),
                 previousLetters = letters.previousLetters.copyOf(),
-                submitted = letters.submitted
+                submitted = letters.isSubmitted
             )
         }
 

@@ -4,8 +4,14 @@ import androidx.annotation.ColorRes
 import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.R
 
-data class Letter(val position: Int, val value: String = BLANK, var state: State = State.Unknown()) {
+data class Letter(val position: Int, val value: String = BLANK) {
     constructor(position: Int, value: Char): this(position, "$value")
+
+    private var _isSubmitted: Boolean = false
+    val isSubmitted: Boolean get() = _isSubmitted
+
+    private var _state: State = State.Unknown()
+    val state: State get() = _state
 
     val isBlank: Boolean
         get() = value.isBlank()
@@ -13,7 +19,14 @@ data class Letter(val position: Int, val value: String = BLANK, var state: State
     val isNotBlank: Boolean
         get() = value.isNotBlank()
 
-    var submitted: Boolean = false
+    fun updateState(state: State) {
+        _state = state
+    }
+
+    fun submit() {
+        _isSubmitted = true
+        _state = State.In.Matched()
+    }
 
     sealed class State {
         @get:ColorRes
@@ -22,21 +35,21 @@ data class Letter(val position: Int, val value: String = BLANK, var state: State
 
         val notUnknown: Boolean get() = this !is Unknown
 
-        sealed class Included : State() {
+        sealed class In : State() {
             data class Matched(
                 override val colorRes: Int = R.color.green_800,
                 override val priority: Int = Priority.MATCHED
-            ) : Included()
+            ) : In()
 
-            data class NotMatched(
+            data class Mismatched(
                 override val colorRes: Int = R.color.yellow_500,
-                override val priority: Int = Priority.NOT_MATCHED
-            ) : Included()
+                override val priority: Int = Priority.MISMATCHED
+            ) : In()
         }
 
-        data class Excluded(
+        data class NotIn(
             override val colorRes: Int = R.color.black,
-            override val priority: Int = Priority.EXCLUDED
+            override val priority: Int = Priority.NOT_IN
         ): State()
 
         data class Unknown(
@@ -46,8 +59,8 @@ data class Letter(val position: Int, val value: String = BLANK, var state: State
 
         private object Priority {
             const val UNKNOWN = 0
-            const val EXCLUDED = 1
-            const val NOT_MATCHED = 2
+            const val NOT_IN = 1
+            const val MISMATCHED = 2
             const val MATCHED = 3
         }
     }

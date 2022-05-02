@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wing.tree.android.wordle.presentation.adapter.play.BoardListAdapter
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
-import com.wing.tree.android.wordle.presentation.constant.Attempt
+import com.wing.tree.android.wordle.presentation.constant.Round
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegate
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegateImpl
@@ -17,7 +17,6 @@ import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.model.play.State
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
-import com.wing.tree.android.wordle.presentation.widget.KeyboardView
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -60,7 +59,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
                 adapter = boardListAdapter
                 layoutManager = LinearLayoutManager(context).apply {
-                    initialPrefetchItemCount = Attempt.MAXIMUM
+                    initialPrefetchItemCount = Round.MAXIMUM
                 }
             }
 
@@ -120,7 +119,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         }
 
         viewModel.keyboard.observe(viewLifecycleOwner) {
-            viewBinding.keyboardView.applyState(it.alphabetKeys)
+            viewBinding.keyboardView.applyState(it.alphabets)
         }
 
         viewModel.directions.observe(viewLifecycleOwner) {

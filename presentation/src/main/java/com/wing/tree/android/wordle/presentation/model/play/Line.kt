@@ -1,22 +1,24 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
 import com.wing.tree.android.wordle.android.constant.BLANK
+import com.wing.tree.android.wordle.android.constant.EMPTY
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 
-data class Line(val number: Int) : Iterable<Letter> {
+data class Line(val round: Int) : Iterable<Letter> {
     private val isNotEmpty: Boolean
         get() = notBlankCount > 0
 
+    private var _isSubmitted: Boolean = false
+    val isSubmitted: Boolean get() = _isSubmitted
+
     val letters: Array<Letter> = Array(LENGTH) { Letter(position = it) }
+    val previousLetters: Array<Letter> = Array(LENGTH) { Letter(position = it) }
 
     val notBlankCount: Int
         get() = letters.count { it.isNotBlank }
 
     val string: String
-        get() = letters.joinToString(BLANK) { it.value }
-
-    val previousLetters: Array<Letter> = Array(LENGTH) { Letter(position = it) }
-    var submitted: Boolean = false
+        get() = letters.joinToString(EMPTY) { it.value }
 
     private fun backup() {
         letters.copyInto(previousLetters)
@@ -54,7 +56,7 @@ data class Line(val number: Int) : Iterable<Letter> {
         if (isNotEmpty) {
             if (index in 0 until LENGTH) {
                 val letter = get(index)
-                val submitted = letter.submitted
+                val submitted = letter.isSubmitted
 
                 if (submitted.not()) {
                     backup()
@@ -66,7 +68,7 @@ data class Line(val number: Int) : Iterable<Letter> {
 
     fun removeLast() {
         if (isNotEmpty) {
-            val index = letters.indexOfLast { it.submitted.not() && it.isNotBlank  }
+            val index = letters.indexOfLast { it.isSubmitted.not() && it.isNotBlank  }
 
             if (index in 0 until LENGTH) {
                 backup()
@@ -76,15 +78,12 @@ data class Line(val number: Int) : Iterable<Letter> {
     }
 
     fun submit() {
-        submitted = true
+        _isSubmitted = true
     }
 
     fun submit(letter: Letter) {
         backup()
-        set(letter.position, letter.apply {
-            state = Letter.State.Included.Matched()
-            submitted = true
-        })
+        set(letter.position, letter.apply { submit() })
     }
 
     override fun iterator(): Iterator<Letter> {

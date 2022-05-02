@@ -4,16 +4,19 @@ import androidx.annotation.ColorRes
 import com.wing.tree.android.wordle.presentation.R
 
 sealed class Key {
-    data class Alphabet(val letter: String, var state: State = State.Unknown()) : Key() {
+    data class Alphabet(val letter: String) : Key() {
+        private var _state: State = State.Unknown()
+        val state: State get() = _state
+
+        fun exclude() {
+            _state = State.NotIn()
+        }
+
         fun updateState(state: Letter.State) {
-            this.state = when(state) {
-                is Letter.State.Excluded -> State.Excluded()
-                is Letter.State.Included.Matched -> State.Included.Matched()
-                is Letter.State.Included.NotMatched -> State.Included.NotMatched()
-                is Letter.State.Unknown -> State.Unknown()
-            }
+            _state = State.from(state)
         }
     }
+
     object Backspace : Key()
     object Return : Key()
 
@@ -24,21 +27,21 @@ sealed class Key {
 
         val notUnknown: Boolean get() = this !is Unknown
 
-        sealed class Included : State() {
+        sealed class In : State() {
             data class Matched(
                 override val colorRes: Int = R.color.green_800,
                 override val priority: Int = Priority.MATCHED
-            ) : Included()
+            ) : In()
 
-            data class NotMatched(
+            data class Mismatched(
                 override val colorRes: Int = R.color.yellow_500,
-                override val priority: Int = Priority.NOT_MATCHED
-            ) : Included()
+                override val priority: Int = Priority.MISMATCHED
+            ) : In()
         }
 
-        data class Excluded(
+        data class NotIn(
             override val colorRes: Int = R.color.black,
-            override val priority: Int = Priority.EXCLUDED
+            override val priority: Int = Priority.NOT_IN
         ): State()
 
         data class Unknown(
@@ -48,9 +51,18 @@ sealed class Key {
 
         private object Priority {
             const val UNKNOWN = 0
-            const val EXCLUDED = 1
-            const val NOT_MATCHED = 2
+            const val NOT_IN = 1
+            const val MISMATCHED = 2
             const val MATCHED = 3
+        }
+
+        companion object {
+            fun from(state: Letter.State) = when(state) {
+                is Letter.State.NotIn -> NotIn()
+                is Letter.State.In.Matched -> In.Matched()
+                is Letter.State.In.Mismatched -> In.Mismatched()
+                is Letter.State.Unknown -> Unknown()
+            }
         }
     }
 }
