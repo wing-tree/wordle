@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option java_package = "com.wing.tree.android.wordle.data.datastore.playstate";
+option java_multiple_files = true;
+
+message PlayState {
+  Board board = 1;
+  KeyBoard keyboard = 2;
+}
+
+message Board {
+  int32 round = 1;
+  int32 maximum_round = 2;
+  bool is_round_added = 3;
+  repeated Line lines = 4;
+}
+
+message Line {
+  int32 round = 1;
+  repeated Letter letters = 2;
+  repeated Letter previous_letters = 3;
+  bool is_submitted = 4;
+}
+
+message Letter {
+  int32 position = 1;
+  string value = 2;
+  int32 state = 3;
+  bool is_submitted = 4;
+}
+
+message KeyBoard {
+  repeated Alphabet alphabets = 1;
+}
+
+message Alphabet {
+  string letter = 1;
+  int32 state = 2;
+}
