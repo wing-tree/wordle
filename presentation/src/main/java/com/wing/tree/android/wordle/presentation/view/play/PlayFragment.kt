@@ -65,6 +65,8 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
 
             keyboardView.setOnKeyListener { key ->
+                viewModel.playSound()
+
                 when(key) {
                     is Key.Alphabet -> viewModel.add(key.letter)
                     // todo sjk check 아래의 접근으로 shake 적용 가능.

@@ -1,6 +1,7 @@
 package com.wing.tree.android.wordle.presentation.viewmodel.play
 
 import android.app.Application
+import android.media.MediaPlayer
 import androidx.annotation.MainThread
 import androidx.lifecycle.*
 import androidx.navigation.NavDirections
@@ -13,10 +14,11 @@ import com.wing.tree.android.wordle.domain.usecase.core.getOrNull
 import com.wing.tree.android.wordle.domain.usecase.playstate.GetPlayStateUseCase
 import com.wing.tree.android.wordle.domain.usecase.playstate.UpdatePlayStateUseCase
 import com.wing.tree.android.wordle.domain.usecase.statistics.UpdateStatisticsUseCase
-import com.wing.tree.android.wordle.domain.usecase.word.ContainUseCase
+import com.wing.tree.android.wordle.domain.usecase.word.ContainsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetCountUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetWordUseCase
 import com.wing.tree.android.wordle.domain.util.notNull
+import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 import com.wing.tree.android.wordle.presentation.delegate.play.*
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toDomainModel
@@ -33,7 +35,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlayViewModel @Inject constructor(
-    private val containUseCase: ContainUseCase,
+    private val containsUseCase: ContainsUseCase,
     private val updatePlayStateUseCase: UpdatePlayStateUseCase,
     private val updateStatisticsUseCase: UpdateStatisticsUseCase,
     getPlayStateUseCase: GetPlayStateUseCase,
@@ -42,7 +44,7 @@ class PlayViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application),
     KeyboardActionDelegate by KeyboardActionDelegateImpl(),
-    LettersChecker by LettersCheckerImpl(containUseCase),
+    LettersChecker by LettersCheckerImpl(containsUseCase),
     WordLoader by WordLoaderImpl(getCountUseCase, getWordUseCase)
 {
     private lateinit var _word: Word
@@ -50,6 +52,8 @@ class PlayViewModel @Inject constructor(
 
     private val defaultDispatcher = Dispatchers.Default
     private val ioDispatcher = Dispatchers.IO
+
+    private val mediaPlayer = MediaPlayer.create(application, R.raw.sound)
 
     init {
         viewModelScope.launch {
@@ -260,5 +264,10 @@ class PlayViewModel @Inject constructor(
     fun tryAgain() {
         _board.value = PlayBoard()
         _keyboard.value = Keyboard()
+    }
+
+
+    fun playSound() {
+        mediaPlayer.start()
     }
 }
