@@ -5,13 +5,13 @@ import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.android.exception.WordNotFoundException
 import com.wing.tree.android.wordle.domain.usecase.core.Result
 import com.wing.tree.android.wordle.domain.usecase.core.map
-import com.wing.tree.android.wordle.domain.usecase.word.ContainUseCase
+import com.wing.tree.android.wordle.domain.usecase.word.ContainsUseCase
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.Line
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class LettersCheckerImpl(private val containUseCase: ContainUseCase) : LettersChecker {
+class LettersCheckerImpl(private val containsUseCase: ContainsUseCase) : LettersChecker {
     private val mainDispatcher = Dispatchers.Main
 
     override suspend fun submit(
@@ -20,7 +20,7 @@ class LettersCheckerImpl(private val containUseCase: ContainUseCase) : LettersCh
         @MainThread onFailure: (Throwable) -> Unit,
         @MainThread onSuccess: (Line) -> Unit
     ) {
-        containUseCase.invoke(ContainUseCase.Parameter(line.string)).map { result ->
+        containsUseCase.invoke(line.string).map { result ->
             when(result) {
                 is Result.Error -> withContext(mainDispatcher) { onFailure(result.throwable) }
                 is Result.Success -> {

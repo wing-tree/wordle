@@ -7,7 +7,7 @@ import com.wing.tree.android.wordle.domain.util.notNull
 import javax.inject.Inject
 
 class WordRepositoryImpl @Inject constructor(private val dataSource: WordDataSource): WordRepository {
-    override suspend fun contain(letters: String): Boolean {
+    override suspend fun contains(letters: String): Boolean {
         return dataSource.get(letters).notNull
     }
 
