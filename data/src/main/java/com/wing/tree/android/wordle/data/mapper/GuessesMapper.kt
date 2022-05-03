@@ -4,16 +4,6 @@ import com.wing.tree.android.wordle.data.datastore.statistics.Guesses
 import com.wing.tree.android.wordle.domain.model.Guesses as DomainGuesses
 
 object GuessesMapper {
-    fun DomainGuesses.toDataModel() = Guesses
-        .newBuilder()
-        .setOne(one)
-        .setTwo(two)
-        .setThree(three)
-        .setFour(four)
-        .setFive(five)
-        .setSix(six)
-        .build()
-
     fun Guesses.toDomainModel() = object : DomainGuesses {
         val guesses = this@toDomainModel
 

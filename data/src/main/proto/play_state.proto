@@ -4,21 +4,31 @@ option java_package = "com.wing.tree.android.wordle.data.datastore.playstate";
 option java_multiple_files = true;
 
 message PlayState {
-  Board board = 1;
-  KeyBoard keyboard = 2;
+  PlayBoard playBoard = 1;
+  Keyboard keyboard = 2;
+  Word word = 3;
 }
 
-message Board {
+message Keyboard {
+  repeated Alphabet alphabet = 1;
+}
+
+message Alphabet {
+  string letter = 1;
+  int32 state = 2;
+}
+
+message PlayBoard {
   int32 round = 1;
   int32 maximum_round = 2;
   bool is_round_added = 3;
-  repeated Line lines = 4;
+  repeated Line line = 4;
 }
 
 message Line {
   int32 round = 1;
-  repeated Letter letters = 2;
-  repeated Letter previous_letters = 3;
+  repeated Letter letter = 2;
+  repeated Letter previous_letter = 3;
   bool is_submitted = 4;
 }
 
@@ -29,11 +39,7 @@ message Letter {
   bool is_submitted = 4;
 }
 
-message KeyBoard {
-  repeated Alphabet alphabets = 1;
-}
-
-message Alphabet {
-  string letter = 1;
-  int32 state = 2;
+message Word {
+  int32 index = 1;
+  string value = 2;
 }

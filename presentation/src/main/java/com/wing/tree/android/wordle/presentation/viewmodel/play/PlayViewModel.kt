@@ -6,6 +6,12 @@ import androidx.lifecycle.*
 import androidx.navigation.NavDirections
 import com.wing.tree.android.wordle.domain.model.Result
 import com.wing.tree.android.wordle.domain.model.Word
+import com.wing.tree.android.wordle.domain.model.playstate.Keyboard as DomainKeyboard
+import com.wing.tree.android.wordle.domain.model.playstate.PlayBoard as DomainPlayBoard
+import com.wing.tree.android.wordle.domain.model.playstate.PlayState
+import com.wing.tree.android.wordle.domain.usecase.core.getOrNull
+import com.wing.tree.android.wordle.domain.usecase.playstate.GetPlayStateUseCase
+import com.wing.tree.android.wordle.domain.usecase.playstate.UpdatePlayStateUseCase
 import com.wing.tree.android.wordle.domain.usecase.statistics.UpdateStatisticsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.ContainUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetCountUseCase
@@ -13,11 +19,14 @@ import com.wing.tree.android.wordle.domain.usecase.word.GetWordUseCase
 import com.wing.tree.android.wordle.domain.util.notNull
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 import com.wing.tree.android.wordle.presentation.delegate.play.*
+import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toDomainModel
 import com.wing.tree.android.wordle.presentation.model.play.*
 import com.wing.tree.android.wordle.presentation.util.setValueWith
 import com.wing.tree.android.wordle.presentation.view.play.PlayFragmentDirections
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -25,7 +34,9 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayViewModel @Inject constructor(
     private val containUseCase: ContainUseCase,
+    private val updatePlayStateUseCase: UpdatePlayStateUseCase,
     private val updateStatisticsUseCase: UpdateStatisticsUseCase,
+    getPlayStateUseCase: GetPlayStateUseCase,
     getCountUseCase: GetCountUseCase,
     getWordUseCase: GetWordUseCase,
     application: Application
@@ -34,24 +45,38 @@ class PlayViewModel @Inject constructor(
     LettersChecker by LettersCheckerImpl(containUseCase),
     WordLoader by WordLoaderImpl(getCountUseCase, getWordUseCase)
 {
-    private lateinit var word: Word
+    private lateinit var _word: Word
+    val word: Word get() = _word
 
+    private val defaultDispatcher = Dispatchers.Default
     private val ioDispatcher = Dispatchers.IO
+
+    init {
+        viewModelScope.launch {
+            getPlayStateUseCase(Unit).collect {
+               it.getOrNull()?.let {
+                   println("aaa word :${it.word}")
+                   println("aaa playboard.lines :${it.playBoard.lines.toList()}")
+                   println("aaa keyboard alphabets :${it.keyboard.alphabets.toList()}")
+               }
+            }
+        }
+    }
 
     private val _state = MutableLiveData<State>(State.Ready)
     val state: LiveData<State> get() = _state
 
     val isAnimating = MutableLiveData<Boolean>()
 
-    private val _board = MutableLiveData(Board())
-    val board: LiveData<Board> get() = _board
+    private val _board = MutableLiveData(PlayBoard())
+    val playBoard: LiveData<PlayBoard> get() = _board
 
     // 키보드 상태 네이밍 .. todo.
 //    private val _keys = MediatorLiveData<List<Letter>>()
 //    val keys: LiveData<List<Letter>> get() = _keys
 
-    private val _keyboard = MediatorLiveData<KeyBoard>()
-    val keyboard: LiveData<KeyBoard> get() = _keyboard
+    private val _keyboard = MediatorLiveData<Keyboard>()
+    val keyboard: LiveData<Keyboard> get() = _keyboard
 
     private val _result = MutableLiveData<Result>()
     val result: LiveData<Result> get() = _result
@@ -61,10 +86,12 @@ class PlayViewModel @Inject constructor(
     private val _directions = MediatorLiveData<NavDirections>()
     val directions: LiveData<NavDirections> get() = _directions
 
-    init {
-        _keyboard.value = KeyBoard()
+    private val round: Int get() = playBoard.value?.round ?: 0
 
-        _keyboard.addSource(board) { board ->
+    init {
+        _keyboard.value = Keyboard()
+
+        _keyboard.addSource(playBoard) { board ->
             val value = _keyboard.value ?: return@addSource
             val alphabetKeys = value.alphabets
 
@@ -102,8 +129,8 @@ class PlayViewModel @Inject constructor(
 
     // 콜백 너무많다.. todo 콜백 좀 줄입시더.
     fun submit(@MainThread onSuccess: (Line) -> Unit) {
-        val word = word.value
-        val currentLetters = board.value?.currentLine ?: return
+        val word = _word.value
+        val currentLetters = playBoard.value?.currentLine ?: return
 
         if (currentLetters.notBlankCount < LENGTH) return
 
@@ -115,18 +142,18 @@ class PlayViewModel @Inject constructor(
 
                 },
                 onSuccess = {
-                    board.value?.let { board ->
+                    playBoard.value?.let { board ->
                         board.submit()
 
                         _board.value = board
 
-                        onSuccess(it)
+                        onSuccess(it) //todo 안쓰는거같은뎅.
 
                         if (it.matches(word)) {
                             win()
                         } else {
                             if (board.isRoundExceeded) {
-                                _state.value = State.Finish.RoundOver(board.isRoundAdded.get())
+                                _state.value = State.Finish.RoundOver(board.isRoundAdded)
                                 // todo 확인 및 제거.
 //                                if (board.attemptIncremented.get()) {
 //                                    lose()
@@ -150,8 +177,8 @@ class PlayViewModel @Inject constructor(
             load(
                 onSuccess = {
                     Timber.d(it.value) // todo 제거... 개발자 용임. 나중에 필요업으면..
-                    word = it
-                    onLoaded(word)
+                    _word = it
+                    onLoaded(_word)
                 },
                 onFailure = {
                     Timber.e(it)
@@ -162,20 +189,14 @@ class PlayViewModel @Inject constructor(
         }
     }
 
-    fun lose() {
-        updateStatistics(Result.Lose) {
-            _result.postValue(Result.Lose)
-        }
-    }
-
     private fun win() {
-        updateStatistics(Result.Win) {
-            _result.postValue(Result.Win)
+        updateStatistics(Result.Win(round)) {
+            _result.postValue(Result.Win(round))
         }
     }
 
     private fun updateStatistics(result: Result, onComplete: () -> Unit) {
-        val attempt = board.value?.round ?: 0
+        val attempt = playBoard.value?.round ?: 0
 
         val parameter = UpdateStatisticsUseCase.Parameter(result, attempt) {
             // todo finally 달아줘야함.
@@ -193,31 +214,51 @@ class PlayViewModel @Inject constructor(
         }
     }
 
+    @DelicateCoroutinesApi
+    fun updatePlayState() {
+        GlobalScope.launch(defaultDispatcher) {
+            val keyboard = keyboard.value?.toDomainModel() ?: Keyboard().toDomainModel()
+            val playBoard = playBoard.value?.toDomainModel() ?: PlayBoard().toDomainModel()
+            val word = object : Word {
+                override val index: Int = word.index
+                override val value: String = word.value
+            }
+
+            val playState = object : PlayState {
+                override val keyboard: DomainKeyboard = keyboard
+                override val playBoard: DomainPlayBoard = playBoard
+                override val word: Word = word
+            }
+
+            updatePlayStateUseCase.invoke(playState)
+        }
+    }
+
     fun useHint() {
-        board.value?.let {
+        playBoard.value?.let {
             if (it.filterWithState<Letter.State.In.Matched>().distinct().count() < LENGTH.dec()) {
-                submitLetter(it.getNotMatchedYetLetters(word).random())
+                submitLetter(it.getNotMatchedYetLetters(_word).random())
             }
         }
     }
 
     fun useEraser() {
         keyboard.value?.let {
-            it.excludeKeys(word)
+            it.erase(_word)
 
             _keyboard.value = it
         }
     }
 
-    fun addAttempt() {
-        board.value?.let {
+    fun addRound() {
+        playBoard.value?.let {
             it.addRound()
             _board.value = it
         }
     }
 
     fun tryAgain() {
-        _board.value = Board()
-        _keyboard.value = KeyBoard()
+        _board.value = PlayBoard()
+        _keyboard.value = Keyboard()
     }
 }

@@ -1,6 +1,7 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
 import androidx.annotation.ColorRes
+import com.wing.tree.android.wordle.domain.model.playstate.Key.Alphabet as DomainAlphabet
 import com.wing.tree.android.wordle.presentation.R
 
 sealed class Key {
@@ -8,7 +9,7 @@ sealed class Key {
         private var _state: State = State.Unknown()
         val state: State get() = _state
 
-        fun exclude() {
+        fun erase() {
             _state = State.NotIn()
         }
 
@@ -27,27 +28,42 @@ sealed class Key {
 
         val notUnknown: Boolean get() = this !is Unknown
 
-        sealed class In : State() {
-            data class Matched(
-                override val colorRes: Int = R.color.green_800,
-                override val priority: Int = Priority.MATCHED
-            ) : In()
-
-            data class Mismatched(
-                override val colorRes: Int = R.color.yellow_500,
-                override val priority: Int = Priority.MISMATCHED
-            ) : In()
+        fun fromInt(int: Int) = when(int) {
+            0 -> Letter.State.Unknown()
+            1 -> Letter.State.NotIn()
+            2 -> Letter.State.In.Mismatched()
+            3 -> Letter.State.In.Matched()
+            else -> throw IllegalArgumentException("$int")
         }
+
+        fun toInt() = when(this) {
+            is Unknown -> 0
+            is NotIn -> 1
+            is In.Mismatched -> 2
+            is In.Matched -> 3
+        }
+
+        data class Unknown(
+            override val colorRes: Int = R.color.dark_grey,
+            override val priority: Int = Priority.UNKNOWN
+        ): State()
 
         data class NotIn(
             override val colorRes: Int = R.color.black,
             override val priority: Int = Priority.NOT_IN
         ): State()
 
-        data class Unknown(
-            override val colorRes: Int = R.color.dark_grey,
-            override val priority: Int = Priority.UNKNOWN
-        ): State()
+        sealed class In : State() {
+            data class Mismatched(
+                override val colorRes: Int = R.color.yellow_500,
+                override val priority: Int = Priority.MISMATCHED
+            ) : In()
+
+            data class Matched(
+                override val colorRes: Int = R.color.green_800,
+                override val priority: Int = Priority.MATCHED
+            ) : In()
+        }
 
         private object Priority {
             const val UNKNOWN = 0

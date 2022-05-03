@@ -1,6 +1,8 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
 import com.wing.tree.android.wordle.domain.model.Word
+import com.wing.tree.android.wordle.domain.model.playstate.Line as DomainLine
+import com.wing.tree.android.wordle.domain.model.playstate.PlayBoard as DomainPlayBoard
 import com.wing.tree.android.wordle.presentation.constant.Round
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 import com.wing.tree.android.wordle.presentation.util.increment
@@ -8,14 +10,17 @@ import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
-class Board {
+class PlayBoard {
     private val _round = AtomicInteger(0)
     val round: Int get() = _round.get()
 
-    private val maximumRound = AtomicInteger(Round.MAXIMUM)
+    private val _maximumRound = AtomicInteger(Round.MAXIMUM)
+    val maximumRound: Int get() = _maximumRound.get()
 
-    val isRoundAdded = AtomicBoolean(false)
-    val isRoundExceeded: Boolean get() = round >= maximumRound.get().dec()
+    private val _isRoundAdded = AtomicBoolean(false)
+    val isRoundAdded: Boolean get() = _isRoundAdded.get()
+
+    val isRoundExceeded: Boolean get() = round >= maximumRound.dec()
 
     private val _lines = MutableList(Round.MAXIMUM) { Line(it) }
     val lines: List<Line> get() = _lines
@@ -63,8 +68,8 @@ class Board {
     }
 
     fun addRound() {
-        if (isRoundAdded.compareAndSet(false, true)) {
-            with(maximumRound.getAndIncrement()) {
+        if (_isRoundAdded.compareAndSet(false, true)) {
+            with(_maximumRound.getAndIncrement()) {
                 incrementRound()
                 _lines.add(Line(this))
             }

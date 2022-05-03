@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.databinding.LineItemBinding
-import com.wing.tree.android.wordle.presentation.model.play.Board
+import com.wing.tree.android.wordle.presentation.model.play.PlayBoard
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.Line as Model
 
@@ -74,8 +74,8 @@ class BoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterIt
         holder.bind(getItem(position))
     }
 
-    fun submitBoard(board: Board) {
-        val list = board.lines.mapIndexed { index, letters ->
+    fun submitBoard(playBoard: PlayBoard) {
+        val list = playBoard.lines.mapIndexed { index, letters ->
             AdapterItem.Line.from(index, letters)
         }
 

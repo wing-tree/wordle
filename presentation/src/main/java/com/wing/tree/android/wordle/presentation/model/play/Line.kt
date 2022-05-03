@@ -2,6 +2,8 @@ package com.wing.tree.android.wordle.presentation.model.play
 
 import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.android.constant.EMPTY
+import com.wing.tree.android.wordle.domain.model.playstate.Letter as DomainLetter
+import com.wing.tree.android.wordle.domain.model.playstate.Line as DomainLine
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 
 data class Line(val round: Int) : Iterable<Letter> {
@@ -28,14 +30,6 @@ data class Line(val round: Int) : Iterable<Letter> {
 
     operator fun set(index: Int, letter: Letter) {
         letters[index] = letter
-    }
-
-    inline fun <reified R: Letter.State> filterWithState(): List<Letter> {
-        return letters.filterWithState<R>()
-    }
-
-    inline fun <reified R: Letter.State> Array<Letter>.filterWithState(): List<Letter> {
-        return filter { it.state is R }
     }
 
     fun add(letter: String) {
@@ -84,6 +78,14 @@ data class Line(val round: Int) : Iterable<Letter> {
     fun submit(letter: Letter) {
         backup()
         set(letter.position, letter.apply { submit() })
+    }
+
+    inline fun <reified R: Letter.State> filterWithState(): List<Letter> {
+        return letters.filterWithState<R>()
+    }
+
+    inline fun <reified R: Letter.State> Array<Letter>.filterWithState(): List<Letter> {
+        return filter { it.state is R }
     }
 
     override fun iterator(): Iterator<Letter> {

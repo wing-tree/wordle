@@ -13,6 +13,7 @@ import com.wing.tree.android.wordle.presentation.constant.Round
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegate
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegateImpl
+import com.wing.tree.android.wordle.presentation.extention.scale
 import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.model.play.State
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
@@ -66,7 +67,8 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             keyboardView.setOnKeyListener { key ->
                 when(key) {
                     is Key.Alphabet -> viewModel.add(key.letter)
-                    is Key.Return -> { viewModel.submit {  } }
+                    // todo sjk check 아래의 접근으로 shake 적용 가능.
+                    is Key.Return -> { viewModel.submit { recyclerView.findViewHolderForAdapterPosition(1)?.itemView?.scale(1.0F, 1.5F, 500L) } }
                     is Key.Backspace -> viewModel.removeLast()
                 }
             }
@@ -102,7 +104,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
         }
 
-        viewModel.board.observe(viewLifecycleOwner) {
+        viewModel.playBoard.observe(viewLifecycleOwner) {
             boardListAdapter.submitBoard(it)
         }
 
@@ -128,7 +130,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     }
 
     override fun onAddRoundClick() {
-        viewModel.addAttempt()
+        viewModel.addRound()
     }
 
     override fun onNoThanksClick() {
