@@ -1,11 +1,10 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
-import com.wing.tree.android.wordle.android.constant.BLANK
-import com.wing.tree.android.wordle.android.constant.EMPTY
-import com.wing.tree.android.wordle.domain.model.playstate.Letter as DomainLetter
-import com.wing.tree.android.wordle.domain.model.playstate.Line as DomainLine
-import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toPresentationModel
+import com.wing.tree.wordle.core.constant.BLANK
+import com.wing.tree.wordle.core.constant.EMPTY
+import com.wing.tree.wordle.core.constant.WORD_LENGTH
+import com.wing.tree.android.wordle.domain.model.playstate.Line as DomainLine
 
 data class Line(val round: Int) : Iterable<Letter> {
     private val isNotEmpty: Boolean
@@ -14,8 +13,8 @@ data class Line(val round: Int) : Iterable<Letter> {
     private var _isSubmitted: Boolean = false
     val isSubmitted: Boolean get() = _isSubmitted
 
-    val letters: Array<Letter> = Array(LENGTH) { Letter(position = it) }
-    val previousLetters: Array<Letter> = Array(LENGTH) { Letter(position = it) }
+    val letters: Array<Letter> = Array(WORD_LENGTH) { Letter(position = it) }
+    val previousLetters: Array<Letter> = Array(WORD_LENGTH) { Letter(position = it) }
 
     val notBlankCount: Int
         get() = letters.count { it.isNotBlank }
@@ -34,12 +33,12 @@ data class Line(val round: Int) : Iterable<Letter> {
     }
 
     fun add(letter: String) {
-        if (notBlankCount < LENGTH) {
+        if (notBlankCount < WORD_LENGTH) {
             backup()
 
             val index = letters.indexOfFirst { it.value.isBlank() }
 
-            if (index in 0 until LENGTH) {
+            if (index in 0 until WORD_LENGTH) {
                 letters[index] = Letter(index, letter)
             }
         }
@@ -49,7 +48,7 @@ data class Line(val round: Int) : Iterable<Letter> {
 
     fun removeAt(index: Int) {
         if (isNotEmpty) {
-            if (index in 0 until LENGTH) {
+            if (index in 0 until WORD_LENGTH) {
                 val letter = get(index)
                 val submitted = letter.isSubmitted
 
@@ -65,7 +64,7 @@ data class Line(val round: Int) : Iterable<Letter> {
         if (isNotEmpty) {
             val index = letters.indexOfLast { it.isSubmitted.not() && it.isNotBlank  }
 
-            if (index in 0 until LENGTH) {
+            if (index in 0 until WORD_LENGTH) {
                 backup()
                 set(index, Letter(index, BLANK))
             }

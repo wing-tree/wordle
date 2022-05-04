@@ -7,8 +7,6 @@ import androidx.lifecycle.*
 import androidx.navigation.NavDirections
 import com.wing.tree.android.wordle.domain.model.Result
 import com.wing.tree.android.wordle.domain.model.Word
-import com.wing.tree.android.wordle.domain.model.playstate.Keyboard as DomainKeyboard
-import com.wing.tree.android.wordle.domain.model.playstate.PlayBoard as DomainPlayBoard
 import com.wing.tree.android.wordle.domain.model.playstate.PlayState
 import com.wing.tree.android.wordle.domain.usecase.core.getOrNull
 import com.wing.tree.android.wordle.domain.usecase.playstate.GetPlayStateUseCase
@@ -19,12 +17,12 @@ import com.wing.tree.android.wordle.domain.usecase.word.GetCountUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetWordUseCase
 import com.wing.tree.android.wordle.domain.util.notNull
 import com.wing.tree.android.wordle.presentation.R
-import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 import com.wing.tree.android.wordle.presentation.delegate.play.*
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toDomainModel
 import com.wing.tree.android.wordle.presentation.model.play.*
 import com.wing.tree.android.wordle.presentation.util.setValueWith
 import com.wing.tree.android.wordle.presentation.view.play.PlayFragmentDirections
+import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +30,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+import com.wing.tree.android.wordle.domain.model.playstate.Keyboard as DomainKeyboard
+import com.wing.tree.android.wordle.domain.model.playstate.PlayBoard as DomainPlayBoard
 
 @HiltViewModel
 class PlayViewModel @Inject constructor(
@@ -136,7 +136,7 @@ class PlayViewModel @Inject constructor(
         val word = _word.value
         val currentLetters = playBoard.value?.currentLine ?: return
 
-        if (currentLetters.notBlankCount < LENGTH) return
+        if (currentLetters.notBlankCount < WORD_LENGTH) return
 
         viewModelScope.launch(ioDispatcher) {
             submit(
@@ -158,12 +158,6 @@ class PlayViewModel @Inject constructor(
                         } else {
                             if (board.isRoundOver) {
                                 _state.value = State.Finish.RoundOver(board.isRoundAdded)
-                                // todo 확인 및 제거.
-//                                if (board.attemptIncremented.get()) {
-//                                    lose()
-//                                } else {
-//                                    showAddAttemptDialog.value = true
-//                                }
                             } else {
                                 board.incrementRound()
                                 enableKeyboard()
@@ -240,7 +234,7 @@ class PlayViewModel @Inject constructor(
 
     fun useHint() {
         playBoard.value?.let {
-            if (it.filterWithState<Letter.State.In.Matched>().distinct().count() < LENGTH.dec()) {
+            if (it.filterWithState<Letter.State.In.Matched>().distinct().count() < WORD_LENGTH.dec()) {
                 submitLetter(it.getNotMatchedYetLetters(_word).random())
             }
         }

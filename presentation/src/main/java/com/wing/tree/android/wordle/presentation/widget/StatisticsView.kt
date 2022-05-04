@@ -8,17 +8,16 @@ import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
-import com.wing.tree.android.wordle.domain.model.Statistics
-import com.wing.tree.android.wordle.presentation.R
-import com.wing.tree.android.wordle.presentation.databinding.StatisticsViewBinding
-import java.util.ArrayList
-
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.domain.model.Guesses
+import com.wing.tree.android.wordle.domain.model.Statistics
 import com.wing.tree.android.wordle.domain.util.float
-import com.wing.tree.android.wordle.presentation.constant.Round
+import com.wing.tree.android.wordle.presentation.R
+import com.wing.tree.android.wordle.presentation.databinding.StatisticsViewBinding
+import com.wing.tree.wordle.core.constant.BLANK
+import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
+import java.util.*
 
 
 class StatisticsView : ConstraintLayout {
@@ -51,7 +50,7 @@ class StatisticsView : ConstraintLayout {
     private fun initHorizontalBarChart(horizontalBarChart: HorizontalBarChart, guesses: Guesses) {
         val yVals = ArrayList<BarEntry>()
 
-        repeat(Round.MAXIMUM) {
+        repeat(MAXIMUM_ROUND) {
             val index = it.inc()
 
             yVals.add(BarEntry(index.float, guesses[index].float))

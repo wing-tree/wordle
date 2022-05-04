@@ -1,9 +1,8 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
 import androidx.annotation.ColorRes
-import com.wing.tree.android.wordle.android.constant.BLANK
-import com.wing.tree.android.wordle.domain.model.playstate.Letter as DomainLetter
 import com.wing.tree.android.wordle.presentation.R
+import com.wing.tree.wordle.core.constant.BLANK
 
 data class Letter(val position: Int, val value: String = BLANK) {
     constructor(position: Int, value: Char): this(position, "$value")

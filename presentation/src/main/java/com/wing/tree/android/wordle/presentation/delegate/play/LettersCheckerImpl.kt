@@ -1,13 +1,13 @@
 package com.wing.tree.android.wordle.presentation.delegate.play
 
 import androidx.annotation.MainThread
-import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.android.exception.WordNotFoundException
 import com.wing.tree.android.wordle.domain.usecase.core.Result
 import com.wing.tree.android.wordle.domain.usecase.core.map
 import com.wing.tree.android.wordle.domain.usecase.word.ContainsUseCase
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.Line
+import com.wing.tree.wordle.core.constant.BLANK
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

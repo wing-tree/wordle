@@ -6,12 +6,12 @@ import android.content.res.TypedArray
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
-import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.KeyViewBinding
 import com.wing.tree.android.wordle.presentation.extention.scale
 import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.util.flip
+import com.wing.tree.wordle.core.constant.BLANK
 
 class KeyView : FrameLayout, Flippable<KeyView> {
     private val viewBinding: KeyViewBinding = KeyViewBinding.bind(inflate(context, R.layout.key_view, this))

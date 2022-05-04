@@ -7,17 +7,16 @@ import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.wing.tree.android.wordle.presentation.adapter.play.BoardListAdapter
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
-import com.wing.tree.android.wordle.presentation.constant.Round
+import com.wing.tree.android.wordle.presentation.adapter.play.PlayBoardListAdapter
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegate
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegateImpl
-import com.wing.tree.android.wordle.presentation.extention.scale
 import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.model.play.State
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
+import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
@@ -26,8 +25,8 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     RoundOverDialogFragment.OnClickListener, InterstitialAdDelegate by InterstitialAdDelegateImpl()
 {
     private val viewModel by viewModels<PlayViewModel>()
-    private val boardListAdapter = BoardListAdapter(
-        object : BoardListAdapter.Callbacks {
+    private val boardListAdapter = PlayBoardListAdapter(
+        object : PlayBoardListAdapter.Callbacks {
             override fun onLetterClick(adapterPosition: Int, index: Int) {
                 viewModel.removeAt(adapterPosition, index)
             }
@@ -60,7 +59,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
                 adapter = boardListAdapter
                 layoutManager = LinearLayoutManager(context).apply {
-                    initialPrefetchItemCount = Round.MAXIMUM
+                    initialPrefetchItemCount = MAXIMUM_ROUND
                 }
             }
 

@@ -1,9 +1,9 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
 import com.wing.tree.android.wordle.domain.model.Word
-import com.wing.tree.android.wordle.presentation.constant.Round
-import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toPresentationModel
+import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
+import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import timber.log.Timber
 import com.wing.tree.android.wordle.domain.model.playstate.PlayBoard as DomainPlayBoard
 
@@ -11,13 +11,13 @@ class PlayBoard {
     private var _round: Int = 0
     val round: Int get() = _round
 
-    private var _maximumRound: Int = Round.MAXIMUM
+    private var _maximumRound: Int = MAXIMUM_ROUND
     val maximumRound: Int get() = _maximumRound
 
-    val isRoundAdded: Boolean get() = maximumRound > Round.MAXIMUM
+    val isRoundAdded: Boolean get() = maximumRound > MAXIMUM_ROUND
     val isRoundOver: Boolean get() = round.inc() >= maximumRound
 
-    private val _lines = MutableList(Round.MAXIMUM) { Line(it) }
+    private val _lines = MutableList(MAXIMUM_ROUND) { Line(it) }
     val lines: List<Line> get() = _lines
 
     val letters get() = lines.flatten()
@@ -40,7 +40,7 @@ class PlayBoard {
 
     fun add(letter: String) {
         with(currentLine) {
-            if (notBlankCount < LENGTH) {
+            if (notBlankCount < WORD_LENGTH) {
                 add(letter)
             }
         }

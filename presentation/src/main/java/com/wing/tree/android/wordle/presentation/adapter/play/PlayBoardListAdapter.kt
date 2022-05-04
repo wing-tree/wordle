@@ -5,13 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.wing.tree.android.wordle.android.constant.BLANK
 import com.wing.tree.android.wordle.presentation.databinding.LineItemBinding
 import com.wing.tree.android.wordle.presentation.model.play.PlayBoard
 import com.wing.tree.android.wordle.presentation.model.play.Letter
+import com.wing.tree.wordle.core.constant.BLANK
 import com.wing.tree.android.wordle.presentation.model.play.Line as Model
 
-class BoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterItem, BoardListAdapter.ViewHolder>(DiffCallback()) {
+class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterItem, PlayBoardListAdapter.ViewHolder>(DiffCallback()) {
     interface Callbacks {
         fun onLetterClick(adapterPosition: Int, index: Int)
         fun onAnimationEnd()
