@@ -8,7 +8,9 @@ import javax.inject.Inject
 
 class WordRepositoryImpl @Inject constructor(private val dataSource: WordDataSource): WordRepository {
     override suspend fun contains(letters: String): Boolean {
-        return dataSource.get(letters).notNull
+       return runCatching {
+            dataSource.get(letters).notNull
+        }.getOrDefault(false)
     }
 
     override suspend fun count(): Int {

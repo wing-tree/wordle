@@ -74,7 +74,7 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
         holder.bind(getItem(position))
     }
 
-    fun submitBoard(playBoard: PlayBoard) {
+    fun submitPlayBoard(playBoard: PlayBoard) {
         val list = playBoard.lines.mapIndexed { index, letters ->
             AdapterItem.Line.from(index, letters)
         }

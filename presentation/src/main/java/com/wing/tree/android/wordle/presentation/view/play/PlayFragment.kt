@@ -18,14 +18,16 @@ import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.DelicateCoroutinesApi
 import timber.log.Timber
 
+@DelicateCoroutinesApi
 @AndroidEntryPoint
 class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     RoundOverDialogFragment.OnClickListener, InterstitialAdDelegate by InterstitialAdDelegateImpl()
 {
     private val viewModel by viewModels<PlayViewModel>()
-    private val boardListAdapter = PlayBoardListAdapter(
+    private val playBoardListAdapter = PlayBoardListAdapter(
         object : PlayBoardListAdapter.Callbacks {
             override fun onLetterClick(adapterPosition: Int, index: Int) {
                 viewModel.removeAt(adapterPosition, index)
@@ -40,6 +42,11 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
         }
     )
+
+    override fun onPause() {
+        viewModel.updatePlayState()
+        super.onPause()
+    }
 
     override fun inflate(inflater: LayoutInflater, container: ViewGroup?): FragmentPlayBinding {
         return FragmentPlayBinding.inflate(inflater, container, false)
@@ -57,7 +64,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
                     }
                 }
 
-                adapter = boardListAdapter
+                adapter = playBoardListAdapter
                 layoutManager = LinearLayoutManager(context).apply {
                     initialPrefetchItemCount = MAXIMUM_ROUND
                 }
@@ -106,7 +113,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         }
 
         viewModel.playBoard.observe(viewLifecycleOwner) {
-            boardListAdapter.submitBoard(it)
+            playBoardListAdapter.submitPlayBoard(it)
         }
 
         viewModel.load {
@@ -122,7 +129,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         }
 
         viewModel.keyboard.observe(viewLifecycleOwner) {
-            viewBinding.keyboardView.applyState(it.alphabets)
+            viewBinding.keyboardView.applyState(it.alphabetKeys)
         }
 
         viewModel.directions.observe(viewLifecycleOwner) {

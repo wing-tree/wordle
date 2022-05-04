@@ -5,5 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface PlayStateRepository {
     fun get(): Flow<PlayState>
+    suspend fun clear()
     suspend fun update(playState: PlayState)
 }

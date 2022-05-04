@@ -10,12 +10,8 @@ import javax.inject.Inject
 class ContainsUseCase @Inject constructor(
     private val repository: WordRepository,
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-) : CoroutineUseCase<String, Result<Boolean>>(coroutineDispatcher) {
-    override suspend fun execute(parameter: String): Result<Boolean> {
-        return try {
-            Result.Success(repository.contains(parameter))
-        } catch (throwable: Throwable) {
-            Result.Error(throwable)
-        }
+) : CoroutineUseCase<String, Boolean>(coroutineDispatcher) {
+    override suspend fun execute(parameter: String): Boolean {
+        return repository.contains(parameter)
     }
 }

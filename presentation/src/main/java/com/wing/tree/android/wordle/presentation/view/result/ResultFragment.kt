@@ -8,7 +8,9 @@ import com.wing.tree.android.wordle.presentation.databinding.FragmentResultBindi
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.result.ResultViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.DelicateCoroutinesApi
 
+@DelicateCoroutinesApi
 @AndroidEntryPoint
 class ResultFragment : BaseFragment<FragmentResultBinding>() {
     private val viewModel by viewModels<ResultViewModel>()

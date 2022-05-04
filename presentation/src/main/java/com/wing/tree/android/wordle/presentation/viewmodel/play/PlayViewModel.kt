@@ -24,10 +24,8 @@ import com.wing.tree.android.wordle.presentation.util.setValueWith
 import com.wing.tree.android.wordle.presentation.view.play.PlayFragmentDirections
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 import javax.inject.Inject
 import com.wing.tree.android.wordle.domain.model.playstate.Keyboard as DomainKeyboard
@@ -57,12 +55,16 @@ class PlayViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getPlayStateUseCase(Unit).collect {
-               it.getOrNull()?.let {
-                   println("aaa word :${it.word}")
-                   println("aaa playboard.lines :${it.playBoard.lines.toList()}")
-                   println("aaa keyboard alphabets :${it.keyboard.alphabets.toList()}")
-               }
+            getPlayStateUseCase(Unit).collect { result ->
+                if (state.value is State.Finish) {
+                    cancel()
+                } else {
+                    result.getOrNull()?.let { playState ->
+                        _playBoard.value = PlayBoard.from(playState.playBoard)
+                        _keyboard.value = Keyboard.from(playState.keyboard)
+                        _word = playState.word
+                    }
+                }
             }
         }
     }
@@ -72,12 +74,8 @@ class PlayViewModel @Inject constructor(
 
     val isAnimating = MutableLiveData<Boolean>()
 
-    private val _board = MutableLiveData(PlayBoard())
-    val playBoard: LiveData<PlayBoard> get() = _board
-
-    // 키보드 상태 네이밍 .. todo.
-//    private val _keys = MediatorLiveData<List<Letter>>()
-//    val keys: LiveData<List<Letter>> get() = _keys
+    private val _playBoard = MutableLiveData(PlayBoard())
+    val playBoard: LiveData<PlayBoard> get() = _playBoard
 
     private val _keyboard = MediatorLiveData<Keyboard>()
     val keyboard: LiveData<Keyboard> get() = _keyboard
@@ -97,7 +95,7 @@ class PlayViewModel @Inject constructor(
 
         _keyboard.addSource(playBoard) { board ->
             val value = _keyboard.value ?: return@addSource
-            val alphabetKeys = value.alphabets
+            val alphabetKeys = value.alphabetKeys
 
             board.notUnknownLetters.forEach { letter ->
                 alphabetKeys.find { it.letter == letter.value }?.updateState(letter.state)
@@ -120,20 +118,19 @@ class PlayViewModel @Inject constructor(
     }
 
     fun add(letter: String) {
-        _board.setValueWith { add(letter) }
+        _playBoard.setValueWith { add(letter) }
     }
 
     fun removeAt(attempt: Int, index: Int) {
-        _board.setValueWith { removeAt(attempt, index) }
+        _playBoard.setValueWith { removeAt(attempt, index) }
     }
 
     fun removeLast() {
-        _board.setValueWith { removeLast() }
+        _playBoard.setValueWith { removeLast() }
     }
 
     // 콜백 너무많다.. todo 콜백 좀 줄입시더.
     fun submit(@MainThread onSuccess: (Line) -> Unit) {
-        val word = _word.value
         val currentLetters = playBoard.value?.currentLine ?: return
 
         if (currentLetters.notBlankCount < WORD_LENGTH) return
@@ -149,11 +146,11 @@ class PlayViewModel @Inject constructor(
                     playBoard.value?.let { board ->
                         board.submit()
 
-                        _board.value = board
+                        _playBoard.value = board
 
                         onSuccess(it) //todo 안쓰는거같은뎅.
 
-                        if (it.matches(word)) {
+                        if (it.matches(word.value)) {
                             win()
                         } else {
                             if (board.isRoundOver) {
@@ -207,7 +204,7 @@ class PlayViewModel @Inject constructor(
     }
 
     private fun submitLetter(letter: Letter) {
-        _board.setValueWith {
+        _playBoard.setValueWith {
             currentLine.submit(letter)
         }
     }
@@ -215,20 +212,24 @@ class PlayViewModel @Inject constructor(
     @DelicateCoroutinesApi
     fun updatePlayState() {
         GlobalScope.launch(defaultDispatcher) {
-            val keyboard = keyboard.value?.toDomainModel() ?: Keyboard().toDomainModel()
-            val playBoard = playBoard.value?.toDomainModel() ?: PlayBoard().toDomainModel()
-            val word = object : Word {
-                override val index: Int = word.index
-                override val value: String = word.value
-            }
+            if (state.value is State.Finish) {
+                cancel()
+            } else {
+                val keyboard = keyboard.value?.toDomainModel() ?: Keyboard().toDomainModel()
+                val playBoard = playBoard.value?.toDomainModel() ?: PlayBoard().toDomainModel()
+                val word = object : Word {
+                    override val index: Int = word.index
+                    override val value: String = word.value
+                }
 
-            val playState = object : PlayState {
-                override val keyboard: DomainKeyboard = keyboard
-                override val playBoard: DomainPlayBoard = playBoard
-                override val word: Word = word
-            }
+                val playState = object : PlayState {
+                    override val keyboard: DomainKeyboard = keyboard
+                    override val playBoard: DomainPlayBoard = playBoard
+                    override val word: Word = word
+                }
 
-            updatePlayStateUseCase.invoke(playState)
+                updatePlayStateUseCase(playState)
+            }
         }
     }
 
@@ -251,12 +252,12 @@ class PlayViewModel @Inject constructor(
     fun addRound() {
         playBoard.value?.let {
             it.addRound()
-            _board.value = it
+            _playBoard.value = it
         }
     }
 
     fun tryAgain() {
-        _board.value = PlayBoard()
+        _playBoard.value = PlayBoard()
         _keyboard.value = Keyboard()
     }
 

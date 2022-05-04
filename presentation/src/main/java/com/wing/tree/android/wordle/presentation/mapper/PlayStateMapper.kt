@@ -12,8 +12,14 @@ object PlayStateMapper {
         val keyboard = this
 
         return object : DomainKeyboard {
-            override val alphabets: List<DomainAlphabet> = keyboard.alphabets.map { it.toDomainModel() }
+            override val alphabets: List<DomainAlphabet> = keyboard.alphabetKeys.map { it.toDomainModel() }
         }
+    }
+
+    fun DomainAlphabet.toPresentationModel(): Key.Alphabet {
+        val alphabet = this
+
+        return Key.Alphabet(alphabet.letter)
     }
 
     fun Key.Alphabet.toDomainModel(): DomainAlphabet {
@@ -35,7 +41,7 @@ object PlayStateMapper {
         }
     }
 
-    fun DomainLine.toPresentationModel() = Line(round = round)
+    fun DomainLine.toPresentationModel() = Line.from(this)
 
     fun Line.toDomainModel(): DomainLine {
         val line = this

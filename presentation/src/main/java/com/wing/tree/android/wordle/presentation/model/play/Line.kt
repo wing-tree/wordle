@@ -15,6 +15,7 @@ data class Line(val round: Int) : Iterable<Letter> {
 
     val letters: Array<Letter> = Array(WORD_LENGTH) { Letter(position = it) }
     val previousLetters: Array<Letter> = Array(WORD_LENGTH) { Letter(position = it) }
+    val unknownLetters: List<Letter> get() = letters.filterWithState<Letter.State.Unknown>()
 
     val notBlankCount: Int
         get() = letters.count { it.isNotBlank }
@@ -112,6 +113,8 @@ data class Line(val round: Int) : Iterable<Letter> {
                 line.previousLetters.sortedBy { it.position }.forEachIndexed { index, letter ->
                     previousLetters[index] = letter.toPresentationModel()
                 }
+
+                _isSubmitted = line.isSubmitted
             }
         }
     }
