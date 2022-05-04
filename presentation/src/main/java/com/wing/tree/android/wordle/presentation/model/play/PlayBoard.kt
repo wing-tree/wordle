@@ -1,33 +1,28 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
 import com.wing.tree.android.wordle.domain.model.Word
-import com.wing.tree.android.wordle.domain.model.playstate.Line as DomainLine
-import com.wing.tree.android.wordle.domain.model.playstate.PlayBoard as DomainPlayBoard
 import com.wing.tree.android.wordle.presentation.constant.Round
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
-import com.wing.tree.android.wordle.presentation.util.increment
+import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toPresentationModel
 import timber.log.Timber
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.atomic.AtomicInteger
+import com.wing.tree.android.wordle.domain.model.playstate.PlayBoard as DomainPlayBoard
 
 class PlayBoard {
-    private val _round = AtomicInteger(0)
-    val round: Int get() = _round.get()
+    private var _round: Int = 0
+    val round: Int get() = _round
 
-    private val _maximumRound = AtomicInteger(Round.MAXIMUM)
-    val maximumRound: Int get() = _maximumRound.get()
+    private var _maximumRound: Int = Round.MAXIMUM
+    val maximumRound: Int get() = _maximumRound
 
-    private val _isRoundAdded = AtomicBoolean(false)
-    val isRoundAdded: Boolean get() = _isRoundAdded.get()
-
-    val isRoundExceeded: Boolean get() = round >= maximumRound.dec()
+    val isRoundAdded: Boolean get() = maximumRound > Round.MAXIMUM
+    val isRoundOver: Boolean get() = round.inc() >= maximumRound
 
     private val _lines = MutableList(Round.MAXIMUM) { Line(it) }
     val lines: List<Line> get() = _lines
 
     val letters get() = lines.flatten()
 
-    val currentLine: Line get() = lines[_round.get()]
+    val currentLine: Line get() = lines[round]
 
     val notUnknownLetters: List<Letter> get() = letters.filter { it.state.notUnknown }
 
@@ -68,16 +63,12 @@ class PlayBoard {
     }
 
     fun addRound() {
-        if (_isRoundAdded.compareAndSet(false, true)) {
-            with(_maximumRound.getAndIncrement()) {
-                incrementRound()
-                _lines.add(Line(this))
-            }
-        }
+        incrementRound()
+        _lines.add(Line(_maximumRound++))
     }
 
     fun incrementRound() {
-        _round.increment()
+        ++_round
     }
 
     inline fun <reified R: Letter.State> List<Letter>.filterWithState(): List<Letter> {
@@ -86,5 +77,18 @@ class PlayBoard {
 
     inline fun <reified R: Letter.State> filterWithState(): List<Letter> {
         return letters.filterWithState<R>()
+    }
+
+    companion object {
+        fun from(playBoard: DomainPlayBoard): PlayBoard {
+            return PlayBoard().apply {
+                _round = playBoard.round
+                _maximumRound = playBoard.maximumRound
+
+                playBoard.lines.forEachIndexed { index, line ->
+                    _lines[index] = line.toPresentationModel()
+                }
+            }
+        }
     }
 }

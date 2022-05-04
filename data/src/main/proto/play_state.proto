@@ -21,8 +21,7 @@ message Alphabet {
 message PlayBoard {
   int32 round = 1;
   int32 maximum_round = 2;
-  bool is_round_added = 3;
-  repeated Line line = 4;
+  repeated Line line = 3;
 }
 
 message Line {

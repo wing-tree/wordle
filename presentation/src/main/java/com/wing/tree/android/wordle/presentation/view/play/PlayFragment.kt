@@ -70,7 +70,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
                 when(key) {
                     is Key.Alphabet -> viewModel.add(key.letter)
                     // todo sjk check 아래의 접근으로 shake 적용 가능.
-                    is Key.Return -> { viewModel.submit { recyclerView.findViewHolderForAdapterPosition(1)?.itemView?.scale(1.0F, 1.5F, 500L) } }
+                    is Key.Return -> { viewModel.submit { recyclerView.findViewHolderForAdapterPosition(1)?.itemView } }
                     is Key.Backspace -> viewModel.removeLast()
                 }
             }

@@ -5,6 +5,7 @@ import com.wing.tree.android.wordle.android.constant.EMPTY
 import com.wing.tree.android.wordle.domain.model.playstate.Letter as DomainLetter
 import com.wing.tree.android.wordle.domain.model.playstate.Line as DomainLine
 import com.wing.tree.android.wordle.presentation.constant.Word.LENGTH
+import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toPresentationModel
 
 data class Line(val round: Int) : Iterable<Letter> {
     private val isNotEmpty: Boolean
@@ -98,6 +99,20 @@ data class Line(val round: Int) : Iterable<Letter> {
 
             override fun next(): Letter {
                 return letters[index++]
+            }
+        }
+    }
+
+    companion object {
+        fun from(line: DomainLine): Line {
+            return Line(line.round).apply {
+                line.letters.sortedBy { it.position }.forEachIndexed { index, letter ->
+                    letters[index] = letter.toPresentationModel()
+                }
+
+                line.previousLetters.sortedBy { it.position }.forEachIndexed { index, letter ->
+                    previousLetters[index] = letter.toPresentationModel()
+                }
             }
         }
     }

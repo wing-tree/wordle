@@ -156,7 +156,7 @@ class PlayViewModel @Inject constructor(
                         if (it.matches(word)) {
                             win()
                         } else {
-                            if (board.isRoundExceeded) {
+                            if (board.isRoundOver) {
                                 _state.value = State.Finish.RoundOver(board.isRoundAdded)
                                 // todo 확인 및 제거.
 //                                if (board.attemptIncremented.get()) {

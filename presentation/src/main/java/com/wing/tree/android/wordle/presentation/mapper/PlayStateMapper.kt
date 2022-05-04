@@ -36,6 +36,8 @@ object PlayStateMapper {
         }
     }
 
+    fun DomainLine.toPresentationModel() = Line(round = round)
+
     fun Line.toDomainModel(): DomainLine {
         val line = this
 
@@ -46,6 +48,8 @@ object PlayStateMapper {
             override val isSubmitted: Boolean = line.isSubmitted
         }
     }
+
+    fun DomainLetter.toPresentationModel() = Letter(position, value)
 
     fun Letter.toDomainModel(): DomainLetter {
         val letter = this
