@@ -10,10 +10,10 @@ message PlayState {
 }
 
 message Keyboard {
-  repeated Alphabet alphabet = 1;
+  repeated AlphabetKey alphabet = 1;
 }
 
-message Alphabet {
+message AlphabetKey {
   string letter = 1;
   int32 state = 2;
 }

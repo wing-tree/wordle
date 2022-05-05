@@ -13,7 +13,13 @@
     <color name="green_800">#2E7D32</color>
     <color name="yellow_500">#FFFFEB3B</color>
     <color name="grey_200">#FFEEEEEE</color>
+    <color name="grey_800">#FF424242</color>
     <color name="grey_900">#FF212121</color>
 
     <color name="surface">@color/white</color>
+
+    <color name="undefined">@color/grey_800</color>
+    <color name="not_in">@color/black</color>
+    <color name="mismatched">@color/yellow_500</color>
+    <color name="matched">@color/green_800</color>
 </resources>

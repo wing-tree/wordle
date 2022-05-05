@@ -16,7 +16,7 @@ import com.wing.tree.wordle.core.constant.BLANK
 class KeyView : FrameLayout, Flippable<KeyView> {
     private val viewBinding: KeyViewBinding = KeyViewBinding.bind(inflate(context, R.layout.key_view, this))
 
-    private var state: Key.State = Key.State.Unknown()
+    private var state: Key.State = Key.State.Undefined()
 
     override var isFlippable = true
     override var isAnimating = false
@@ -90,7 +90,7 @@ class KeyView : FrameLayout, Flippable<KeyView> {
         if (this.state.priority < state.priority) {
             this.state = state
 
-            val color = context.getColor(state.colorRes)
+            val color = context.getColor(state.backgroundColorRes)
 
             back.backgroundTintList = ColorStateList.valueOf(color)
 

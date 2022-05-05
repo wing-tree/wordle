@@ -24,7 +24,7 @@ class PlayBoard {
 
     val currentLine: Line get() = lines[round]
 
-    val notUnknownLetters: List<Letter> get() = letters.filter { it.state.notUnknown }
+    val notUnknownLetters: List<Letter> get() = letters.filter { it.state.notUndefined }
 
     fun getNotMatchedYetLetters(word: Word): List<Letter> {
         val matchedPositions = letters.filterWithState<Letter.State.In.Matched>().map { it.position }.distinct()

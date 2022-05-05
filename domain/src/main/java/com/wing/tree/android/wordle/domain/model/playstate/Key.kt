@@ -6,7 +6,7 @@ interface Key {
         val state: Int
 
         object State {
-            const val UNKNOWN = 0
+            const val UNDEFINED = 0
             const val NOT_IN = 1
             const val MISMATCHED = 2
             const val MATCHED = 3

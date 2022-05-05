@@ -2,8 +2,8 @@ package com.wing.tree.android.wordle.presentation.model.play
 
 import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toPresentationModel
+import com.wing.tree.wordle.core.constant.alphabet
 import com.wing.tree.android.wordle.domain.model.playstate.Keyboard as DomainKeyboard
-import com.wing.tree.android.wordle.presentation.util.alphabet
 import java.util.*
 
 class Keyboard {

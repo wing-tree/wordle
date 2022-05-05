@@ -15,7 +15,7 @@ data class Line(val round: Int) : Iterable<Letter> {
 
     val letters: Array<Letter> = Array(WORD_LENGTH) { Letter(position = it) }
     val previousLetters: Array<Letter> = Array(WORD_LENGTH) { Letter(position = it) }
-    val unknownLetters: List<Letter> get() = letters.filterWithState<Letter.State.Unknown>()
+    val unknownLetters: List<Letter> get() = letters.filterWithState<Letter.State.Undefined>()
 
     val notBlankCount: Int
         get() = letters.count { it.isNotBlank }
