@@ -1,6 +1,10 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
 import androidx.annotation.ColorRes
+import com.wing.tree.android.wordle.domain.model.playstate.Key.Alphabet.State.MATCHED
+import com.wing.tree.android.wordle.domain.model.playstate.Key.Alphabet.State.MISMATCHED
+import com.wing.tree.android.wordle.domain.model.playstate.Key.Alphabet.State.NOT_IN
+import com.wing.tree.android.wordle.domain.model.playstate.Key.Alphabet.State.UNDEFINED
 import com.wing.tree.android.wordle.presentation.R
 
 sealed class Key {
@@ -12,8 +16,8 @@ sealed class Key {
             _state = State.NotIn()
         }
 
-        fun updateState(state: Letter.State) {
-            _state = State.from(state)
+        fun updateState(state: State) {
+            _state = state
         }
     }
 
@@ -29,19 +33,11 @@ sealed class Key {
 
         val notUndefined: Boolean get() = this !is Undefined
 
-        fun fromInt(int: Int) = when(int) {
-            0 -> Letter.State.Undefined()
-            1 -> Letter.State.NotIn()
-            2 -> Letter.State.In.Mismatched()
-            3 -> Letter.State.In.Matched()
-            else -> throw IllegalArgumentException("$int")
-        }
-
         fun toInt() = when(this) {
-            is Undefined -> 0
-            is NotIn -> 1
-            is In.Mismatched -> 2
-            is In.Matched -> 3
+            is Undefined -> UNDEFINED
+            is NotIn -> NOT_IN
+            is In.Mismatched -> MISMATCHED
+            is In.Matched -> MATCHED
         }
 
         data class Undefined(
@@ -83,6 +79,14 @@ sealed class Key {
                 is Letter.State.In.Matched -> In.Matched()
                 is Letter.State.In.Mismatched -> In.Mismatched()
                 is Letter.State.Undefined -> Undefined()
+            }
+
+            fun fromInt(int: Int) = when(int) {
+                UNDEFINED -> Undefined()
+                NOT_IN -> NotIn()
+                MISMATCHED -> In.Mismatched()
+                MATCHED -> In.Matched()
+                else -> throw IllegalArgumentException("$int")
             }
         }
     }

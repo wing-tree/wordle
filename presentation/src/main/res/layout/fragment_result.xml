@@ -4,6 +4,14 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <com.wing.tree.android.wordle.presentation.widget.LineView
+        android:id="@+id/line_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.wing.tree.android.wordle.presentation.widget.StatisticsView
         android:id="@+id/statistics_view"
         android:layout_width="0dp"
@@ -11,7 +19,7 @@
         app:layout_constraintBottom_toTopOf="@+id/material_button_next_word"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/line_view" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/material_button_next_word"

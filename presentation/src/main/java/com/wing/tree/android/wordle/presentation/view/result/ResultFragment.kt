@@ -2,11 +2,16 @@ package com.wing.tree.android.wordle.presentation.view.result
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.ColorRes
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.wing.tree.android.wordle.presentation.databinding.FragmentResultBinding
+import com.wing.tree.android.wordle.presentation.model.play.Letter
+import com.wing.tree.android.wordle.presentation.model.play.PlayResult
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.result.ResultViewModel
+import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 
@@ -14,6 +19,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 @AndroidEntryPoint
 class ResultFragment : BaseFragment<FragmentResultBinding>() {
     private val viewModel by viewModels<ResultViewModel>()
+    private val navArgs: ResultFragmentArgs by navArgs()
 
     override fun inflate(inflater: LayoutInflater, container: ViewGroup?): FragmentResultBinding {
         return FragmentResultBinding.inflate(inflater, container, false)
@@ -30,6 +36,28 @@ class ResultFragment : BaseFragment<FragmentResultBinding>() {
             materialButtonNextWord.setOnClickListener {
                 findNavController().navigate(ResultFragmentDirections.actionResultFragmentToPlayFragment())
             }
+
+            when(val playResult = navArgs.playResult) {
+                is PlayResult.Lose -> {
+                    repeat(WORD_LENGTH) {
+                        val letters = playResult.letters
+                        val states = playResult.states
+                        val state = Letter.State.fromInt(states[it])
+
+                        val letter = Letter(it, letters[it]).apply {
+                            updateState(state)
+                        }
+
+                        lineView[it] = letter
+                        lineView[it].setFrontBackgroundColor(getColor(state.backgroundColorRes))
+                    }
+                }
+                is PlayResult.Win -> {
+
+                }
+            }
         }
     }
+
+    private fun getColor(@ColorRes id: Int) = requireContext().getColor(id)
 }

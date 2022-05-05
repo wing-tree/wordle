@@ -1,6 +1,7 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
 import androidx.annotation.ColorRes
+import com.wing.tree.android.wordle.domain.model.playstate.Letter
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.wordle.core.constant.BLANK
 
@@ -37,19 +38,11 @@ data class Letter(val position: Int, val value: String = BLANK) {
 
         val notUndefined: Boolean get() = this !is Undefined
 
-        fun fromInt(int: Int) = when(int) {
-            0 -> Undefined()
-            1 -> NotIn()
-            2 -> In.Mismatched()
-            3 -> In.Matched()
-            else -> throw IllegalArgumentException("$int")
-        }
-
         fun toInt() = when(this) {
-            is Undefined -> 0
-            is NotIn -> 1
-            is In.Mismatched -> 2
-            is In.Matched -> 3
+            is Undefined -> Letter.State.UNDEFINED
+            is NotIn -> Letter.State.NOT_IN
+            is In.Mismatched -> Letter.State.MISMATCHED
+            is In.Matched -> Letter.State.MATCHED
         }
 
         data class Undefined(
@@ -82,7 +75,17 @@ data class Letter(val position: Int, val value: String = BLANK) {
             const val UNDEFINED = 0
             const val NOT_IN = 1
             const val MISMATCHED = 2
-            const val MATCHED = 3
+            const val MATCHED = 4
+        }
+
+        companion object {
+            fun fromInt(int: Int) = when(int) {
+                Letter.State.UNDEFINED -> Undefined()
+                Letter.State.NOT_IN -> NotIn()
+                Letter.State.MISMATCHED -> In.Mismatched()
+                Letter.State.MATCHED -> In.Matched()
+                else -> throw IllegalArgumentException("$int")
+            }
         }
     }
 }

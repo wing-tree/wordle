@@ -9,7 +9,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.wing.tree.android.wordle.data.datastore.PreferencesDataStore
+import com.wing.tree.android.wordle.data.datastore.preferences.PreferencesDataStore
 import com.wing.tree.android.wordle.data.datastore.playstate.PlayState
 import com.wing.tree.android.wordle.data.datastore.playstate.PlayStateDataStore
 import com.wing.tree.android.wordle.data.datastore.playstate.PlayStateSerializer

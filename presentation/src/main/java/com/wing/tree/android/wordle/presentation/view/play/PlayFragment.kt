@@ -1,6 +1,7 @@
 package com.wing.tree.android.wordle.presentation.view.play
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavDirections
@@ -12,8 +13,10 @@ import com.wing.tree.android.wordle.presentation.adapter.play.PlayBoardListAdapt
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegate
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegateImpl
+import com.wing.tree.android.wordle.presentation.extention.shake
 import com.wing.tree.android.wordle.presentation.model.play.Key
-import com.wing.tree.android.wordle.presentation.model.play.State
+import com.wing.tree.android.wordle.presentation.model.play.PlayResult
+import com.wing.tree.android.wordle.presentation.model.play.ViewState
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
@@ -42,6 +45,10 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
         }
     )
+
+    private val currentItemView: View?
+        get() = viewBinding.recyclerView
+            .findViewHolderForAdapterPosition(viewModel.round)?.itemView
 
     override fun onPause() {
         viewModel.updatePlayState()
@@ -75,8 +82,9 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
                 when(key) {
                     is Key.Alphabet -> viewModel.add(key.letter)
-                    // todo sjk check 아래의 접근으로 shake 적용 가능.
-                    is Key.Return -> { viewModel.submit { recyclerView.findViewHolderForAdapterPosition(1)?.itemView } }
+                    is Key.Return -> {
+                        viewModel.submit { it.onFailure { currentItemView?.shake() } }
+                    }
                     is Key.Backspace -> viewModel.removeLast()
                 }
             }
@@ -94,30 +102,8 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     override fun initData() {
         loadInterstitialAd(requireContext())
 
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            when(state) {
-                is State.Error -> {}
-                is State.Play -> {}
-                is State.Ready -> {}
-                is State.Finish -> {
-                    when(state) {
-                        is State.Finish.RoundOver -> {
-                            RoundOverDialogFragment.newInstance(state.isRoundAdded).also {
-                                it.show(childFragmentManager, it.tag)
-                            }
-                        }
-                        is State.Finish.Win -> {}
-                    }
-                }
-            }
-        }
-
         viewModel.playBoard.observe(viewLifecycleOwner) {
             playBoardListAdapter.submitPlayBoard(it)
-        }
-
-        viewModel.load {
-            viewModel.enableKeyboard()
         }
 
         viewModel.keyboardEnabled.observe(viewLifecycleOwner) { enabled ->
@@ -132,8 +118,35 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             viewBinding.keyboardView.applyState(it.alphabetKeys)
         }
 
-        viewModel.directions.observe(viewLifecycleOwner) {
-            navigate(it)
+        viewModel.viewState.observe(viewLifecycleOwner) { state ->
+            when(state) {
+                is ViewState.Error -> {}
+                is ViewState.Loading -> { viewModel.disableKeyboard() }
+                is ViewState.Play -> { viewModel.enableKeyboard() }
+                is ViewState.Ready -> { viewModel.disableKeyboard() }
+                is ViewState.Finish -> {
+                    when(state) {
+                        is ViewState.Finish.RoundOver -> {
+                            RoundOverDialogFragment.newInstance(state.isRoundAdded).also {
+                                it.show(childFragmentManager, it.tag)
+                            }
+                        }
+                        is ViewState.Finish.Win -> {
+                            val round = viewModel.round
+                            val word = viewModel.word.value
+
+                            val win =  PlayResult.Win(
+                                round = round,
+                                word = word
+                            )
+
+                            val directions = PlayFragmentDirections.actionPlayFragmentToResultFragment(win)
+
+                            navigate(directions)
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -142,7 +155,26 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     }
 
     override fun onNoThanksClick() {
-        navigate(PlayFragmentDirections.actionPlayFragmentToResultFragment())
+        with(viewModel) {
+            playBoard.value?.let { playBoard ->
+                val closest = playBoard.closest
+                val letters = closest.string
+                val round = round
+                val states = closest.map { it.state.toInt() }
+                val word = word.value
+
+                val lose = PlayResult.Lose(
+                    letters = letters,
+                    round = round,
+                    states = states,
+                    word = word
+                )
+
+                val directions = PlayFragmentDirections.actionPlayFragmentToResultFragment(lose)
+
+                navigate(directions)
+            }
+        }
     }
 
     override fun onTryAgainClick() {

@@ -21,9 +21,8 @@ class PlayBoard {
     val lines: List<Line> get() = _lines
 
     val letters get() = lines.flatten()
-
+    val closest: Line get() = lines.maxByOrNull { it.proximity } ?: currentLine
     val currentLine: Line get() = lines[round]
-
     val notUnknownLetters: List<Letter> get() = letters.filter { it.state.notUndefined }
 
     fun getNotMatchedYetLetters(word: Word): List<Letter> {

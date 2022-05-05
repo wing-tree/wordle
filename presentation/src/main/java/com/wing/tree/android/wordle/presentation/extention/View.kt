@@ -1,8 +1,10 @@
 package com.wing.tree.android.wordle.presentation.extention
 
+import android.animation.ObjectAnimator
+import android.graphics.Path
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.ScaleAnimation
+import android.view.animation.*
+import com.wing.tree.android.wordle.presentation.R
 
 fun View.scale(from: Float, to: Float, duration: Long, withEndAction: Runnable = Runnable {  }) {
     val pivotXType = Animation.RELATIVE_TO_SELF
@@ -34,4 +36,16 @@ fun View.visible() {
 
 fun View.gone() {
     visibility = View.GONE
+}
+
+fun View.shake() {
+    val animation = AnimationUtils.loadAnimation(context, R.anim.shake).apply {
+        fillAfter = true
+    }
+
+    val animationSet = AnimationSet(true).apply {
+        addAnimation(animation)
+    }
+
+    startAnimation(animationSet)
 }

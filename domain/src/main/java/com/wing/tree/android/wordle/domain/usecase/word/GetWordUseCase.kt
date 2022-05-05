@@ -11,14 +11,16 @@ import javax.inject.Inject
 class GetWordUseCase @Inject constructor(
     private val repository: WordRepository,
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-) : CoroutineUseCase<GetWordUseCase.Parameter, Result<Word>>(coroutineDispatcher) {
-    override suspend fun execute(parameter: Parameter): Result<Word> {
-        return try {
-            Result.Success(repository.get(parameter.index))
-        } catch (throwable: Throwable) {
-            Result.Error(throwable)
+) : CoroutineUseCase<GetWordUseCase.Parameter, Word>(coroutineDispatcher) {
+    override suspend fun execute(parameter: Parameter): Word {
+        return when(parameter) {
+            is Parameter.Index -> repository.get(parameter.value)
+            is Parameter.Random -> repository.random()
         }
     }
 
-    data class Parameter(val index: Int)
+    sealed class Parameter {
+        data class Index(val value: Int) : Parameter()
+        object Random : Parameter()
+    }
 }

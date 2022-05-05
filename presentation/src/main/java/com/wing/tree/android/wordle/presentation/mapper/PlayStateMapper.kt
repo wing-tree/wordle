@@ -19,7 +19,9 @@ object PlayStateMapper {
     fun DomainAlphabet.toPresentationModel(): Key.Alphabet {
         val alphabet = this
 
-        return Key.Alphabet(alphabet.letter)
+        return Key.Alphabet(alphabet.letter).apply {
+            updateState(Key.State.fromInt(alphabet.state))
+        }
     }
 
     fun Key.Alphabet.toDomainModel(): DomainAlphabet {
@@ -54,7 +56,17 @@ object PlayStateMapper {
         }
     }
 
-    fun DomainLetter.toPresentationModel() = Letter(position, value)
+    fun DomainLetter.toPresentationModel(): Letter {
+        val letter = this
+
+        return Letter(letter.position, letter.value).apply {
+            if (letter.isSubmitted) {
+                submit()
+            } else {
+                updateState(Letter.State.fromInt(letter.state))
+            }
+        }
+    }
 
     fun Letter.toDomainModel(): DomainLetter {
         val letter = this

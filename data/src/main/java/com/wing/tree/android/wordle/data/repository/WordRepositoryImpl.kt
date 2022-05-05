@@ -13,11 +13,15 @@ class WordRepositoryImpl @Inject constructor(private val dataSource: WordDataSou
         }.getOrDefault(false)
     }
 
-    override suspend fun count(): Int {
-        return dataSource.count()
+    override suspend fun get(index: Int): Word {
+        return runCatching {
+            dataSource.get(index)
+        }.getOrThrow()
     }
 
-    override suspend fun get(index: Int): Word {
-        return dataSource.get(index)
+    override suspend fun random(): Word {
+        return runCatching {
+            dataSource.random()
+        }.getOrThrow()
     }
 }

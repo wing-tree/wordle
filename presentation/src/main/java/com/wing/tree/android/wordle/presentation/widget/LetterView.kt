@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import androidx.annotation.ColorInt
+import androidx.annotation.ColorRes
 import androidx.core.view.isVisible
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.LetterViewBinding
@@ -16,8 +18,8 @@ class LetterView : FrameLayout, Flippable<LetterView> {
     override var isFlippable = true
     override var isAnimating = false
 
-    var back = viewBinding.letterBack
-    var front = viewBinding.letterFront
+    private var back = viewBinding.letterBack
+    private var front = viewBinding.letterFront
 
     var letter: Letter? = null
         set(value) {
@@ -69,7 +71,11 @@ class LetterView : FrameLayout, Flippable<LetterView> {
         }
     }
 
-    fun setTextFront(text: String) {
+    fun setFrontText(text: String) {
         front.text = text
+    }
+
+    fun setFrontBackgroundColor(@ColorInt color: Int) {
+        front.backgroundTintList = ColorStateList.valueOf(color)
     }
 }

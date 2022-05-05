@@ -73,7 +73,15 @@ class LineView : ConstraintLayout {
         }
     }
 
-    fun get(index: Int): LetterView = with(viewBinding) {
+    fun scaleAt(index: Int) {
+        with(get(index)) {
+            scale(1.0F, 1.15F, 240L) {
+                scale(1.15F, 1.0F, 240L)
+            }
+        }
+    }
+
+    operator fun get(index: Int): LetterView = with(viewBinding) {
         when(index) {
             0 -> firstLetter
             1 -> secondLetter
@@ -81,14 +89,6 @@ class LineView : ConstraintLayout {
             3 -> fourthLetter
             4 -> fifthLetter
             else -> throw IllegalArgumentException("$index")
-        }
-    }
-
-    fun scaleAt(index: Int) {
-        with(get(index)) {
-            scale(1.0F, 1.15F, 240L) {
-                scale(1.15F, 1.0F, 240L)
-            }
         }
     }
 

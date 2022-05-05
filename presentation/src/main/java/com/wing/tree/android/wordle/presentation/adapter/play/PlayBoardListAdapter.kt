@@ -44,7 +44,7 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
                                 if (letter.isSubmitted) {
                                     with(get(index)) {
                                         if (isFlippable) {
-                                            setTextFront(BLANK)
+                                            setFrontText(BLANK)
                                             flipAt(index) { isFlippable = false }
                                         }
                                     }

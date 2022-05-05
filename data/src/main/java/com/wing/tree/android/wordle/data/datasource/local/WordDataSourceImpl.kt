@@ -18,4 +18,8 @@ class WordDataSourceImpl @Inject constructor(database: Database) : WordDataSourc
     override suspend fun get(letters: String): Word? {
         return dao.get(letters)
     }
+
+    override suspend fun random(): Word {
+        return dao.random()
+    }
 }

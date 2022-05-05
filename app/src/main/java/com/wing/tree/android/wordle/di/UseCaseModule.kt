@@ -7,7 +7,6 @@ import com.wing.tree.android.wordle.domain.usecase.billing.GetGoldUseCase
 import com.wing.tree.android.wordle.domain.usecase.core.IOCoroutineDispatcher
 import com.wing.tree.android.wordle.domain.usecase.statistics.GetStatisticsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.ContainsUseCase
-import com.wing.tree.android.wordle.domain.usecase.word.GetCountUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetWordUseCase
 import dagger.Module
 import dagger.Provides
@@ -26,15 +25,6 @@ internal object UseCaseModule {
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
     ): ContainsUseCase {
         return ContainsUseCase(repository, coroutineDispatcher)
-    }
-
-    @Provides
-    @ViewModelScoped
-    fun providesGetCountUseCase(
-        repository: WordRepository,
-        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-    ): GetCountUseCase {
-        return GetCountUseCase(repository, coroutineDispatcher)
     }
 
     @Provides

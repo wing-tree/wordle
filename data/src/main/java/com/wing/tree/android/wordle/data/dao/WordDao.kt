@@ -16,4 +16,7 @@ interface WordDao {
 
     @Query("SELECT * FROM word WHERE value IS :letters")
     suspend fun get(letters: String): Word?
+
+    @Query("SELECT * FROM word ORDER BY RANDOM() LIMIT 1")
+    suspend fun random(): Word
 }
