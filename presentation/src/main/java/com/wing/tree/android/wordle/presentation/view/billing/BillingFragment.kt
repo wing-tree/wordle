@@ -3,21 +3,16 @@ package com.wing.tree.android.wordle.presentation.view.billing
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wing.tree.android.wordle.presentation.adapter.billing.SkuDetailsListAdapter
 import com.wing.tree.android.wordle.presentation.databinding.FragmentBillingBinding
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
-import com.wing.tree.android.wordle.presentation.viewmodel.billing.BillingViewModel
 import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.concurrent.atomic.AtomicInteger
 
 @AndroidEntryPoint
 class BillingFragment : BaseFragment<FragmentBillingBinding>() {
     private val activityViewModel by activityViewModels<MainActivityViewModel>()
-    private val viewModel by viewModels<BillingViewModel>()
     private val skuDetailsListAdapter = SkuDetailsListAdapter { skuDetails ->
         if (isAdded) {
             activityViewModel.launchBillingFlow(requireActivity(), skuDetails)

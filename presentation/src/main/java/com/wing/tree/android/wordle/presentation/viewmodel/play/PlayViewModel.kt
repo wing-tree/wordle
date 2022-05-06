@@ -7,7 +7,6 @@ import androidx.lifecycle.*
 import com.wing.tree.android.wordle.domain.model.Result
 import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.domain.model.item.Item
-import com.wing.tree.android.wordle.domain.model.item.ItemCount
 import com.wing.tree.android.wordle.domain.model.item.ItemType
 import com.wing.tree.android.wordle.domain.model.playstate.PlayState
 import com.wing.tree.android.wordle.domain.usecase.billing.ConsumeCreditsUseCase
@@ -224,7 +223,7 @@ class PlayViewModel @Inject constructor(
                 when(itemType) {
                     Item.Type.ERASER -> useEraser()
                     Item.Type.HINT -> useHint()
-                    Item.Type.ONE_MORE_TRY -> addRound()
+                    Item.Type.ONE_MORE_TRY -> useOneMoreTry()
                 }
             } else {
                 println("wwwww")
@@ -232,15 +231,7 @@ class PlayViewModel @Inject constructor(
         }
     }
 
-    fun useHint() {
-        playBoard.value?.let {
-            if (it.filterWithState<Letter.State.In.Matched>().distinct().count() < WORD_LENGTH.dec()) {
-                submitLetter(it.getNotMatchedYetLetters(_word).random())
-            }
-        }
-    }
-
-    fun useEraser() {
+    private fun useEraser() {
         keyboard.value?.let {
             it.erase(_word)
 
@@ -248,7 +239,15 @@ class PlayViewModel @Inject constructor(
         }
     }
 
-    fun addRound() {
+    private fun useHint() {
+        playBoard.value?.let {
+            if (it.filterWithState<Letter.State.In.Matched>().distinct().count() < WORD_LENGTH.dec()) {
+                submitLetter(it.getNotMatchedYetLetters(_word).random())
+            }
+        }
+    }
+
+    private fun useOneMoreTry() {
         playBoard.value?.let {
             it.addRound()
             _playBoard.value = it

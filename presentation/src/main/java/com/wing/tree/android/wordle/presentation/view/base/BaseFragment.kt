@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 
 abstract class BaseFragment<VB: ViewBinding> : Fragment() {
@@ -33,5 +35,9 @@ abstract class BaseFragment<VB: ViewBinding> : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         bind(viewBinding)
+    }
+
+    protected fun navigate(directions: NavDirections) {
+        findNavController().navigate(directions)
     }
 }

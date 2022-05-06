@@ -162,10 +162,6 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         }
     }
 
-    override fun onAddRoundClick() {
-        viewModel.useItem(Item.Type.ONE_MORE_TRY)
-    }
-
     override fun onNoThanksClick() {
         with(viewModel) {
             playBoard.value?.let { playBoard ->
@@ -189,7 +185,11 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         }
     }
 
-    override fun onTryAgainClick() {
+    override fun onOneMoreTryClick() {
+        viewModel.useItem(Item.Type.ONE_MORE_TRY)
+    }
+
+    override fun onPlayAgainClick() {
         showInterstitialAd(
             requireActivity(),
             onAdDismissedFullScreenContent = {
@@ -200,9 +200,5 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
                 viewModel.tryAgain()
             }
         )
-    }
-
-    private fun navigate(directions: NavDirections) {
-        findNavController().navigate(directions)
     }
 }

@@ -14,9 +14,9 @@ import com.wing.tree.android.wordle.presentation.view.base.BaseDialogFragment
 
 class RoundOverDialogFragment : BaseDialogFragment<FragmentRoundOverDialogBinding>() {
     interface OnClickListener {
-        fun onAddRoundClick()
+        fun onOneMoreTryClick()
         fun onNoThanksClick()
-        fun onTryAgainClick()
+        fun onPlayAgainClick()
     }
 
     private val roundAdded by lazy { arguments?.getBoolean(Key.ROUND_ADDED) ?: false }
@@ -42,13 +42,13 @@ class RoundOverDialogFragment : BaseDialogFragment<FragmentRoundOverDialogBindin
                 materialButtonAddRound.visible()
 
                 materialButtonAddRound.setOnClickListener {
-                    onClickListener?.onAddRoundClick()
+                    onClickListener?.onOneMoreTryClick()
                     dismiss()
                 }
             }
 
             materialButtonTryAgain.setOnClickListener {
-                onClickListener?.onTryAgainClick()
+                onClickListener?.onPlayAgainClick()
                 dismiss()
             }
 

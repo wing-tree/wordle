@@ -39,21 +39,30 @@ class ResultFragment : BaseFragment<FragmentResultBinding>() {
 
             when(val playResult = navArgs.playResult) {
                 is PlayResult.Lose -> {
-                    repeat(WORD_LENGTH) {
-                        val letters = playResult.letters
-                        val states = playResult.states
-                        val state = Letter.State.fromInt(states[it])
+                    val letters = playResult.letters
+                    val states = playResult.states
 
-                        val letter = Letter(it, letters[it]).apply {
-                            updateState(state)
-                        }
+                    repeat(WORD_LENGTH) {
+                        val letter = Letter(it, letters[it]).apply { updateState(state) }
+                        val state = Letter.State.fromInt(states[it])
+                        val backgroundColor = getColor(state.backgroundColorRes)
 
                         lineView[it] = letter
-                        lineView[it].setFrontBackgroundColor(getColor(state.backgroundColorRes))
+                        lineView[it].setFrontBackgroundColor(backgroundColor)
                     }
                 }
                 is PlayResult.Win -> {
+                    playResult.word.forEachIndexed { index, letter ->
+                        with(Letter(index, letter)) {
+                            val state = Letter.State.In.Matched()
+                            val backgroundColor = getColor(state.backgroundColorRes)
 
+                            updateState(state)
+
+                            lineView[index] = this
+                            lineView[index].setFrontBackgroundColor(backgroundColor)
+                        }
+                    }
                 }
             }
         }

@@ -79,6 +79,9 @@ class MainActivityViewModel @Inject constructor(
                         Skus.CREDITS_240 in skus -> {
                             purchaseCreditsUseCase(240)
                         }
+                        Skus.CREDITS_720 in skus -> {
+                            purchaseCreditsUseCase(720)
+                        }
                     }
                 }
             }
