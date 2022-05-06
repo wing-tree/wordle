@@ -6,7 +6,7 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import com.wing.tree.android.wordle.domain.model.Statistics
-import com.wing.tree.android.wordle.domain.usecase.billing.GetGoldUseCase
+import com.wing.tree.android.wordle.domain.usecase.billing.GetCreditsUseCase
 import com.wing.tree.android.wordle.domain.usecase.core.Result
 import com.wing.tree.android.wordle.domain.usecase.core.getOrDefault
 import com.wing.tree.android.wordle.domain.usecase.statistics.GetStatisticsUseCase
@@ -16,11 +16,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainFragmentViewModel @Inject constructor(
-    getGoldUseCase: GetGoldUseCase,
+    getCreditsUseCase: GetCreditsUseCase,
     getStatisticsUseCase: GetStatisticsUseCase,
     application: Application
 ) : AndroidViewModel(application) {
-    val gold = getGoldUseCase(Unit).map { result ->
+    val gold = getCreditsUseCase(Unit).map { result ->
         result.getOrDefault(0)
     }.asLiveData(viewModelScope.coroutineContext)
 

@@ -12,43 +12,41 @@ import javax.inject.Inject
 
 class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataStore<Preferences>) : PreferencesRepository {
     private object Name {
-        const val GOLD = "GOLD"
+        const val CREDITS = "CREDITS"
         const val IS_FIRST_TIME = "IS_FIRST_TIME"
-        const val REMOVE_ADS_PURCHASED = "REMOVE_ADS_PURCHASED"
+        const val IS_REMOVE_ADS_PURCHASED = "IS_REMOVE_ADS_PURCHASED"
     }
 
     private object Key {
-        val gold = intPreferencesKey(Name.GOLD)
+        val credits = intPreferencesKey(Name.CREDITS)
         val isFirstTime = booleanPreferencesKey(Name.IS_FIRST_TIME)
-        val removeAdsPurchased = booleanPreferencesKey(Name.REMOVE_ADS_PURCHASED)
+        val isRemoveAdsPurchased = booleanPreferencesKey(Name.IS_REMOVE_ADS_PURCHASED)
+    }
+
+    override fun getCredits(): Flow<Int> {
+        return dataStore.data.map { it[Key.credits] ?: 0 }
     }
 
     override fun isFirstTime(): Flow<Boolean> {
         return dataStore.data.map { it[Key.isFirstTime] ?: true }
     }
 
-    override fun getGold(): Flow<Int> {
-        return dataStore.data.map { it[Key.gold] ?: 0 }
+    override fun isRemoveAdsPurchased(): Flow<Boolean> {
+        return dataStore.data.map { it[Key.isRemoveAdsPurchased] ?: false }
     }
 
-    override fun getRemoveAdsPurchased(): Flow<Boolean> {
-        return dataStore.data.map { it[Key.removeAdsPurchased] ?: false }
-    }
-
-    override suspend fun consumeGold(gold: Int) {
+    override suspend fun consumeCredits(credits: Int) {
         dataStore.edit {
-            with(it[Key.gold]) {
-                it[Key.gold] = this?.minus(gold) ?: 0
+            with(it[Key.credits]) {
+                it[Key.credits] = this?.minus(credits) ?: 0
             }
         }
     }
 
-    override suspend fun purchaseGold(gold: Int) {
+    override suspend fun purchaseCredits(credits: Int) {
         dataStore.edit {
-            val s = listOf(12,1,3,)
-            s.groupBy {  }
-            with(it[Key.gold]) {
-                it[Key.gold] = this?.plus(gold) ?: gold
+            with(it[Key.credits]) {
+                it[Key.credits] = this?.plus(credits) ?: credits
             }
         }
     }
@@ -58,6 +56,6 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
     }
 
     override suspend fun putRemoveAdsPurchased(removeAdsPurchased: Boolean) {
-        dataStore.edit { it[Key.removeAdsPurchased] = removeAdsPurchased }
+        dataStore.edit { it[Key.isRemoveAdsPurchased] = removeAdsPurchased }
     }
 }

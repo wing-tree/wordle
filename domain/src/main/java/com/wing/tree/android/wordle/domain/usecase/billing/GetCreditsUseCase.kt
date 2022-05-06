@@ -9,12 +9,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class GetGoldUseCase @Inject constructor(
+class GetCreditsUseCase @Inject constructor(
     private val repository: PreferencesRepository,
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : FlowUseCase<Unit, Int>(coroutineDispatcher) {
     override fun execute(parameter: Unit): Flow<Result<Int>> {
-        return repository.getGold().map {
+        return repository.getCredits().map {
             try {
                 Result.Success(it)
             } catch (throwable: Throwable) {

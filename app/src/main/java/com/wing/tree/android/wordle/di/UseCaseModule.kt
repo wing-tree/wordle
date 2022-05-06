@@ -3,7 +3,7 @@ package com.wing.tree.android.wordle.di
 import com.wing.tree.android.wordle.domain.repository.PreferencesRepository
 import com.wing.tree.android.wordle.domain.repository.StatisticsRepository
 import com.wing.tree.android.wordle.domain.repository.WordRepository
-import com.wing.tree.android.wordle.domain.usecase.billing.GetGoldUseCase
+import com.wing.tree.android.wordle.domain.usecase.billing.GetCreditsUseCase
 import com.wing.tree.android.wordle.domain.usecase.core.IOCoroutineDispatcher
 import com.wing.tree.android.wordle.domain.usecase.statistics.GetStatisticsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.ContainsUseCase
@@ -32,8 +32,8 @@ internal object UseCaseModule {
     fun providesGetGoldUseCase(
         repository: PreferencesRepository,
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-    ): GetGoldUseCase {
-        return GetGoldUseCase(repository, coroutineDispatcher)
+    ): GetCreditsUseCase {
+        return GetCreditsUseCase(repository, coroutineDispatcher)
     }
 
     @Provides

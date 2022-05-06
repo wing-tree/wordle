@@ -22,7 +22,7 @@ object BillingDelegateImpl : BillingDelegate {
                         handlePurchase(purchase)
                     }
                 } else {
-                    purchaseCallbacks?.onFailure(billingResult.debugMessage, billingResult.responseCode)
+                    purchaseCallbacks?.onPurchaseFailure(billingResult.debugMessage, billingResult.responseCode)
                 }
             }
         }
@@ -43,7 +43,7 @@ object BillingDelegateImpl : BillingDelegate {
                     if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                         purchaseCallbacks?.onPurchaseAcknowledged(purchase)
                     } else {
-                        purchaseCallbacks?.onFailure(
+                        purchaseCallbacks?.onPurchaseFailure(
                             billingResult.debugMessage,
                             billingResult.responseCode
                         )
@@ -74,7 +74,7 @@ object BillingDelegateImpl : BillingDelegate {
                     if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                         purchaseCallbacks?.onPurchaseConsumed(purchase)
                     } else {
-                        purchaseCallbacks?.onFailure(
+                        purchaseCallbacks?.onPurchaseFailure(
                             billingResult.debugMessage,
                             billingResult.responseCode
                         )
@@ -133,7 +133,7 @@ object BillingDelegateImpl : BillingDelegate {
                         handlePurchase(purchase)
                     }
                 } else {
-                    purchaseCallbacks?.onFailure(billingResult.debugMessage, responseCode)
+                    purchaseCallbacks?.onPurchaseFailure(billingResult.debugMessage, responseCode)
                 }
             }
         }
@@ -143,17 +143,17 @@ object BillingDelegateImpl : BillingDelegate {
         skuType: String,
         onSkuDetailsList: (List<SkuDetails>) -> Unit
     ) {
-        val skuDetailsParams = SkuDetailsParams
-            .newBuilder().apply {
-                setSkusList(skusList).setType(skuType)
-            }
+        val builder = SkuDetailsParams.newBuilder()
+        val skuDetailsParams = builder
+            .setSkusList(skusList)
+            .setType(skuType)
             .build()
 
         billingClient?.querySkuDetailsAsync(skuDetailsParams) { billingResult, skuDetailsList ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
                 onSkuDetailsList.invoke(skuDetailsList ?: emptyList())
             } else {
-                purchaseCallbacks?.onFailure(billingResult.debugMessage, billingResult.responseCode)
+                purchaseCallbacks?.onPurchaseFailure(billingResult.debugMessage, billingResult.responseCode)
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.wing.tree.android.wordle.presentation.view.main
 
 import androidx.activity.viewModels
-import androidx.navigation.findNavController
 import com.google.android.gms.ads.*
 import com.wing.tree.android.wordle.presentation.BuildConfig
 import com.wing.tree.android.wordle.presentation.R

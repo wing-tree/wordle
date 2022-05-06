@@ -14,7 +14,7 @@ class GetRemoveAdsPurchased @Inject constructor(
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : FlowUseCase<Unit, Boolean>(coroutineDispatcher) {
     override fun execute(parameter: Unit): Flow<Result<Boolean>> {
-        return repository.getRemoveAdsPurchased().map {
+        return repository.isRemoveAdsPurchased().map {
             try {
                 Result.Success(it)
             } catch (throwable: Throwable) {

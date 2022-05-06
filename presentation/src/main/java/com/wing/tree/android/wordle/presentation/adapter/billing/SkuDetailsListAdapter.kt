@@ -11,13 +11,17 @@ import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 
-class SkuDetailsListAdapter : ListAdapter<SkuDetails, SkuDetailsListAdapter.ViewHolder>(DiffCallback()) {
+class SkuDetailsListAdapter(private val onItemClick: (SkuDetails) -> Unit) : ListAdapter<SkuDetails, SkuDetailsListAdapter.ViewHolder>(DiffCallback()) {
     inner class ViewHolder(private val viewBinding: SkuDetailsItemBinding): RecyclerView.ViewHolder(viewBinding.root) {
         fun bind(item: SkuDetails) {
             with(viewBinding) {
                 textViewName.text = item.name
                 textViewPrice.text = item.price
                 textViewDescription.text = item.description
+
+                root.setOnClickListener {
+                    onItemClick(item)
+                }
             }
         }
 
