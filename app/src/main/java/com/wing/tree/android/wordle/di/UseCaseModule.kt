@@ -29,7 +29,7 @@ internal object UseCaseModule {
 
     @Provides
     @ViewModelScoped
-    fun providesGetGoldUseCase(
+    fun providesGetCreditsUseCase(
         repository: PreferencesRepository,
         @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
     ): GetCreditsUseCase {

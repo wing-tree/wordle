@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="text_view_gold" translatable="false">text_view_gold</string>
+    <string name="text_view_credits" translatable="false">text_view_credits</string>
 </resources>

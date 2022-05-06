@@ -16,20 +16,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainFragmentViewModel @Inject constructor(
-    getCreditsUseCase: GetCreditsUseCase,
     getStatisticsUseCase: GetStatisticsUseCase,
     application: Application
 ) : AndroidViewModel(application) {
-    val gold = getCreditsUseCase(Unit).map { result ->
-        result.getOrDefault(0)
-    }.asLiveData(viewModelScope.coroutineContext)
-
-    val statistics = getStatisticsUseCase.invoke(Unit).asLiveData(viewModelScope.coroutineContext)
-        .map { result ->
-            when(result) {
-                is Result.Error -> Statistics.Default
-                is Result.Success -> result.data
-                Result.Loading -> Statistics.Default
-            }
-        }
+   val statistics = getStatisticsUseCase()
+       .map { it.getOrDefault(Statistics.Default) }
+       .asLiveData(viewModelScope.coroutineContext)
 }

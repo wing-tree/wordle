@@ -9,6 +9,9 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
+import com.wing.tree.android.wordle.data.datastore.itemcount.ItemCount
+import com.wing.tree.android.wordle.data.datastore.itemcount.ItemCountDataStore
+import com.wing.tree.android.wordle.data.datastore.itemcount.ItemCountSerializer
 import com.wing.tree.android.wordle.data.datastore.preferences.PreferencesDataStore
 import com.wing.tree.android.wordle.data.datastore.playstate.PlayState
 import com.wing.tree.android.wordle.data.datastore.playstate.PlayStateDataStore
@@ -31,10 +34,10 @@ import javax.inject.Singleton
 object DataStoreModule {
     @Singleton
     @Provides
-    fun providesPlayStateDataStore(@ApplicationContext context: Context): DataStore<PlayState> {
+    fun providesItemCountDataStore(@ApplicationContext context: Context): DataStore<ItemCount> {
         return DataStoreFactory.create(
-            serializer = PlayStateSerializer,
-            produceFile = { context.dataStoreFile(PlayStateDataStore.FILE_NAME) },
+            serializer = ItemCountSerializer,
+            produceFile = { context.dataStoreFile(ItemCountDataStore.FILE_NAME) },
             corruptionHandler = null,
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         )
@@ -42,10 +45,10 @@ object DataStoreModule {
 
     @Singleton
     @Provides
-    fun providesStatisticsDataStore(@ApplicationContext context: Context): DataStore<Statistics> {
+    fun providesPlayStateDataStore(@ApplicationContext context: Context): DataStore<PlayState> {
         return DataStoreFactory.create(
-            serializer = StatisticsSerializer,
-            produceFile = { context.dataStoreFile(StatisticsDataStore.FILE_NAME) },
+            serializer = PlayStateSerializer,
+            produceFile = { context.dataStoreFile(PlayStateDataStore.FILE_NAME) },
             corruptionHandler = null,
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         )
@@ -60,6 +63,17 @@ object DataStoreModule {
             ),
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
             produceFile = { context.preferencesDataStoreFile(PreferencesDataStore.FILE_NAME) }
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun providesStatisticsDataStore(@ApplicationContext context: Context): DataStore<Statistics> {
+        return DataStoreFactory.create(
+            serializer = StatisticsSerializer,
+            produceFile = { context.dataStoreFile(StatisticsDataStore.FILE_NAME) },
+            corruptionHandler = null,
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         )
     }
 }

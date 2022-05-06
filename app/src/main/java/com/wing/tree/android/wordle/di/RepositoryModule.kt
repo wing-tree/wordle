@@ -1,13 +1,7 @@
 package com.wing.tree.android.wordle.di
 
-import com.wing.tree.android.wordle.data.repository.PlayStateRepositoryImpl
-import com.wing.tree.android.wordle.data.repository.PreferencesRepositoryImpl
-import com.wing.tree.android.wordle.data.repository.StatisticsRepositoryImpl
-import com.wing.tree.android.wordle.data.repository.WordRepositoryImpl
-import com.wing.tree.android.wordle.domain.repository.PlayStateRepository
-import com.wing.tree.android.wordle.domain.repository.PreferencesRepository
-import com.wing.tree.android.wordle.domain.repository.StatisticsRepository
-import com.wing.tree.android.wordle.domain.repository.WordRepository
+import com.wing.tree.android.wordle.data.repository.*
+import com.wing.tree.android.wordle.domain.repository.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,7 +13,7 @@ import javax.inject.Singleton
 internal abstract class RepositoryModule {
     @Binds
     @Singleton
-    abstract fun bindsWordRepository(repository: WordRepositoryImpl): WordRepository
+    abstract fun bindsItemCountRepository(repository: ItemCountRepositoryImpl): ItemCountRepository
 
     @Binds
     @Singleton
@@ -32,4 +26,8 @@ internal abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindsStatisticsRepository(repository: StatisticsRepositoryImpl): StatisticsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsWordRepository(repository: WordRepositoryImpl): WordRepository
 }

@@ -3,6 +3,7 @@ package com.wing.tree.android.wordle.domain.usecase.billing
 import com.wing.tree.android.wordle.domain.repository.PreferencesRepository
 import com.wing.tree.android.wordle.domain.usecase.core.FlowUseCase
 import com.wing.tree.android.wordle.domain.usecase.core.IOCoroutineDispatcher
+import com.wing.tree.android.wordle.domain.usecase.core.NoParameterFlowUseCase
 import com.wing.tree.android.wordle.domain.usecase.core.Result
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -12,14 +13,8 @@ import javax.inject.Inject
 class GetCreditsUseCase @Inject constructor(
     private val repository: PreferencesRepository,
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-) : FlowUseCase<Unit, Int>(coroutineDispatcher) {
-    override fun execute(parameter: Unit): Flow<Result<Int>> {
-        return repository.getCredits().map {
-            try {
-                Result.Success(it)
-            } catch (throwable: Throwable) {
-                Result.Error(throwable)
-            }
-        }
+) : NoParameterFlowUseCase<Int>(coroutineDispatcher) {
+    override fun execute(): Flow<Int> {
+        return repository.getCredits()
     }
 }

@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+option java_package = "com.wing.tree.android.wordle.data.datastore.itemcount";
+option java_multiple_files = true;
+
+message ItemCount {
+  int32 eraser = 1;
+  int32 hint = 2;
+  int32 oneMoreTry = 3;
+}

@@ -4,23 +4,26 @@ import android.app.Application
 import android.media.MediaPlayer
 import androidx.annotation.MainThread
 import androidx.lifecycle.*
-import androidx.navigation.NavDirections
 import com.wing.tree.android.wordle.domain.model.Result
 import com.wing.tree.android.wordle.domain.model.Word
+import com.wing.tree.android.wordle.domain.model.item.Item
+import com.wing.tree.android.wordle.domain.model.item.ItemCount
+import com.wing.tree.android.wordle.domain.model.item.ItemType
 import com.wing.tree.android.wordle.domain.model.playstate.PlayState
+import com.wing.tree.android.wordle.domain.usecase.billing.ConsumeCreditsUseCase
 import com.wing.tree.android.wordle.domain.usecase.core.getOrNull
+import com.wing.tree.android.wordle.domain.usecase.item.ConsumeItemCountUseCase
+import com.wing.tree.android.wordle.domain.usecase.item.GetItemCountUseCase
 import com.wing.tree.android.wordle.domain.usecase.playstate.GetPlayStateUseCase
 import com.wing.tree.android.wordle.domain.usecase.playstate.UpdatePlayStateUseCase
 import com.wing.tree.android.wordle.domain.usecase.statistics.UpdateStatisticsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.ContainsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetWordUseCase
-import com.wing.tree.android.wordle.domain.util.notNull
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.delegate.play.*
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toDomainModel
 import com.wing.tree.android.wordle.presentation.model.play.*
 import com.wing.tree.android.wordle.presentation.util.setValueWith
-import com.wing.tree.android.wordle.presentation.view.play.PlayFragmentDirections
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -34,10 +37,18 @@ class PlayViewModel @Inject constructor(
     private val containsUseCase: ContainsUseCase,
     private val updatePlayStateUseCase: UpdatePlayStateUseCase,
     private val updateStatisticsUseCase: UpdateStatisticsUseCase,
+    consumeCreditsUseCase: ConsumeCreditsUseCase,
+    consumeItemCountUseCase: ConsumeItemCountUseCase,
+    getItemCountUseCase: GetItemCountUseCase,
     getPlayStateUseCase: GetPlayStateUseCase,
     getWordUseCase: GetWordUseCase,
     application: Application
 ) : AndroidViewModel(application),
+    ItemHandler by ItemHandlerImpl(
+        consumeCreditsUseCase = consumeCreditsUseCase,
+        consumeItemCountUseCase = consumeItemCountUseCase,
+        getItemCountUseCase = getItemCountUseCase
+    ),
     KeyboardActionDelegate by KeyboardActionDelegateImpl(),
     LettersChecker by LettersCheckerImpl(containsUseCase),
     WordLoader by WordLoaderImpl(getWordUseCase)
@@ -51,7 +62,7 @@ class PlayViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getPlayStateUseCase(Unit).collect { result ->
+            getPlayStateUseCase().collect { result ->
                 _viewState.value = ViewState.Loading
 
                 if (viewState.value is ViewState.Finish) {
@@ -203,6 +214,20 @@ class PlayViewModel @Inject constructor(
                 }
 
                 updatePlayStateUseCase(playState)
+            }
+        }
+    }
+
+    fun useItem(@ItemType itemType: Int) {
+        viewModelScope.launch {
+            if (use(itemType).isSuccess) {
+                when(itemType) {
+                    Item.Type.ERASER -> useEraser()
+                    Item.Type.HINT -> useHint()
+                    Item.Type.ONE_MORE_TRY -> addRound()
+                }
+            } else {
+                println("wwwww")
             }
         }
     }

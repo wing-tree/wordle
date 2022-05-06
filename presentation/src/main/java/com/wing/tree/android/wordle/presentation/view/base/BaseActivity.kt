@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowInsetsController
+import android.widget.Toast
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
@@ -20,9 +21,7 @@ abstract class BaseActivity<VB: ViewBinding>  : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
-
         hideSystemUi()
-
         initData()
         bind(viewBinding)
     }
@@ -43,5 +42,9 @@ abstract class BaseActivity<VB: ViewBinding>  : AppCompatActivity() {
             @Suppress("DEPRECATION")
             window.decorView.systemUiVisibility = visibility
         }
+    }
+
+    protected fun showToast(text: String,  duration: Int = Toast.LENGTH_SHORT) {
+        Toast.makeText(this, text, duration).show()
     }
 }

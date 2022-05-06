@@ -51,7 +51,16 @@
             app:layout_constraintTop_toBottomOf="@+id/keyboard_view" />
 
         <TextView
-            android:id="@+id/text_view_dart"
+            android:id="@+id/text_view_hint_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="1dp"
+            app:layout_constraintEnd_toEndOf="@+id/text_view_hint"
+            app:layout_constraintTop_toTopOf="@+id/text_view_hint"
+            tools:text="3"/>
+
+        <TextView
+            android:id="@+id/text_view_eraser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="12dp"
@@ -60,6 +69,14 @@
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/text_view_hint"
             app:layout_constraintTop_toTopOf="@+id/text_view_hint" />
+
+        <TextView
+            android:id="@+id/text_view_eraser_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@+id/text_view_eraser"
+            app:layout_constraintTop_toTopOf="@+id/text_view_eraser"
+            tools:text="3"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

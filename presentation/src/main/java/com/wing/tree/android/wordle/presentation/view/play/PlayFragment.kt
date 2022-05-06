@@ -4,10 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.wing.tree.android.wordle.domain.model.item.Item
+import com.wing.tree.android.wordle.domain.model.item.ItemCount
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.play.PlayBoardListAdapter
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
@@ -22,6 +25,8 @@ import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @DelicateCoroutinesApi
@@ -90,17 +95,24 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
 
             textViewHint.setOnClickListener {
-                viewModel.useHint()
+                viewModel.useItem(Item.Type.HINT)
             }
 
-            textViewDart.setOnClickListener {
-                viewModel.useEraser()
+            textViewEraser.setOnClickListener {
+                viewModel.useItem(Item.Type.ERASER)
             }
         }
     }
 
     override fun initData() {
         loadInterstitialAd(requireContext())
+
+        lifecycleScope.launch {
+            viewModel.itemCount.collect {
+                viewBinding.textViewEraserCount.text = "${it.eraser}"
+                viewBinding.textViewHintCount.text = "${it.hint}"
+            }
+        }
 
         viewModel.playBoard.observe(viewLifecycleOwner) {
             playBoardListAdapter.submitPlayBoard(it)
@@ -151,7 +163,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     }
 
     override fun onAddRoundClick() {
-        viewModel.addRound()
+        viewModel.useItem(Item.Type.ONE_MORE_TRY)
     }
 
     override fun onNoThanksClick() {

@@ -17,7 +17,7 @@ class BillingViewModel @Inject constructor(
     getCreditsUseCase: GetCreditsUseCase,
     application: Application
 ) : AndroidViewModel(application), BillingDelegate by BillingDelegateImpl {
-    val gold = getCreditsUseCase(Unit).map { result ->
+    val credits = getCreditsUseCase().map { result ->
         result.getOrDefault(0)
     }.asLiveData(viewModelScope.coroutineContext)
 }

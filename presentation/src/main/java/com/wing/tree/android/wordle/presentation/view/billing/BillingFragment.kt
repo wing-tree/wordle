@@ -4,15 +4,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wing.tree.android.wordle.presentation.adapter.billing.SkuDetailsListAdapter
 import com.wing.tree.android.wordle.presentation.databinding.FragmentBillingBinding
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.billing.BillingViewModel
 import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityViewModel
-import com.wing.tree.wordle.billing.delegate.BillingDelegate
-import com.wing.tree.wordle.billing.delegate.BillingDelegateImpl
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.atomic.AtomicInteger
 
 @AndroidEntryPoint
 class BillingFragment : BaseFragment<FragmentBillingBinding>() {
@@ -29,13 +29,8 @@ class BillingFragment : BaseFragment<FragmentBillingBinding>() {
     }
 
     override fun initData() {
-        activityViewModel.querySkuDetails {
-            println("ssssss:$it")
+        activityViewModel.skuDetailsList.observe(viewLifecycleOwner) {
             skuDetailsListAdapter.submitList(it)
-        }
-
-        viewModel.gold.observe(viewLifecycleOwner) { gold ->
-            viewBinding.textViewGold.text = "$gold"
         }
     }
 
