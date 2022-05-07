@@ -9,6 +9,8 @@ import com.wing.tree.android.wordle.presentation.BuildConfig
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.ActivityMainBinding
 import com.wing.tree.android.wordle.presentation.view.base.BaseActivity
+import com.wing.tree.android.wordle.presentation.view.play.PlayFragmentDirections
+import com.wing.tree.android.wordle.presentation.view.result.ResultFragmentDirections
 import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -44,6 +46,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         navController?.addOnDestinationChangedListener(onDestinationChangedListener)
 
+        viewModel.credits.observe(this) {
+            viewBinding.textViewCredits.text = "$it"
+        }
+
         viewModel.isAdsRemoved.observe(this) { isAdsRemoved ->
             val container = viewBinding.frameLayoutAdView
 
@@ -72,17 +78,22 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
         }
 
-        viewModel.credits.observe(this) {
-            viewBinding.textViewCredits.text = "$it"
+        viewModel.onCreditsClick.observe(this) {
+            val directions = when(navController?.currentDestination?.id) {
+                R.id.mainFragment -> MainFragmentDirections.actionMainFragmentToBillingFragment()
+                R.id.playFragment -> PlayFragmentDirections.actionPlayFragmentToBillingFragment()
+                R.id.resultFragment -> ResultFragmentDirections.actionResultFragmentToBillingFragment()
+                else -> null
+            }
+
+            directions?.let { navigate(it) }
         }
     }
 
     override fun bind(viewBinding: ActivityMainBinding) {
         with(viewBinding) {
             textViewCredits.setOnClickListener {
-                val directions = MainFragmentDirections.actionMainFragmentToBillingFragment()
-
-                navigate(directions)
+                viewModel.callOnCreditsClick()
             }
         }
     }

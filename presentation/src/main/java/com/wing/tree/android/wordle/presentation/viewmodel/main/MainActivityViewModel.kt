@@ -10,6 +10,7 @@ import com.wing.tree.android.wordle.domain.usecase.billing.IsRemoveAdsPurchasedU
 import com.wing.tree.android.wordle.domain.usecase.billing.PurchaseCreditsUseCase
 import com.wing.tree.android.wordle.domain.usecase.billing.PutRemoveAdsPurchasedUseCase
 import com.wing.tree.android.wordle.domain.usecase.core.getOrDefault
+import com.wing.tree.android.wordle.presentation.util.SingleLiveEvent
 import com.wing.tree.wordle.billing.callbacks.BillingClientStateCallbacks
 import com.wing.tree.wordle.billing.callbacks.PurchaseCallbacks
 import com.wing.tree.wordle.billing.delegate.BillingDelegate
@@ -42,13 +43,16 @@ class MainActivityViewModel @Inject constructor(
     private val _skuDetailsList = MutableLiveData<List<SkuDetails>>()
     val skuDetailsList: LiveData<List<SkuDetails>> get() = _skuDetailsList
 
+    val credits = getCreditsUseCase()
+        .map { it.getOrDefault(0) }
+        .asLiveData(viewModelScope.coroutineContext)
+
     val isAdsRemoved = isRemoveAdsPurchasedUseCaseUseCase()
         .map { it.getOrDefault(false) }
         .asLiveData(viewModelScope.coroutineContext)
 
-    val credits = getCreditsUseCase()
-        .map { it.getOrDefault(0) }
-        .asLiveData(viewModelScope.coroutineContext)
+    private val _onCreditsClick = SingleLiveEvent<Unit>()
+    val onCreditsClick: LiveData<Unit> get() = _onCreditsClick
 
     val played = AtomicInteger(0)
 
@@ -93,5 +97,9 @@ class MainActivityViewModel @Inject constructor(
 
             }
         })
+    }
+
+    fun callOnCreditsClick() {
+        _onCreditsClick.call()
     }
 }
