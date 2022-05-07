@@ -6,7 +6,7 @@
     tools:parentTag="android.widget.FrameLayout">
 
     <TextView
-        android:id="@+id/letter_back"
+        android:id="@+id/text_view_back"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:backgroundTintMode="src_over"
@@ -15,7 +15,7 @@
         tools:text="A" />
 
     <TextView
-        android:id="@+id/letter_front"
+        android:id="@+id/text_view_front"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:backgroundTintMode="src_over"
