@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
     id "com.google.protobuf" version "0.8.12"
 }
 
@@ -71,6 +72,9 @@ dependencies {
     implementation 'com.google.protobuf:protobuf-javalite:4.0.0-rc-2'
 
     implementation platform('com.google.firebase:firebase-bom:29.3.1')
+
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 }
 
 protobuf {
