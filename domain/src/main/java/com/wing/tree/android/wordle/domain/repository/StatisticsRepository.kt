@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface StatisticsRepository {
     fun get(): Flow<Statistics>
-    suspend fun update(result: Result, guess: Int, onComplete: () -> Unit)
+    suspend fun update(result: Result, guess: Int)
 }

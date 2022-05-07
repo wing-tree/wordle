@@ -168,19 +168,15 @@ class PlayViewModel @Inject constructor(
 
     @DelicateCoroutinesApi
     private fun win() {
-        updateStatistics(Result.Win(round)) {
-            _viewState.postValue(ViewState.Finish.Win)
-        }
+        updateStatistics(Result.Win(round))
+        _viewState.postValue(ViewState.Finish.Win)
     }
 
     @DelicateCoroutinesApi
-    private fun updateStatistics(result: Result, onComplete: () -> Unit) {
-        val attempt = playBoard.value?.round ?: 0
+    private fun updateStatistics(result: Result) {
+        val round = playBoard.value?.round ?: 0
 
-        val parameter = UpdateStatisticsUseCase.Parameter(result, attempt) {
-            // todo finally 달아줘야함.
-            onComplete.invoke()
-        }
+        val parameter = UpdateStatisticsUseCase.Parameter(result, round)
 
         GlobalScope.launch(ioDispatcher) {
             updateStatisticsUseCase.invoke(parameter)
@@ -233,7 +229,7 @@ class PlayViewModel @Inject constructor(
 
     private fun useEraser() {
         keyboard.value?.let {
-            it.erase(_word)
+            it.erase(word)
 
             _keyboard.value = it
         }

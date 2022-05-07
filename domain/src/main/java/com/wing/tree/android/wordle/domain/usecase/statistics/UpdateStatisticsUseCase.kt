@@ -12,8 +12,8 @@ class UpdateStatisticsUseCase @Inject constructor(
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
 ) : CoroutineUseCase<UpdateStatisticsUseCase.Parameter, Unit>(coroutineDispatcher) {
     override suspend fun execute(parameter: Parameter) {
-        repository.update(parameter.result, parameter.guess, parameter.onComplete)
+        repository.update(parameter.result, parameter.guess)
     }
 
-    data class Parameter(val result: Result, val guess: Int, val onComplete: () -> Unit)
+    data class Parameter(val result: Result, val guess: Int)
 }

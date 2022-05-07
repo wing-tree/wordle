@@ -17,7 +17,7 @@ object GuessesMapper {
             get() = guesses.four
         override val five: Int
             get() = guesses.five
-        override val six: Int
-            get() = guesses.six
+        override val sixOrMore: Int
+            get() = guesses.sixOrMore
     }
 }

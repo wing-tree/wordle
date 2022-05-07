@@ -48,15 +48,15 @@ class StatisticsView : ConstraintLayout {
     }
 
     private fun initHorizontalBarChart(horizontalBarChart: HorizontalBarChart, guesses: Guesses) {
-        val yVals = ArrayList<BarEntry>()
+        val barEntries = ArrayList<BarEntry>()
 
         repeat(MAXIMUM_ROUND) {
             val index = it.inc()
 
-            yVals.add(BarEntry(index.float, guesses[index].float))
+            barEntries.add(BarEntry(index.float, guesses[index].float))
         }
 
-        val barDataSet = BarDataSet(yVals, BLANK)
+        val barDataSet = BarDataSet(barEntries, BLANK)
 
         barDataSet.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
@@ -101,7 +101,6 @@ class StatisticsView : ConstraintLayout {
         3 -> three
         4 -> four
         5 -> five
-        6 -> six
-        else -> throw IndexOutOfBoundsException("$index")
+        else -> sixOrMore
     }
 }

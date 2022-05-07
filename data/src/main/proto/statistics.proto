@@ -17,5 +17,5 @@ message Guesses {
   int32 three = 3;
   int32 four = 4;
   int32 five = 5;
-  int32 six = 6;
+  int32 six_or_more = 6;
 }

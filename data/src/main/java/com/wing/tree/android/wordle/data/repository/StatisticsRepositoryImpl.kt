@@ -17,7 +17,7 @@ class StatisticsRepositoryImpl @Inject constructor(private val dataStore: DataSt
         return dataStore.data.map { it.toDomainModel() }
     }
 
-    override suspend fun update(result: Result, guess: Int, onComplete: () -> Unit) {
+    override suspend fun update(result: Result, guess: Int) {
         dataStore.updateData {
             val maximumWinStreak: Int
             val played = it.played.inc()
@@ -36,12 +36,12 @@ class StatisticsRepositoryImpl @Inject constructor(private val dataStore: DataSt
 
             val guesses = with(Guesses.newBuilder(it.guesses)) {
                 when(guess) {
-                    1 -> one = it.guesses.one.inc()
-                    2 -> two = it.guesses.two.inc()
-                    3 -> three = it.guesses.three.inc()
-                    4 -> four = it.guesses.four.inc()
-                    5 -> five = it.guesses.five.inc()
-                    6 -> six = it.guesses.six.inc()
+                    0 -> one = it.guesses.one.inc()
+                    1 -> two = it.guesses.two.inc()
+                    2 -> three = it.guesses.three.inc()
+                    3 -> four = it.guesses.four.inc()
+                    4 -> five = it.guesses.five.inc()
+                    else -> sixOrMore = it.guesses.sixOrMore.inc()
                 }
 
                 build()
@@ -55,7 +55,5 @@ class StatisticsRepositoryImpl @Inject constructor(private val dataStore: DataSt
                 .setGuesses(guesses)
                 .build()
         }
-
-        onComplete()
     }
 }
