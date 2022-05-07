@@ -94,12 +94,12 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
                 }
             }
 
-            textViewHint.setOnClickListener {
-                viewModel.useItem(Item.Type.HINT)
+            eraser.setOnClickListener {
+                viewModel.useItem(Item.Type.ERASER)
             }
 
-            textViewEraser.setOnClickListener {
-                viewModel.useItem(Item.Type.ERASER)
+            hint.setOnClickListener {
+                viewModel.useItem(Item.Type.HINT)
             }
         }
     }
@@ -109,8 +109,8 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
         lifecycleScope.launch {
             viewModel.itemCount.collect {
-                viewBinding.textViewEraserCount.text = "${it.eraser}"
-                viewBinding.textViewHintCount.text = "${it.hint}"
+                viewBinding.eraserCount.text = "${it.eraser}"
+                viewBinding.hintCount.text = "${it.hint}"
             }
         }
 
