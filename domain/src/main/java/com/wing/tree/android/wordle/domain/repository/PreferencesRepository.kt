@@ -9,5 +9,5 @@ interface PreferencesRepository {
     suspend fun consumeCredits(credits: Int): Boolean
     suspend fun purchaseCredits(credits: Int)
     suspend fun putFirstTime(isFirstTime: Boolean)
-    suspend fun putRemoveAdsPurchased(removeAdsPurchased: Boolean)
+    suspend fun putRemoveAdsPurchased(isRemoveAdsPurchased: Boolean)
 }

@@ -47,36 +47,48 @@ class LineView : ConstraintLayout {
         }
     }
 
-    fun flip(@MainThread doOnEnd: (() -> Unit)? = null) {
+    fun flip(skipAnimation: Boolean = false, @MainThread doOnEnd: (() -> Unit)? = null) {
         coroutineScope.launch {
-            flip(0)
-            flip(1)
-            flip(2)
-            flip(3)
-            flip(4)
+            if (skipAnimation) {
+                flip(0, true)
+                flip(1, true)
+                flip(2, true)
+                flip(3, true)
+                flip(4, true)
+            } else {
+                flip(0, false)
+                flip(1, false)
+                flip(2, false)
+                flip(3, false)
+                flip(4, false)
 
-            delay(600L)
+                delay(600L)
+            }
+
             doOnEnd?.invoke()
         }
     }
 
     fun flipAt(index: Int, @MainThread doOnEnd: ((LetterView) -> Unit)? = null) {
-        get(index).flip(doOnEnd)
+        get(index).flip(false, doOnEnd)
     }
 
-    private suspend fun flip(index: Int) {
+    private suspend fun flip(index: Int, skipAnimation: Boolean) {
         with(get(index)) {
             if (isFlippable) {
-                flip()
-                delay(240L)
+                flip(skipAnimation)
+
+                if (skipAnimation.not()) {
+                    delay(240L)
+                }
             }
         }
     }
 
     fun scaleAt(index: Int) {
         with(get(index)) {
-            scale(1.0F, 1.15F, 240L) {
-                scale(1.15F, 1.0F, 240L)
+            scale(1.0F, 1.25F, 200L) {
+                scale(1.25F, 1.0F, 200L)
             }
         }
     }
@@ -100,6 +112,18 @@ class LineView : ConstraintLayout {
                 2 -> thirdLetter.letter = letter
                 3 -> fourthLetter.letter = letter
                 4 -> fifthLetter.letter = letter
+            }
+        }
+    }
+
+    fun setBackLetterAt(index: Int, letter: Letter) {
+        with(viewBinding) {
+            when(index) {
+                0 -> firstLetter.backLetter = letter
+                1 -> secondLetter.backLetter = letter
+                2 -> thirdLetter.backLetter = letter
+                3 -> fourthLetter.backLetter = letter
+                4 -> fifthLetter.backLetter = letter
             }
         }
     }

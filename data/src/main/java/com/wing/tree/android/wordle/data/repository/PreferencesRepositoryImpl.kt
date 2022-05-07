@@ -77,7 +77,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
         dataStore.edit { it[Key.IsFirstTime] = isFirstTime }
     }
 
-    override suspend fun putRemoveAdsPurchased(removeAdsPurchased: Boolean) {
-        dataStore.edit { it[Key.IsRemoveAdsPurchased] = removeAdsPurchased }
+    override suspend fun putRemoveAdsPurchased(isRemoveAdsPurchased: Boolean) {
+        dataStore.edit { it[Key.IsRemoveAdsPurchased] = isRemoveAdsPurchased }
     }
 }

@@ -6,9 +6,9 @@ import androidx.lifecycle.*
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
 import com.wing.tree.android.wordle.domain.usecase.billing.GetCreditsUseCase
-import com.wing.tree.android.wordle.domain.usecase.billing.GetRemoveAdsPurchased
+import com.wing.tree.android.wordle.domain.usecase.billing.IsRemoveAdsPurchasedUseCase
 import com.wing.tree.android.wordle.domain.usecase.billing.PurchaseCreditsUseCase
-import com.wing.tree.android.wordle.domain.usecase.core.Result
+import com.wing.tree.android.wordle.domain.usecase.billing.PutRemoveAdsPurchasedUseCase
 import com.wing.tree.android.wordle.domain.usecase.core.getOrDefault
 import com.wing.tree.wordle.billing.callbacks.BillingClientStateCallbacks
 import com.wing.tree.wordle.billing.callbacks.PurchaseCallbacks
@@ -28,8 +28,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
     private val purchaseCreditsUseCase: PurchaseCreditsUseCase,
+    private val putRemoveAdsPurchasedUseCase: PutRemoveAdsPurchasedUseCase,
     getCreditsUseCase: GetCreditsUseCase,
-    getRemoveAdsPurchasedUseCase: GetRemoveAdsPurchased,
+    isRemoveAdsPurchasedUseCaseUseCase: IsRemoveAdsPurchasedUseCase,
     application: Application
 ) : AndroidViewModel(application), BillingDelegate by BillingDelegateImpl {
     init {
@@ -41,7 +42,7 @@ class MainActivityViewModel @Inject constructor(
     private val _skuDetailsList = MutableLiveData<List<SkuDetails>>()
     val skuDetailsList: LiveData<List<SkuDetails>> get() = _skuDetailsList
 
-    val adsRemoved = getRemoveAdsPurchasedUseCase()
+    val isAdsRemoved = isRemoveAdsPurchasedUseCaseUseCase()
         .map { it.getOrDefault(false) }
         .asLiveData(viewModelScope.coroutineContext)
 
@@ -68,7 +69,13 @@ class MainActivityViewModel @Inject constructor(
 
         registerPurchaseCallbacks(object : PurchaseCallbacks {
             override fun onPurchaseAcknowledged(purchase: Purchase) {
+                val skus = purchase.skus
 
+                GlobalScope.launch(ioDispatcher) {
+                    if (Skus.REMOVE_ADS in skus) {
+                        putRemoveAdsPurchasedUseCase(true)
+                    }
+                }
             }
 
             override fun onPurchaseConsumed(purchase: Purchase) {
@@ -76,12 +83,8 @@ class MainActivityViewModel @Inject constructor(
                     val skus = purchase.skus
 
                     when {
-                        Skus.CREDITS_240 in skus -> {
-                            purchaseCreditsUseCase(240)
-                        }
-                        Skus.CREDITS_720 in skus -> {
-                            purchaseCreditsUseCase(720)
-                        }
+                        Skus.CREDITS_240 in skus -> purchaseCreditsUseCase(240)
+                        Skus.CREDITS_720 in skus -> purchaseCreditsUseCase(720)
                     }
                 }
             }

@@ -44,10 +44,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         navController?.addOnDestinationChangedListener(onDestinationChangedListener)
 
-        viewModel.adsRemoved.observe(this) { adsRemoved ->
+        viewModel.isAdsRemoved.observe(this) { isAdsRemoved ->
             val container = viewBinding.frameLayoutAdView
 
-            if (adsRemoved) {
+            if (isAdsRemoved) {
                 container.removeAllViews()
             } else {
                 val adView = AdView(this).apply {

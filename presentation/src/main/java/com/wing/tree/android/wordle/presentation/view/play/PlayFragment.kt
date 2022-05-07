@@ -115,7 +115,9 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         }
 
         viewModel.playBoard.observe(viewLifecycleOwner) {
-            playBoardListAdapter.submitPlayBoard(it)
+            playBoardListAdapter.submitPlayBoard(it) {
+                it.skipAnimation.set(false)
+            }
         }
 
         viewModel.keyboardEnabled.observe(viewLifecycleOwner) { enabled ->

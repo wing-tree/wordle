@@ -1,5 +1,7 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
+import android.content.Context
+import android.content.res.ColorStateList
 import androidx.annotation.ColorRes
 import com.wing.tree.android.wordle.domain.model.playstate.Letter
 import com.wing.tree.android.wordle.presentation.R
@@ -19,6 +21,12 @@ data class Letter(val position: Int, val value: String = BLANK) {
 
     val isNotBlank: Boolean
         get() = value.isNotBlank()
+
+    fun getTint(context: Context): ColorStateList {
+        val color = context.getColor(state.backgroundColorRes)
+
+        return ColorStateList.valueOf(color)
+    }
 
     fun updateState(state: State) {
         _state = state

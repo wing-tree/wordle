@@ -61,7 +61,7 @@ class KeyView : FrameLayout, Flippable<KeyView> {
         typedArray.recycle()
     }
 
-    override fun flip(doOnEnd: ((KeyView)-> Unit)?) {
+    override fun flip(skipAnimation: Boolean, doOnEnd: ((KeyView)-> Unit)?) {
         with(viewBinding) {
             if (isAnimating.not()) {
                 isAnimating = true

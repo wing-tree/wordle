@@ -9,9 +9,12 @@ import com.wing.tree.android.wordle.presentation.databinding.LineItemBinding
 import com.wing.tree.android.wordle.presentation.model.play.PlayBoard
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.wordle.core.constant.BLANK
+import java.util.concurrent.atomic.AtomicBoolean
 import com.wing.tree.android.wordle.presentation.model.play.Line as Model
 
 class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterItem, PlayBoardListAdapter.ViewHolder>(DiffCallback()) {
+    private val skipAnimation = AtomicBoolean(false)
+
     interface Callbacks {
         fun onLetterClick(adapterPosition: Int, index: Int)
         fun onAnimationEnd()
@@ -32,23 +35,26 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
 
                             callbacks.onAnimationStart()
 
-                            flip { callbacks.onAnimationEnd() }
+                            flip(skipAnimation.get()) {
+                                callbacks.onAnimationEnd()
+                            }
                         } else {
                             setOnLetterClickListener { _, index ->
                                 callbacks.onLetterClick(adapterPosition, index)
                             }
 
                             letters.zip(previousLetters).forEachIndexed { index, (letter, previousLetter) ->
-                                set(index, letter)
+
 
                                 if (letter.isSubmitted) {
+                                    setBackLetterAt(index, letter)
                                     with(get(index)) {
                                         if (isFlippable) {
-                                            setFrontText(BLANK)
                                             flipAt(index) { isFlippable = false }
                                         }
                                     }
                                 } else {
+                                    set(index, letter)
                                     if (previousLetter.isBlank && letter.isNotBlank) {
                                         scaleAt(index)
                                     } else if (previousLetter.isNotBlank && letter.isBlank) {
@@ -74,12 +80,14 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
         holder.bind(getItem(position))
     }
 
-    fun submitPlayBoard(playBoard: PlayBoard) {
+    fun submitPlayBoard(playBoard: PlayBoard, commitCallback: Runnable? = null) {
         val list = playBoard.lines.mapIndexed { index, letters ->
             AdapterItem.Line.from(index, letters)
         }
 
-        submitList(list)
+        skipAnimation.set(playBoard.skipAnimation.get())
+
+        submitList(list, commitCallback)
     }
 
     class DiffCallback: DiffUtil.ItemCallback<AdapterItem>() {

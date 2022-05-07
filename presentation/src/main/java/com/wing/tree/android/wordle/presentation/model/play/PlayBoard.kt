@@ -5,6 +5,7 @@ import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toPresen
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import timber.log.Timber
+import java.util.concurrent.atomic.AtomicBoolean
 import com.wing.tree.android.wordle.domain.model.playstate.PlayBoard as DomainPlayBoard
 
 class PlayBoard {
@@ -13,6 +14,8 @@ class PlayBoard {
 
     private var _maximumRound: Int = MAXIMUM_ROUND
     val maximumRound: Int get() = _maximumRound
+
+    val skipAnimation = AtomicBoolean(false)
 
     val isRoundAdded: Boolean get() = maximumRound > MAXIMUM_ROUND
     val isRoundOver: Boolean get() = round.inc() >= maximumRound
@@ -83,6 +86,7 @@ class PlayBoard {
             return PlayBoard().apply {
                 _round = playBoard.round
                 _maximumRound = playBoard.maximumRound
+                skipAnimation.set(true)
 
                 playBoard.lines.forEachIndexed { index, line ->
                     _lines[index] = line.toPresentationModel()

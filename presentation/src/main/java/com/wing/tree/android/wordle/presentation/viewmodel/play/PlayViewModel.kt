@@ -94,7 +94,7 @@ class PlayViewModel @Inject constructor(
 
     val isAnimating = MutableLiveData<Boolean>()
 
-    private val _playBoard = MutableLiveData(PlayBoard())
+    private val _playBoard = MutableLiveData<PlayBoard>()
     val playBoard: LiveData<PlayBoard> get() = _playBoard
 
     private val _keyboard = MediatorLiveData<Keyboard>()

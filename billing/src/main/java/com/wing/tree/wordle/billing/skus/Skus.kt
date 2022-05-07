@@ -6,5 +6,5 @@ object Skus {
     const val REMOVE_ADS = "remove_ads"
 
     val consumableList = listOf(CREDITS_240, CREDITS_720)
-    val list = listOf(CREDITS_240, REMOVE_ADS, CREDITS_720)
+    val list = listOf(CREDITS_240, CREDITS_720, REMOVE_ADS)
 }

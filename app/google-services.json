@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "949475950342",
+    "project_id": "wordle-211e7",
+    "storage_bucket": "wordle-211e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:949475950342:android:4aeb5923799c71f4ade887",
+        "android_client_info": {
+          "package_name": "com.wing.tree.android.wordle"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "949475950342-18eg340evqfv2mr1jsm2qog9fkom4rna.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.wing.tree.android.wordle",
+            "certificate_hash": "3e936a2917ee5367a6ac56a686b85b5762701bb4"
+          }
+        },
+        {
+          "client_id": "949475950342-343i1ut23mjuvmhfl6h3jh8or67f15qd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjaV4Y6xKaZMrQYJqMnUSLZoxN-FRM_w8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "949475950342-343i1ut23mjuvmhfl6h3jh8or67f15qd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
