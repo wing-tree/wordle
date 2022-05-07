@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.wing.tree.android.wordle.presentation.databinding.FragmentOnBoardingBinding
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
-import dagger.hilt.android.AndroidEntryPoint
 
 class OnBoardingFragment : BaseFragment<FragmentOnBoardingBinding>() {
     override fun inflate(
