@@ -42,11 +42,11 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
 
             override fun onAnimationEnd() {
-                viewModel.isAnimating.postValue(false)
+                viewModel.isAnimating.value = false
             }
 
             override fun onAnimationStart() {
-                viewModel.isAnimating.postValue(true)
+                viewModel.isAnimating.value = true
             }
         }
     )

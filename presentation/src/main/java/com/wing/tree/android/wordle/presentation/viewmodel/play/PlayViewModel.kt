@@ -84,6 +84,8 @@ class PlayViewModel @Inject constructor(
                     }
 
                     _viewState.value = ViewState.Play
+
+                    cancel()
                 }
             }
         }

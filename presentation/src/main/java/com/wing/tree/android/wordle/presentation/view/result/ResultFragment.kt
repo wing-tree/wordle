@@ -11,6 +11,7 @@ import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.PlayResult
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.result.ResultViewModel
+import com.wing.tree.android.wordle.presentation.widget.LetterView
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -20,6 +21,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 class ResultFragment : BaseFragment<FragmentResultBinding>() {
     private val viewModel by viewModels<ResultViewModel>()
     private val navArgs: ResultFragmentArgs by navArgs()
+    private val featureFlag = LetterView.FeatureFlag.Result
 
     override fun inflate(inflater: LayoutInflater, container: ViewGroup?): FragmentResultBinding {
         return FragmentResultBinding.inflate(inflater, container, false)
@@ -43,24 +45,17 @@ class ResultFragment : BaseFragment<FragmentResultBinding>() {
                     val states = playResult.states
 
                     repeat(WORD_LENGTH) {
-                        val letter = Letter(it, letters[it]).apply { updateState(state) }
                         val state = Letter.State.fromInt(states[it])
-                        val backgroundColor = getColor(state.backgroundColorRes)
+                        val letter = Letter(it, letters[it]).apply { updateState(state) }
 
-                        lineView[it] = letter
-                        lineView[it].setFrontBackgroundColor(backgroundColor)
+                        word[it].submitLetter(letter, featureFlag)
                     }
                 }
                 is PlayResult.Win -> {
                     playResult.word.forEachIndexed { index, letter ->
                         with(Letter(index, letter)) {
-                            val state = Letter.State.In.Matched()
-                            val backgroundColor = getColor(state.backgroundColorRes)
-
-                            updateState(state)
-
-                            lineView[index] = this
-                            lineView[index].setFrontBackgroundColor(backgroundColor)
+                            submit()
+                            word[index].submitLetter(this, featureFlag)
                         }
                     }
                 }

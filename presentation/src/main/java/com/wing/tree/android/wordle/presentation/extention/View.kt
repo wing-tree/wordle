@@ -1,9 +1,10 @@
 package com.wing.tree.android.wordle.presentation.extention
 
-import android.animation.ObjectAnimator
-import android.graphics.Path
 import android.view.View
-import android.view.animation.*
+import android.view.animation.Animation
+import android.view.animation.AnimationSet
+import android.view.animation.AnimationUtils
+import android.view.animation.ScaleAnimation
 import com.wing.tree.android.wordle.presentation.R
 
 fun View.scale(from: Float, to: Float, duration: Long, withEndAction: Runnable = Runnable {  }) {

@@ -18,7 +18,7 @@
 
     <color name="surface">@color/white</color>
 
-    <color name="undefined">@color/grey_800</color>
+    <color name="undefined">@android:color/transparent</color>
     <color name="not_in">@color/black</color>
     <color name="mismatched">@color/yellow_500</color>
     <color name="matched">@color/green_800</color>

@@ -8,12 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.android.wordle.presentation.databinding.LineItemBinding
 import com.wing.tree.android.wordle.presentation.model.play.PlayBoard
 import com.wing.tree.android.wordle.presentation.model.play.Letter
-import com.wing.tree.wordle.core.constant.BLANK
-import java.util.concurrent.atomic.AtomicBoolean
+import com.wing.tree.android.wordle.presentation.widget.LetterView
 import com.wing.tree.android.wordle.presentation.model.play.Line as Model
 
 class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterItem, PlayBoardListAdapter.ViewHolder>(DiffCallback()) {
-    private val skipAnimation = AtomicBoolean(false)
+    private var isRestored = false
 
     interface Callbacks {
         fun onLetterClick(adapterPosition: Int, index: Int)
@@ -25,41 +24,54 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
         fun bind(item: AdapterItem) {
             when(item) {
                 is AdapterItem.Line -> with(viewBinding.lineView) {
-                    with(item) {
-                        if (submitted) {
-                            setOnLetterClickListener(null)
+                    if (item.isSubmitted) {
+                        setOnLetterClickListener(null)
 
-                            letters.forEachIndexed { index, letter ->
-                                set(index, letter)
-                            }
-
-                            callbacks.onAnimationStart()
-
-                            flip(skipAnimation.get()) {
-                                callbacks.onAnimationEnd()
-                            }
+                        val featureFlag = if (isRestored) {
+                            LetterView.FeatureFlag.Restore
                         } else {
-                            setOnLetterClickListener { _, index ->
-                                callbacks.onLetterClick(adapterPosition, index)
-                            }
+                            LetterView.FeatureFlag.Submit
+                        }
 
-                            letters.zip(previousLetters).forEachIndexed { index, (letter, previousLetter) ->
+                        submitLetters(item.letters, featureFlag)
 
+                        if (isRestored.not()) {
+                            callbacks.onAnimationStart()
+                            flipAll { callbacks.onAnimationEnd() }
+                        }
+                    } else {
+                        setOnLetterClickListener { _, index ->
+                            callbacks.onLetterClick(adapterPosition, index)
+                        }
 
-                                if (letter.isSubmitted) {
-                                    setBackLetterAt(index, letter)
-                                    with(get(index)) {
-                                        if (isFlippable) {
-                                            flipAt(index) { isFlippable = false }
-                                        }
-                                    }
+                        item.letters.zip(item.previousLetters).forEachIndexed { index, (letter, previousLetter) ->
+                            if (letter.isSubmitted) {
+                                val featureFlag = if (isRestored) {
+                                    LetterView.FeatureFlag.Restore
                                 } else {
-                                    set(index, letter)
-                                    if (previousLetter.isBlank && letter.isNotBlank) {
-                                        scaleAt(index)
-                                    } else if (previousLetter.isNotBlank && letter.isBlank) {
+                                    LetterView.FeatureFlag.Submit
+                                }
 
-                                    }
+                                get(index).submitLetter(letter, featureFlag)
+
+                                if (isRestored.not()) {
+                                    flipAt(index) { it.isFlippable = false }
+                                } else {
+                                    get(index).isFlippable = false
+                                }
+                            } else {
+                                val featureFlag = if (isRestored) {
+                                    LetterView.FeatureFlag.Restore
+                                } else {
+                                    LetterView.FeatureFlag.Normal
+                                }
+
+                                get(index).submitLetter(letter, featureFlag)
+
+                                if (previousLetter.isBlank && letter.isNotBlank && isRestored.not()) {
+                                    scaleAt(index)
+                                } else if (previousLetter.isNotBlank && letter.isBlank) {
+                                    // 딜리트.. 페이딩이나,, 등등.
                                 }
                             }
                         }
@@ -85,7 +97,7 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
             AdapterItem.Line.from(index, letters)
         }
 
-        skipAnimation.set(playBoard.skipAnimation.get())
+        isRestored = playBoard.isRestored.compareAndSet(true, false)
 
         submitList(list, commitCallback)
     }
@@ -108,14 +120,14 @@ sealed class AdapterItem {
         override val index: Int,
         val letters: Array<Letter>,
         val previousLetters: Array<Letter>,
-        val submitted: Boolean = false
+        val isSubmitted: Boolean = false
     ) : AdapterItem() {
         companion object {
             fun from(index: Int, letters: Model) = Line(
                 index = index,
                 letters = letters.letters.copyOf(),
                 previousLetters = letters.previousLetters.copyOf(),
-                submitted = letters.isSubmitted
+                isSubmitted = letters.isSubmitted
             )
         }
 
@@ -126,7 +138,7 @@ sealed class AdapterItem {
             if (index != other.index) return false
             if (!letters.contentEquals(other.letters)) return false
             if (!previousLetters.contentEquals(other.previousLetters)) return false
-            if (submitted != other.submitted) return false
+            if (isSubmitted != other.isSubmitted) return false
 
             return true
         }
@@ -135,7 +147,7 @@ sealed class AdapterItem {
             var result = index
             result = 31 * result + letters.contentHashCode()
             result = 31 * result + previousLetters.contentHashCode()
-            result = 31 * result + submitted.hashCode()
+            result = 31 * result + isSubmitted.hashCode()
             return result
         }
     }

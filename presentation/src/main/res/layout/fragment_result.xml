@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.wing.tree.android.wordle.presentation.widget.LineView
-        android:id="@+id/line_view"
+        android:id="@+id/word"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,7 +19,7 @@
         app:layout_constraintBottom_toTopOf="@+id/material_button_next_word"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/line_view" />
+        app:layout_constraintTop_toBottomOf="@+id/word" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/material_button_next_word"

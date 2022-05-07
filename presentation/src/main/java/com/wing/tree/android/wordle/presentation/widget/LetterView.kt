@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.core.view.isVisible
 import com.wing.tree.android.wordle.presentation.R
@@ -12,7 +13,6 @@ import com.wing.tree.android.wordle.presentation.extention.gone
 import com.wing.tree.android.wordle.presentation.extention.visible
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.util.flip
-import com.wing.tree.wordle.core.constant.BLANK
 
 class LetterView : FrameLayout, Flippable<LetterView> {
     private val viewBinding: LetterViewBinding = LetterViewBinding.bind(inflate(context, R.layout.letter_view, this))
@@ -21,21 +21,22 @@ class LetterView : FrameLayout, Flippable<LetterView> {
     override var isAnimating = false
 
     private var back = viewBinding.letterBack
-    private var front = viewBinding.letterFront
 
-    var letter: Letter? = null
+    private var _front = viewBinding.letterFront
+    val front: TextView get() = _front
+
+    @ColorInt
+    var backBackgroundColor: Int = 0
         set(value) {
             field = value
-            field?.let { setText(it) }
+            back.backgroundTintList = ColorStateList.valueOf(field)
         }
 
-    var backLetter: Letter? = null
+    @ColorInt
+    var frontBackgroundColor: Int = 0
         set(value) {
             field = value
-            field?.let {
-                back.text = it.value.uppercase()
-                back.backgroundTintList = it.getTint(context)
-            }
+            front.backgroundTintList = ColorStateList.valueOf(field)
         }
 
     constructor(context: Context) : super(context)
@@ -46,37 +47,7 @@ class LetterView : FrameLayout, Flippable<LetterView> {
         defStyleAttr
     )
 
-    override fun flip(skipAnimation: Boolean, doOnEnd: ((LetterView) -> Unit)?) {
-        val letterView = this
-
-        if (skipAnimation) {
-            with(viewBinding) {
-                if (isFlippable && isAnimating.not()) {
-                    isAnimating = true
-
-                    if (letterBack.isVisible) {
-                        letterBack.gone()
-                        letterFront.visible()
-                        back = letterBack
-                        front = letterFront
-                        doOnEnd?.invoke(letterView)
-                        isAnimating = false
-                    } else {
-                        letterBack.visible()
-                        letterFront.gone()
-                        back = letterFront
-                        front = letterBack
-                        doOnEnd?.invoke(letterView)
-                        isAnimating = false
-                    }
-                }
-            }
-        } else {
-            flip(doOnEnd)
-        }
-    }
-
-    private fun flip(doOnEnd: ((LetterView) -> Unit)?) {
+    override fun flip(doOnEnd: ((LetterView) -> Unit)?) {
         val letterView = this
 
         with(viewBinding) {
@@ -86,14 +57,14 @@ class LetterView : FrameLayout, Flippable<LetterView> {
                 if (letterBack.isVisible) {
                     flip(letterFront, letterBack) {
                         back = letterBack
-                        front = letterFront
+                        _front = letterFront
                         doOnEnd?.invoke(letterView)
                         isAnimating = false
                     }
                 } else {
                     flip(letterBack, letterFront) {
                         back = letterFront
-                        front = letterBack
+                        _front = letterBack
                         doOnEnd?.invoke(letterView)
                         isAnimating = false
                     }
@@ -102,21 +73,36 @@ class LetterView : FrameLayout, Flippable<LetterView> {
         }
     }
 
-    private fun setText(letter: Letter) {
+    fun submitLetter(letter: Letter, featureFlag: FeatureFlag) {
         val text = letter.value.uppercase()
+        val tint = letter.getTint(context)
 
-        with(viewBinding) {
-            back.backgroundTintList = letter.getTint(context)
-            letterBack.text = text
-            letterFront.text = text
+        when(featureFlag) {
+            is FeatureFlag.Normal -> {
+                front.text = text
+
+                back.text = text
+                back.backgroundTintList = tint
+            }
+            is FeatureFlag.Restore -> {
+                front.text = text
+                front.backgroundTintList = tint
+            }
+            is FeatureFlag.Result -> {
+                front.text = text
+                front.backgroundTintList = tint
+            }
+            is FeatureFlag.Submit -> {
+                back.text = text
+                back.backgroundTintList = tint
+            }
         }
     }
 
-    fun setFrontText(text: String) {
-        front.text = text
-    }
-
-    fun setFrontBackgroundColor(@ColorInt color: Int) {
-        front.backgroundTintList = ColorStateList.valueOf(color)
+    sealed class FeatureFlag {
+        object Normal : FeatureFlag()
+        object Restore : FeatureFlag()
+        object Result : FeatureFlag()
+        object Submit : FeatureFlag()
     }
 }

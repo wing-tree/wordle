@@ -17,6 +17,7 @@ class PlayBoard {
 
     val skipAnimation = AtomicBoolean(false)
 
+    val isRestored = AtomicBoolean(false)
     val isRoundAdded: Boolean get() = maximumRound > MAXIMUM_ROUND
     val isRoundOver: Boolean get() = round.inc() >= maximumRound
 
@@ -84,6 +85,8 @@ class PlayBoard {
     companion object {
         fun from(playBoard: DomainPlayBoard): PlayBoard {
             return PlayBoard().apply {
+                isRestored.set(true)
+
                 _round = playBoard.round
                 _maximumRound = playBoard.maximumRound
                 skipAnimation.set(true)
