@@ -22,10 +22,9 @@ fun PlayState.toDomainModel(): DomainPlayState {
 fun DomainKeyboard.toDataModel(): Keyboard {
     val keyboard = this
     val builder = Keyboard.newBuilder()
+        .addAllAlphabet(keyboard.alphabets.map { it.toDataModel() })
 
-    builder.addAllAlphabet(keyboard.alphabets.map { it.toDataModel() })
-
-    return Keyboard.newBuilder().build()
+    return builder.build()
 }
 
 fun Keyboard.toDomainModel(): DomainKeyboard {
