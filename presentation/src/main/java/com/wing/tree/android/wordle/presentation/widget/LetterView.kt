@@ -12,6 +12,7 @@ import com.wing.tree.android.wordle.presentation.util.flip
 class LetterView : FrameLayout, Flippable<LetterView> {
     private val viewBinding: LetterViewBinding = LetterViewBinding.bind(inflate(context, R.layout.letter_view, this))
     private val isFlipped: Boolean get() = viewBinding.textViewBack.isVisible
+    private val isNotAnimating: Boolean get() = isAnimating.not()
 
     override var isFlippable = true
     override var isAnimating = false
@@ -28,7 +29,7 @@ class LetterView : FrameLayout, Flippable<LetterView> {
     )
 
     override fun flip(doOnEnd: ((LetterView) -> Unit)?) {
-        if (isFlippable && isAnimating.not()) {
+        if (isFlippable && isNotAnimating) {
             isAnimating = true
 
             flip(back, front) {
@@ -57,10 +58,10 @@ class LetterView : FrameLayout, Flippable<LetterView> {
 
         when(featureFlag) {
             is FeatureFlag.Normal -> {
-                front.text = text
-
                 back.text = text
                 back.backgroundTintList = tint
+
+                front.text = text
             }
             is FeatureFlag.Restore -> {
                 front.text = text
