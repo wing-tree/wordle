@@ -86,6 +86,10 @@ class PlayBoard {
                 _round = playBoard.round
                 _maximumRound = playBoard.maximumRound
 
+                if (lines.size < maximumRound) {
+                    _lines.add(Line(maximumRound.dec()))
+                }
+
                 playBoard.lines.forEachIndexed { index, line ->
                     _lines[index] = line.toPresentationModel()
                 }
