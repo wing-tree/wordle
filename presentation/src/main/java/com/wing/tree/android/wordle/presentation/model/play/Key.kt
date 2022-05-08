@@ -17,7 +17,9 @@ sealed class Key {
         }
 
         fun updateState(state: State) {
-            _state = state
+            if (this.state.priority < state.priority) {
+                _state = state
+            }
         }
     }
 
