@@ -7,8 +7,8 @@ import com.wing.tree.android.wordle.domain.model.item.Item.Type.ONE_MORE_TRY
 
 object Item {
     object Credits {
-        const val ERASER = 120
-        const val HINT = 120
+        const val ERASER = 40
+        const val HINT = 80
         const val ONE_MORE_TRY = 120
     }
 

@@ -91,21 +91,25 @@ class PlayViewModel @Inject constructor(
         }
     }
 
-    private val _viewState = MutableLiveData<ViewState>(ViewState.Ready)
-    val viewState: LiveData<ViewState> get() = _viewState
+    private val _isAnimating = MutableLiveData<Boolean>()
+    val isAnimating: LiveData<Boolean> get() = _isAnimating
 
-    val isAnimating = MutableLiveData<Boolean>()
+    private val _keyboard = MediatorLiveData<Keyboard>()
+    val keyboard: LiveData<Keyboard> get() = _keyboard
 
     private val _playBoard = MutableLiveData<PlayBoard>()
     val playBoard: LiveData<PlayBoard> get() = _playBoard
 
-    private val _keyboard = MediatorLiveData<Keyboard>()
-    val keyboard: LiveData<Keyboard> get() = _keyboard
+    private val playResult = MutableLiveData<PlayResult>()
+
+    private val _viewState = MediatorLiveData<ViewState>()
+    val viewState: LiveData<ViewState> get() = _viewState
 
     val round: Int get() = playBoard.value?.round ?: 0
 
     init {
         _keyboard.value = Keyboard()
+        _viewState.value = ViewState.Ready
 
         _keyboard.addSource(playBoard) { board ->
             val value = _keyboard.value ?: return@addSource
@@ -116,6 +120,39 @@ class PlayViewModel @Inject constructor(
             }
 
             _keyboard.value = value
+        }
+
+        _viewState.addSource(isAnimating) { isAnimating ->
+            val playResult = playResult.value ?: return@addSource
+
+            if (isAnimating.not()) {
+                when(playResult) {
+                    is PlayResult.Win -> _viewState.value = ViewState.Finish.Win
+                    is PlayResult.Lose -> {
+                        val isRoundAdded = playBoard.value?.isRoundAdded ?: false
+                        val roundOver = ViewState.Finish.RoundOver(isRoundAdded)
+
+                        _viewState.value = roundOver
+                    }
+                }
+            }
+        }
+
+        _viewState.addSource(playResult) {
+            val isAnimating = _isAnimating.value ?: return@addSource
+            val playResult = playResult.value ?: return@addSource
+
+            if (isAnimating.not()) {
+                when(playResult) {
+                    is PlayResult.Win -> _viewState.value = ViewState.Finish.Win
+                    is PlayResult.Lose -> {
+                        val isRoundAdded = playBoard.value?.isRoundAdded ?: false
+                        val roundOver = ViewState.Finish.RoundOver(isRoundAdded)
+
+                        _viewState.value = roundOver
+                    }
+                }
+            }
         }
     }
 
@@ -131,6 +168,10 @@ class PlayViewModel @Inject constructor(
         _playBoard.setValueWith { removeLast() }
     }
 
+    fun setAnimating(value: Boolean) {
+        _isAnimating.value = value
+    }
+
     // 콜백 너무많다.. todo 콜백 좀 줄입시더.
     fun submit(@MainThread commitCallback: (kotlin.Result<Line>) -> Unit) {
         val currentLetters = playBoard.value?.currentLine ?: return
@@ -144,21 +185,22 @@ class PlayViewModel @Inject constructor(
                 onFailure = {
                     commitCallback(kotlin.Result.failure(it))
                 },
-                onSuccess = {
-                    playBoard.value?.let { board ->
-                        board.submit()
+                onSuccess = { line ->
+                    playBoard.value?.let { playBoard ->
+                        playBoard.submit()
 
-                        _playBoard.value = board
+                        _playBoard.value = playBoard
+                        _isAnimating.value = true
 
-                        commitCallback(kotlin.Result.success(it)) //todo 안쓰는거같은뎅.
+                        commitCallback(kotlin.Result.success(line))
 
-                        if (it.matches(word.value)) {
+                        if (line.matches(word.value)) {
                             win()
                         } else {
-                            if (board.isRoundOver) {
-                                _viewState.value = ViewState.Finish.RoundOver(board.isRoundAdded)
+                            if (playBoard.isRoundOver) {
+                                _viewState.value = ViewState.Finish.RoundOver(playBoard.isRoundAdded)
                             } else {
-                                board.incrementRound()
+                                playBoard.incrementRound()
                                 enableKeyboard()
                             }
                         }
@@ -171,7 +213,7 @@ class PlayViewModel @Inject constructor(
     @DelicateCoroutinesApi
     private fun win() {
         updateStatistics(Result.Win(round))
-        _viewState.postValue(ViewState.Finish.Win)
+        playResult.value = PlayResult.Win(round, word.value)
     }
 
     @DelicateCoroutinesApi
@@ -199,10 +241,7 @@ class PlayViewModel @Inject constructor(
             } else {
                 val keyboard = keyboard.value?.toDomainModel() ?: Keyboard().toDomainModel()
                 val playBoard = playBoard.value?.toDomainModel() ?: PlayBoard().toDomainModel()
-                val word = object : Word {
-                    override val index: Int = word.index
-                    override val value: String = word.value
-                }
+                val word = Word.from(word)
 
                 val playState = object : PlayState {
                     override val keyboard: DomainKeyboard = keyboard

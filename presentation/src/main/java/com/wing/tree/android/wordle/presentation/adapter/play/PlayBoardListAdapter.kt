@@ -15,9 +15,9 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
     private var isRestored = false
 
     interface Callbacks {
+        fun beforeAnimationStart()
         fun onLetterClick(adapterPosition: Int, index: Int)
         fun onAnimationEnd()
-        fun onAnimationStart()
     }
 
     inner class ViewHolder(private val viewBinding: LineItemBinding) : RecyclerView.ViewHolder(viewBinding.root) {
@@ -36,7 +36,7 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
                         submitLetters(item.letters, featureFlag)
 
                         if (isRestored.not()) {
-                            callbacks.onAnimationStart()
+                            callbacks.beforeAnimationStart()
                             flipAll { callbacks.onAnimationEnd() }
                         }
                     } else {
@@ -55,7 +55,11 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
                                 get(index).submitLetter(letter, featureFlag)
 
                                 if (isRestored.not()) {
-                                    flipAt(index) { it.isFlippable = false }
+                                    callbacks.beforeAnimationStart()
+                                    flipAt(index) {
+                                        it.isFlippable = false
+                                        callbacks.onAnimationEnd()
+                                    }
                                 } else {
                                     get(index).isFlippable = false
                                 }

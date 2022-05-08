@@ -7,12 +7,12 @@
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <com.wing.tree.android.wordle.presentation.widget.LetterView
-        android:id="@+id/letter1"
+        android:id="@+id/letter_view1"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toStartOf="@+id/letter2"
+        app:layout_constraintEnd_toStartOf="@+id/letter_view2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,43 +20,43 @@
 
 
     <com.wing.tree.android.wordle.presentation.widget.LetterView
-        android:id="@+id/letter2"
+        android:id="@+id/letter_view2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toStartOf="@+id/letter3"
+        app:layout_constraintEnd_toStartOf="@+id/letter_view3"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/letter1"
+        app:layout_constraintStart_toEndOf="@+id/letter_view1"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.wing.tree.android.wordle.presentation.widget.LetterView
-        android:id="@+id/letter3"
+        android:id="@+id/letter_view3"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toStartOf="@+id/letter4"
+        app:layout_constraintEnd_toStartOf="@+id/letter_view4"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/letter2"
+        app:layout_constraintStart_toEndOf="@+id/letter_view2"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.wing.tree.android.wordle.presentation.widget.LetterView
-        android:id="@+id/letter4"
+        android:id="@+id/letter_view4"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toStartOf="@+id/letter5"
+        app:layout_constraintEnd_toStartOf="@+id/letter_view5"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/letter3"
+        app:layout_constraintStart_toEndOf="@+id/letter_view3"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.wing.tree.android.wordle.presentation.widget.LetterView
-        android:id="@+id/letter5"
+        android:id="@+id/letter_view5"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="6dp"
@@ -65,7 +65,7 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/letter4"
+        app:layout_constraintStart_toEndOf="@+id/letter_view4"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_max="56dp" />
 

@@ -37,6 +37,8 @@ class LetterView : FrameLayout, Flippable<LetterView> {
                 doOnEnd?.invoke(this)
                 isAnimating = false
             }
+        } else {
+            doOnEnd?.invoke(this)
         }
     }
 

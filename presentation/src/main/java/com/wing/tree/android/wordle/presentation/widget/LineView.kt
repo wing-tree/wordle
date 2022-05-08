@@ -10,11 +10,15 @@ import com.wing.tree.android.wordle.presentation.extention.scale
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
 
 class LineView : ConstraintLayout {
     private val supervisorJob = SupervisorJob()
     private val coroutineScope = CoroutineScope(Dispatchers.Main.immediate + supervisorJob)
     private val viewBinding: LineViewBinding = LineViewBinding.bind(inflate(context, R.layout.line_view, this))
+
+    private val lastIndex = WORD_LENGTH.dec()
 
     private var onLetterClickListener: OnLetterClickListener? = null
 
@@ -39,7 +43,7 @@ class LineView : ConstraintLayout {
     }
 
     private fun bind() {
-       repeat(WORD_LENGTH) {
+        repeat(WORD_LENGTH) {
             with(get(it)) {
                 setOnClickListener { _ ->
                     onLetterClickListener?.onLetterViewClick(this, it)
@@ -50,45 +54,54 @@ class LineView : ConstraintLayout {
 
     operator fun get(index: Int): LetterView = with(viewBinding) {
         when(index) {
-            0 -> letter1
-            1 -> letter2
-            2 -> letter3
-            3 -> letter4
-            4 -> letter5
-            else -> throw IllegalArgumentException("$index")
+            0 -> letterView1
+            1 -> letterView2
+            2 -> letterView3
+            3 -> letterView4
+            4 -> letterView5
+            else -> throw IndexOutOfBoundsException("$index")
         }
     }
 
     fun flipAll(@MainThread doOnEnd: (() -> Unit)? = null) {
-        coroutineScope.launch {
-            flipAt(0)
-            delay(240L)
-            flipAt(1)
-            delay(240L)
-            flipAt(2)
-            delay(240L)
-            flipAt(3)
-            delay(240L)
-            flipAt(4)
-            delay(240L)
+        var lastFlippableIndex = lastIndex
 
-            delay(600L)
-            doOnEnd?.invoke()
+        for (index in WORD_LENGTH.dec() downTo 0) {
+            if (get(index).isFlippable) {
+                lastFlippableIndex = index
+                break
+            }
         }
-    }
 
-    fun flipAt(index: Int, @MainThread doOnEnd: ((LetterView) -> Unit)? = null) {
-        with(get(index)) {
-            if (isFlippable) {
-                flip(doOnEnd)
+        coroutineScope.launch {
+            for (index in 0..lastFlippableIndex) {
+                with(get(index)) {
+                    if (isFlippable) {
+                        flip {
+                            if (index == lastFlippableIndex) {
+                                doOnEnd?.invoke()
+                            }
+                        }
+
+                        delay(200)
+                    } else {
+                        if (index == lastFlippableIndex) {
+                            doOnEnd?.invoke()
+                        }
+                    }
+                }
             }
         }
     }
 
+    fun flipAt(index: Int, @MainThread doOnEnd: ((LetterView) -> Unit)? = null) {
+        get(index).flip(doOnEnd)
+    }
+
     fun scaleAt(index: Int) {
         with(get(index)) {
-            scale(1.0F, 1.25F, 200L) {
-                scale(1.25F, 1.0F, 200L)
+            scale(1.0F, 1.15F, 200L) {
+                scale(1.15F, 1.0F, 200L)
             }
         }
     }
