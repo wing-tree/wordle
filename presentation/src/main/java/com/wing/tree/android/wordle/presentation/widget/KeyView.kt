@@ -15,14 +15,16 @@ import com.wing.tree.wordle.core.constant.BLANK
 
 class KeyView : FrameLayout, Flippable<KeyView> {
     private val viewBinding: KeyViewBinding = KeyViewBinding.bind(inflate(context, R.layout.key_view, this))
+    private val isFlipped: Boolean get() = viewBinding.textViewBack.isVisible
+    private val isNotAnimating: Boolean get() = isAnimating.not()
 
     private var state: Key.State = Key.State.Undefined()
 
     override var isFlippable = true
     override var isAnimating = false
 
-    var back = viewBinding.keyBack
-    var front = viewBinding.keyFront
+    var back = viewBinding.textViewBack
+    var front = viewBinding.textViewFront
 
     constructor(context: Context) : super(context)
 
@@ -54,34 +56,23 @@ class KeyView : FrameLayout, Flippable<KeyView> {
         val text = typedArray.getString(R.styleable.KeyView_key) ?: BLANK
 
         with(viewBinding) {
-            keyBack.text = text
-            keyFront.text = text
+            textViewBack.text = text
+            textViewFront.text = text
         }
 
         typedArray.recycle()
     }
 
     override fun flip(doOnEnd: ((KeyView)-> Unit)?) {
-        with(viewBinding) {
-            if (isAnimating.not()) {
-                isAnimating = true
-                root.isClickable = false
+        if (isAnimating.not()) {
+            isAnimating = true
+            isClickable = false
 
-                if (keyBack.isVisible) {
-                    flip(keyFront, keyBack) {
-                        back = keyBack
-                        front = keyFront
-                        doOnEnd?.invoke(this@KeyView)
-                        isAnimating = false
-                    }
-                } else {
-                    flip(keyBack, keyFront) {
-                        back = keyFront
-                        front = keyBack
-                        doOnEnd?.invoke(this@KeyView)
-                        isAnimating = false
-                    }
-                }
+            flip(back, front) {
+                swap()
+                doOnEnd?.invoke(this)
+                isAnimating = false
+                isClickable = true
             }
         }
     }
@@ -94,15 +85,25 @@ class KeyView : FrameLayout, Flippable<KeyView> {
 
             back.backgroundTintList = ColorStateList.valueOf(color)
 
-            flip {
-                viewBinding.root.isClickable = true
-            }
+            flip()
         }
     }
 
     fun scale() {
         scale(1.0F, 1.15F, 240L) {
             scale(1.15F, 1.0F, 240L)
+        }
+    }
+
+    private fun swap() {
+        with(viewBinding) {
+            if (isFlipped) {
+                back = textViewFront
+                front = textViewBack
+            } else {
+                back = textViewBack
+                front = textViewFront
+            }
         }
     }
 }

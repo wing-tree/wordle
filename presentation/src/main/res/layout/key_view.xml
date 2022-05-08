@@ -6,12 +6,12 @@
     tools:parentTag="android.widget.FrameLayout">
 
     <TextView
-        android:id="@+id/key_back"
+        android:id="@+id/text_view_back"
         android:visibility="gone"
         style="@style/Widget.MaterialComponents.TextView.KeyView" />
 
     <TextView
-        android:id="@+id/key_front"
+        android:id="@+id/text_view_front"
         style="@style/Widget.MaterialComponents.TextView.KeyView" />
 
 </merge>
