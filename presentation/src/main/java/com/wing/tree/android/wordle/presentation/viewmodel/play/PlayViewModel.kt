@@ -262,7 +262,7 @@ class PlayViewModel @Inject constructor(
     @DelicateCoroutinesApi
     fun updatePlayState() {
         GlobalScope.launch(ioDispatcher) {
-            if (viewState.value is ViewState.Finish) {
+            if (viewState.value is ViewState.Finish.Lose || viewState.value is ViewState.Finish.Win) {
                 cancel()
             } else {
                 val keyboard = keyboard.value?.toDomainModel() ?: Keyboard().toDomainModel()
