@@ -23,8 +23,8 @@ class KeyView : FrameLayout, Flippable<KeyView> {
     override var isFlippable = true
     override var isAnimating = false
 
-    var back = viewBinding.textViewBack
-    var front = viewBinding.textViewFront
+    private var back = viewBinding.textViewBack
+    private var front = viewBinding.textViewFront
 
     constructor(context: Context) : super(context)
 
@@ -64,7 +64,7 @@ class KeyView : FrameLayout, Flippable<KeyView> {
     }
 
     override fun flip(doOnEnd: ((KeyView)-> Unit)?) {
-        if (isAnimating.not()) {
+        if (isFlippable && isNotAnimating) {
             isAnimating = true
             isClickable = false
 
