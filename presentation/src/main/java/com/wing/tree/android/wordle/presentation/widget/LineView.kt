@@ -10,8 +10,6 @@ import com.wing.tree.android.wordle.presentation.extention.scale
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
 
 class LineView : ConstraintLayout {
     private val supervisorJob = SupervisorJob()
@@ -110,9 +108,9 @@ class LineView : ConstraintLayout {
         this.onLetterClickListener = onLetterClickListener
     }
 
-    fun submitLetters(letters: Array<Letter>, featureFlag: LetterView.FeatureFlag) {
+    fun submitLetters(letters: Array<Letter>, flag: LetterView.Flag) {
         letters.forEachIndexed { index, letter ->
-            get(index).submitLetter(letter, featureFlag)
+            get(index).submitLetter(letter, flag)
         }
     }
 }

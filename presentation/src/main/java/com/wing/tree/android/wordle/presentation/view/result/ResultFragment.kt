@@ -21,7 +21,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 class ResultFragment : BaseFragment<FragmentResultBinding>() {
     private val viewModel by viewModels<ResultViewModel>()
     private val navArgs: ResultFragmentArgs by navArgs()
-    private val featureFlag = LetterView.FeatureFlag.Result
+    private val featureFlag = LetterView.Flag.Result
 
     override fun inflate(inflater: LayoutInflater, container: ViewGroup?): FragmentResultBinding {
         return FragmentResultBinding.inflate(inflater, container, false)

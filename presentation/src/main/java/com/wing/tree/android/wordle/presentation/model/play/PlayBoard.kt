@@ -15,9 +15,8 @@ class PlayBoard {
     private var _maximumRound: Int = MAXIMUM_ROUND
     val maximumRound: Int get() = _maximumRound
 
-    val skipAnimation = AtomicBoolean(false)
+    val runsAnimation = AtomicBoolean(false)
 
-    val isRestored = AtomicBoolean(false)
     val isRoundAdded: Boolean get() = maximumRound > MAXIMUM_ROUND
     val isRoundOver: Boolean get() = round.inc() >= maximumRound
 
@@ -85,11 +84,9 @@ class PlayBoard {
     companion object {
         fun from(playBoard: DomainPlayBoard): PlayBoard {
             return PlayBoard().apply {
-                isRestored.set(true)
-
                 _round = playBoard.round
                 _maximumRound = playBoard.maximumRound
-                skipAnimation.set(true)
+                runsAnimation.set(false)
 
                 playBoard.lines.forEachIndexed { index, line ->
                     _lines[index] = line.toPresentationModel()

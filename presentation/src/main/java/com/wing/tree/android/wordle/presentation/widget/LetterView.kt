@@ -54,36 +54,36 @@ class LetterView : FrameLayout, Flippable<LetterView> {
         }
     }
 
-    fun submitLetter(letter: Letter, featureFlag: FeatureFlag) {
+    fun submitLetter(letter: Letter, flag: Flag) {
         val text = letter.value.uppercase()
         val tint = letter.getTint(context)
 
-        when(featureFlag) {
-            is FeatureFlag.Normal -> {
+        when(flag) {
+            is Flag.Normal -> {
                 back.text = text
                 back.backgroundTintList = tint
 
                 front.text = text
             }
-            is FeatureFlag.Restore -> {
+            is Flag.Restore -> {
                 front.text = text
                 front.backgroundTintList = tint
             }
-            is FeatureFlag.Result -> {
+            is Flag.Result -> {
                 front.text = text
                 front.backgroundTintList = tint
             }
-            is FeatureFlag.Submit -> {
+            is Flag.Submit -> {
                 back.text = text
                 back.backgroundTintList = tint
             }
         }
     }
 
-    sealed class FeatureFlag {
-        object Normal : FeatureFlag()
-        object Restore : FeatureFlag()
-        object Result : FeatureFlag()
-        object Submit : FeatureFlag()
+    sealed class Flag {
+        object Normal : Flag()
+        object Restore : Flag()
+        object Result : Flag()
+        object Submit : Flag()
     }
 }

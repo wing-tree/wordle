@@ -172,6 +172,10 @@ class PlayViewModel @Inject constructor(
         _isAnimating.value = value
     }
 
+    fun setRunsAnimation(value: Boolean) {
+        playBoard.value?.runsAnimation?.set(value)
+    }
+
     // 콜백 너무많다.. todo 콜백 좀 줄입시더.
     fun submit(@MainThread commitCallback: (kotlin.Result<Line>) -> Unit) {
         val currentLetters = playBoard.value?.currentLine ?: return

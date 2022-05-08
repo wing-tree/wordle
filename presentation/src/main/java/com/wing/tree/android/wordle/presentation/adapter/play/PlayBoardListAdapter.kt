@@ -12,7 +12,7 @@ import com.wing.tree.android.wordle.presentation.widget.LetterView
 import com.wing.tree.android.wordle.presentation.model.play.Line as Model
 
 class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterItem, PlayBoardListAdapter.ViewHolder>(DiffCallback()) {
-    private var isRestored = false
+    private var runsAnimation = true
 
     interface Callbacks {
         fun beforeAnimationStart()
@@ -27,16 +27,17 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
                     if (item.isSubmitted) {
                         setOnLetterClickListener(null)
 
-                        val featureFlag = if (isRestored) {
-                            LetterView.FeatureFlag.Restore
+                        val featureFlag = if (runsAnimation) {
+                            LetterView.Flag.Submit
                         } else {
-                            LetterView.FeatureFlag.Submit
+                            LetterView.Flag.Restore
                         }
 
                         submitLetters(item.letters, featureFlag)
 
-                        if (isRestored.not()) {
+                        if (runsAnimation) {
                             callbacks.beforeAnimationStart()
+
                             flipAll { callbacks.onAnimationEnd() }
                         }
                     } else {
@@ -46,33 +47,34 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
 
                         item.letters.zip(item.previousLetters).forEachIndexed { index, (letter, previousLetter) ->
                             if (letter.isSubmitted) {
-                                val featureFlag = if (isRestored) {
-                                    LetterView.FeatureFlag.Restore
+                                val featureFlag = if (runsAnimation) {
+                                    LetterView.Flag.Submit
                                 } else {
-                                    LetterView.FeatureFlag.Submit
+                                    LetterView.Flag.Restore
                                 }
 
                                 get(index).submitLetter(letter, featureFlag)
 
-                                if (isRestored.not()) {
+                                if (runsAnimation) {
                                     callbacks.beforeAnimationStart()
                                     flipAt(index) {
                                         it.isFlippable = false
+
                                         callbacks.onAnimationEnd()
                                     }
                                 } else {
                                     get(index).isFlippable = false
                                 }
                             } else {
-                                val featureFlag = if (isRestored) {
-                                    LetterView.FeatureFlag.Restore
+                                val featureFlag = if (runsAnimation) {
+                                    LetterView.Flag.Normal
                                 } else {
-                                    LetterView.FeatureFlag.Normal
+                                    LetterView.Flag.Restore
                                 }
 
                                 get(index).submitLetter(letter, featureFlag)
 
-                                if (previousLetter.isBlank && letter.isNotBlank && isRestored.not()) {
+                                if (previousLetter.isBlank && letter.isNotBlank && runsAnimation) {
                                     scaleAt(index)
                                 } else if (previousLetter.isNotBlank && letter.isBlank) {
                                     // 딜리트.. 페이딩이나,, 등등.
@@ -100,8 +102,8 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
         val list = playBoard.lines.mapIndexed { index, letters ->
             AdapterItem.Line.from(index, letters)
         }
-
-        isRestored = playBoard.isRestored.compareAndSet(true, false)
+        
+        runsAnimation = playBoard.runsAnimation.get()
 
         submitList(list, commitCallback)
     }

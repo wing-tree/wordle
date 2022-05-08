@@ -102,6 +102,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
     override fun initData() {
         loadInterstitialAd(requireContext())
+        viewModel.setRunsAnimation(false)
 
         lifecycleScope.launch {
             viewModel.itemCount.collect {
@@ -112,7 +113,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
         viewModel.playBoard.observe(viewLifecycleOwner) {
             playBoardListAdapter.submitPlayBoard(it) {
-                it.skipAnimation.set(false)
+                it.runsAnimation.set(true)
             }
         }
 
@@ -133,7 +134,9 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
                 is ViewState.Error -> {}
                 is ViewState.Loading -> { viewModel.disableKeyboard() }
                 is ViewState.Play -> { viewModel.enableKeyboard() }
-                is ViewState.Ready -> { viewModel.disableKeyboard() }
+                is ViewState.Ready -> {
+                    viewModel.disableKeyboard()
+                }
                 is ViewState.Finish -> {
                     when(state) {
                         is ViewState.Finish.RoundOver -> {
@@ -191,10 +194,12 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         showInterstitialAd(
             requireActivity(),
             onAdDismissedFullScreenContent = {
+                playBoardListAdapter.submitList(emptyList())
                 viewModel.tryAgain()
             },
             onAdFailedToShowFullScreenContent = {
                 Timber.e("$it")
+                playBoardListAdapter.submitList(emptyList())
                 viewModel.tryAgain()
             }
         )
