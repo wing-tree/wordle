@@ -86,7 +86,6 @@ class PlayBoard {
             return PlayBoard().apply {
                 _round = playBoard.round
                 _maximumRound = playBoard.maximumRound
-                runsAnimation.set(false)
 
                 playBoard.lines.forEachIndexed { index, line ->
                     _lines[index] = line.toPresentationModel()
