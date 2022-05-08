@@ -37,15 +37,10 @@ class InterstitialAdDelegateImpl: InterstitialAdDelegate {
 
     override fun showInterstitialAd(
         activity: Activity,
-        onAdDismissedFullScreenContent: () -> Unit,
         onAdFailedToShowFullScreenContent: (adError: AdError) -> Unit,
+        onAdShowedFullScreenContent: () -> Unit,
     ) {
         val fullScreenContentCallback = object : FullScreenContentCallback() {
-            override fun onAdDismissedFullScreenContent() {
-                super.onAdDismissedFullScreenContent()
-                onAdDismissedFullScreenContent()
-            }
-
             override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                 super.onAdFailedToShowFullScreenContent(adError)
                 onAdFailedToShowFullScreenContent(adError)
@@ -53,6 +48,7 @@ class InterstitialAdDelegateImpl: InterstitialAdDelegate {
 
             override fun onAdShowedFullScreenContent() {
                 super.onAdShowedFullScreenContent()
+                onAdShowedFullScreenContent()
                 interstitialAd = null
             }
         }
@@ -60,6 +56,6 @@ class InterstitialAdDelegateImpl: InterstitialAdDelegate {
         interstitialAd?.let {
             it.fullScreenContentCallback = fullScreenContentCallback
             it.show(activity)
-        } ?: onAdDismissedFullScreenContent()
+        } ?: onAdShowedFullScreenContent()
     }
 }

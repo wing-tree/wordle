@@ -193,13 +193,11 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     override fun onPlayAgainClick() {
         showInterstitialAd(
             requireActivity(),
-            onAdDismissedFullScreenContent = {
-                playBoardListAdapter.submitList(emptyList())
-                viewModel.tryAgain()
-            },
             onAdFailedToShowFullScreenContent = {
                 Timber.e("$it")
-                playBoardListAdapter.submitList(emptyList())
+                viewModel.tryAgain()
+            },
+            onAdShowedFullScreenContent = {
                 viewModel.tryAgain()
             }
         )

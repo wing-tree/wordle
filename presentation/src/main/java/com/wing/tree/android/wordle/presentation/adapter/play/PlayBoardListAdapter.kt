@@ -12,7 +12,7 @@ import com.wing.tree.android.wordle.presentation.widget.LetterView
 import com.wing.tree.android.wordle.presentation.model.play.Line as Model
 
 class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterItem, PlayBoardListAdapter.ViewHolder>(DiffCallback()) {
-    private var runsAnimation = true
+    private var runsAnimation = false
 
     interface Callbacks {
         fun beforeAnimationStart()
@@ -102,7 +102,7 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
         val list = playBoard.lines.mapIndexed { index, letters ->
             AdapterItem.Line.from(index, letters)
         }
-        
+
         runsAnimation = playBoard.runsAnimation.get()
 
         submitList(list, commitCallback)

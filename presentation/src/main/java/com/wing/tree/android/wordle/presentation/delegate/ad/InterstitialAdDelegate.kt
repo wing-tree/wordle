@@ -8,7 +8,7 @@ interface InterstitialAdDelegate {
     fun loadInterstitialAd(context: Context)
     fun showInterstitialAd(
         activity: Activity,
-        onAdDismissedFullScreenContent: () -> Unit,
         onAdFailedToShowFullScreenContent: (adError: AdError) -> Unit,
+        onAdShowedFullScreenContent: () -> Unit
     )
 }
