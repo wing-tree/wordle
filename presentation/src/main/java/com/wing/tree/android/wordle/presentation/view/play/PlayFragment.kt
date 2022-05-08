@@ -15,7 +15,6 @@ import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDeleg
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegateImpl
 import com.wing.tree.android.wordle.presentation.extention.shake
 import com.wing.tree.android.wordle.presentation.model.play.Key
-import com.wing.tree.android.wordle.presentation.model.play.PlayResult
 import com.wing.tree.android.wordle.presentation.model.play.ViewState
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
@@ -126,7 +125,9 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         }
 
         viewModel.keyboard.observe(viewLifecycleOwner) {
-            viewBinding.keyboardView.applyState(it.alphabetKeys)
+            viewBinding.keyboardView.submitKeyboard(it) {
+                it.runsAnimation.set(true)
+            }
         }
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->

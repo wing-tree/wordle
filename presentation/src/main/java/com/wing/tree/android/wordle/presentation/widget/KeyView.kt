@@ -74,18 +74,28 @@ class KeyView : FrameLayout, Flippable<KeyView> {
                 isAnimating = false
                 isClickable = true
             }
+        } else {
+            doOnEnd?.invoke(this)
         }
     }
 
-    fun updateState(state: Key.State) {
+    fun updateState(state: Key.State, runsAnimation: Boolean = true) {
         if (this.state.priority < state.priority) {
             this.state = state
 
-            val color = context.getColor(state.backgroundColorRes)
+            val backgroundColor = context.getColor(state.backgroundColorRes)
+            val textColor = context.getColor(state.textColorRes)
+            val tint = ColorStateList.valueOf(backgroundColor)
 
-            back.backgroundTintList = ColorStateList.valueOf(color)
+            if (runsAnimation) {
+                back.backgroundTintList = tint
+                back.setTextColor(textColor)
 
-            flip()
+                flip()
+            } else {
+                front.backgroundTintList = tint
+                front.setTextColor(textColor)
+            }
         }
     }
 

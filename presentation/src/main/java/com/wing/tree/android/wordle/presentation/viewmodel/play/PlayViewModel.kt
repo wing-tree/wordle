@@ -107,7 +107,6 @@ class PlayViewModel @Inject constructor(
     val round: Int get() = playBoard.value?.round ?: 0
 
     init {
-        _keyboard.value = Keyboard()
         _viewState.value = ViewState.Ready
 
         _keyboard.addSource(playBoard) { board ->
@@ -172,6 +171,7 @@ class PlayViewModel @Inject constructor(
     }
 
     fun setRunsAnimation(value: Boolean) {
+        keyboard.value?.runsAnimation?.set(value)
         playBoard.value?.runsAnimation?.set(value)
     }
 

@@ -15,13 +15,12 @@ class PlayBoard {
     private var _maximumRound: Int = MAXIMUM_ROUND
     val maximumRound: Int get() = _maximumRound
 
-    val runsAnimation = AtomicBoolean(false)
+    private val _lines = MutableList(MAXIMUM_ROUND) { Line(it) }
+    val lines: List<Line> get() = _lines
 
     val isRoundAdded: Boolean get() = maximumRound > MAXIMUM_ROUND
     val isRoundOver: Boolean get() = round.inc() >= maximumRound
-
-    private val _lines = MutableList(MAXIMUM_ROUND) { Line(it) }
-    val lines: List<Line> get() = _lines
+    val runsAnimation = AtomicBoolean(false)
 
     val letters get() = lines.flatten()
     val closest: Line get() = lines.maxByOrNull { it.proximity } ?: currentLine

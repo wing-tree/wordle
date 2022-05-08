@@ -5,9 +5,11 @@ import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toPresen
 import com.wing.tree.wordle.core.constant.alphabet
 import com.wing.tree.android.wordle.domain.model.playstate.Keyboard as DomainKeyboard
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 class Keyboard {
     val alphabetKeys = Array(alphabet.size) { Key.Alphabet(alphabet[it]) }
+    val runsAnimation = AtomicBoolean(false)
 
     fun erase(word: Word) {
         val predicate = ErasePredicate(word)
