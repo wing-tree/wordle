@@ -22,7 +22,7 @@ import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.delegate.play.*
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toDomainModel
 import com.wing.tree.android.wordle.presentation.model.play.*
-import com.wing.tree.android.wordle.presentation.util.setValueWith
+import com.wing.tree.android.wordle.presentation.util.setValueAfter
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
@@ -157,15 +157,15 @@ class PlayViewModel @Inject constructor(
     }
 
     fun add(letter: String) {
-        _playBoard.setValueWith { add(letter) }
+        _playBoard.setValueAfter { add(letter) }
     }
 
     fun removeAt(attempt: Int, index: Int) {
-        _playBoard.setValueWith { removeAt(attempt, index) }
+        _playBoard.setValueAfter { removeAt(attempt, index) }
     }
 
     fun removeLast() {
-        _playBoard.setValueWith { removeLast() }
+        _playBoard.setValueAfter { removeLast() }
     }
 
     fun setAnimating(value: Boolean) {
@@ -228,7 +228,7 @@ class PlayViewModel @Inject constructor(
     }
 
     private fun submitLetter(letter: Letter) {
-        _playBoard.setValueWith {
+        _playBoard.setValueAfter {
             currentLine.submit(letter)
         }
     }
