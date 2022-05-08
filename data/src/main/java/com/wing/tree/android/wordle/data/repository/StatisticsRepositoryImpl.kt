@@ -34,17 +34,21 @@ class StatisticsRepositoryImpl @Inject constructor(private val dataStore: DataSt
                 won = it.won.inc()
             }
 
-            val guesses = with(Guesses.newBuilder(it.guesses)) {
-                when(guess) {
-                    0 -> one = it.guesses.one.inc()
-                    1 -> two = it.guesses.two.inc()
-                    2 -> three = it.guesses.three.inc()
-                    3 -> four = it.guesses.four.inc()
-                    4 -> five = it.guesses.five.inc()
-                    else -> sixOrMore = it.guesses.sixOrMore.inc()
-                }
+            val guesses = if (result is Result.Lose) {
+                it.guesses
+            } else {
+                with(Guesses.newBuilder(it.guesses)) {
+                    when (guess) {
+                        0 -> one = it.guesses.one.inc()
+                        1 -> two = it.guesses.two.inc()
+                        2 -> three = it.guesses.three.inc()
+                        3 -> four = it.guesses.four.inc()
+                        4 -> five = it.guesses.five.inc()
+                        else -> sixOrMore = it.guesses.sixOrMore.inc()
+                    }
 
-                build()
+                    build()
+                }
             }
 
             it.toBuilder()
