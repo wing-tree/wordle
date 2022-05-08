@@ -91,8 +91,7 @@ class PlayViewModel @Inject constructor(
         }
     }
 
-    private val _isAnimating = MutableLiveData<Boolean>()
-    val isAnimating: LiveData<Boolean> get() = _isAnimating
+    private val isAnimating = MutableLiveData<Boolean>()
 
     private val _keyboard = MediatorLiveData<Keyboard>()
     val keyboard: LiveData<Keyboard> get() = _keyboard
@@ -127,30 +126,30 @@ class PlayViewModel @Inject constructor(
 
             if (isAnimating.not()) {
                 when(playResult) {
-                    is PlayResult.Win -> _viewState.value = ViewState.Finish.Win
-                    is PlayResult.Lose -> {
+                    is PlayResult.Lose ->  _viewState.value = ViewState.Finish.Lose(playResult)
+                    is PlayResult.RoundOver -> {
                         val isRoundAdded = playBoard.value?.isRoundAdded ?: false
-                        val roundOver = ViewState.Finish.RoundOver(isRoundAdded)
 
-                        _viewState.value = roundOver
+                        _viewState.value = ViewState.Finish.RoundOver(isRoundAdded)
                     }
+                    is PlayResult.Win -> _viewState.value = ViewState.Finish.Win(playResult)
                 }
             }
         }
 
         _viewState.addSource(playResult) {
-            val isAnimating = _isAnimating.value ?: return@addSource
+            val isAnimating = isAnimating.value ?: return@addSource
             val playResult = playResult.value ?: return@addSource
 
             if (isAnimating.not()) {
                 when(playResult) {
-                    is PlayResult.Win -> _viewState.value = ViewState.Finish.Win
-                    is PlayResult.Lose -> {
+                    is PlayResult.Lose ->  _viewState.value = ViewState.Finish.Lose(playResult)
+                    is PlayResult.RoundOver -> {
                         val isRoundAdded = playBoard.value?.isRoundAdded ?: false
-                        val roundOver = ViewState.Finish.RoundOver(isRoundAdded)
 
-                        _viewState.value = roundOver
+                        _viewState.value = ViewState.Finish.RoundOver(isRoundAdded)
                     }
+                    is PlayResult.Win -> _viewState.value = ViewState.Finish.Win(playResult)
                 }
             }
         }
@@ -169,7 +168,7 @@ class PlayViewModel @Inject constructor(
     }
 
     fun setAnimating(value: Boolean) {
-        _isAnimating.value = value
+        isAnimating.value = value
     }
 
     fun setRunsAnimation(value: Boolean) {
@@ -194,7 +193,7 @@ class PlayViewModel @Inject constructor(
                         playBoard.submit()
 
                         _playBoard.value = playBoard
-                        _isAnimating.value = true
+                        isAnimating.value = true
 
                         commitCallback(kotlin.Result.success(line))
 
@@ -202,7 +201,7 @@ class PlayViewModel @Inject constructor(
                             win()
                         } else {
                             if (playBoard.isRoundOver) {
-                                _viewState.value = ViewState.Finish.RoundOver(playBoard.isRoundAdded)
+                                playResult.value = PlayResult.RoundOver(playBoard.isRoundAdded)
                             } else {
                                 playBoard.incrementRound()
                                 enableKeyboard()
@@ -211,6 +210,29 @@ class PlayViewModel @Inject constructor(
                     }
                 }
             )
+        }
+    }
+
+    @DelicateCoroutinesApi
+    fun lose() {
+        updateStatistics(Result.Lose(round))
+
+        playBoard.value?.let { playBoard ->
+            val closest = playBoard.closest
+            val letters = closest.string
+            val round = round
+            val states = closest.map { it.state.toInt() }
+            val word = word.value
+
+            val lose = PlayResult.Lose(
+                letters = letters,
+                round = round,
+                states = states,
+                word = word
+            )
+
+            _viewState
+            playResult.value = lose
         }
     }
 

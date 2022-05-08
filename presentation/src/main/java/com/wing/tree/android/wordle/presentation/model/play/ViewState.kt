@@ -8,6 +8,7 @@ sealed class ViewState {
 
     sealed class Finish : ViewState() {
         class RoundOver(val isRoundAdded: Boolean) : Finish()
-        object Win : Finish()
+        data class Lose(val playResult: PlayResult.Lose) : Finish()
+        data class Win(val playResult: PlayResult.Win) : Finish()
     }
 }

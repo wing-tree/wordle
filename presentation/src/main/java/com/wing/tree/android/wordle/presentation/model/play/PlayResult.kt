@@ -5,6 +5,10 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 open class PlayResult : Parcelable {
+    data class RoundOver(
+        val isRoundAdded: Boolean
+    ) : PlayResult()
+
     data class Lose(
         val letters: String,
         val round: Int,

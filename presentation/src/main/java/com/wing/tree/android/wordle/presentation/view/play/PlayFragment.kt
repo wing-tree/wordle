@@ -129,8 +129,8 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             viewBinding.keyboardView.applyState(it.alphabetKeys)
         }
 
-        viewModel.viewState.observe(viewLifecycleOwner) { state ->
-            when(state) {
+        viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
+            when(viewState) {
                 is ViewState.Error -> {}
                 is ViewState.Loading -> { viewModel.disableKeyboard() }
                 is ViewState.Play -> { viewModel.enableKeyboard() }
@@ -138,22 +138,19 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
                     viewModel.disableKeyboard()
                 }
                 is ViewState.Finish -> {
-                    when(state) {
+                    when(viewState) {
                         is ViewState.Finish.RoundOver -> {
-                            RoundOverDialogFragment.newInstance(state.isRoundAdded).also {
+                            RoundOverDialogFragment.newInstance(viewState.isRoundAdded).also {
                                 it.show(childFragmentManager, it.tag)
                             }
                         }
+                        is ViewState.Finish.Lose -> {
+                            val directions = PlayFragmentDirections.actionPlayFragmentToResultFragment(viewState.playResult)
+
+                            navigate(directions)
+                        }
                         is ViewState.Finish.Win -> {
-                            val round = viewModel.round
-                            val word = viewModel.word.value
-
-                            val win =  PlayResult.Win(
-                                round = round,
-                                word = word
-                            )
-
-                            val directions = PlayFragmentDirections.actionPlayFragmentToResultFragment(win)
+                            val directions = PlayFragmentDirections.actionPlayFragmentToResultFragment(viewState.playResult)
 
                             navigate(directions)
                         }
@@ -164,26 +161,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     }
 
     override fun onNoThanksClick() {
-        with(viewModel) {
-            playBoard.value?.let { playBoard ->
-                val closest = playBoard.closest
-                val letters = closest.string
-                val round = round
-                val states = closest.map { it.state.toInt() }
-                val word = word.value
-
-                val lose = PlayResult.Lose(
-                    letters = letters,
-                    round = round,
-                    states = states,
-                    word = word
-                )
-
-                val directions = PlayFragmentDirections.actionPlayFragmentToResultFragment(lose)
-
-                navigate(directions)
-            }
-        }
+        viewModel.lose()
     }
 
     override fun onOneMoreTryClick() {
