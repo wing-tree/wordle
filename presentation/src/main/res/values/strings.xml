@@ -1,9 +1,10 @@
 <resources>
     <string name="app_name">Wordle</string>
 
-    <string name="eraser">ERASER</string>
-    <string name="hint">HINT</string>
-    <string name="next_word">NEXT WORD</string>
-    <string name="play">PLAY</string>
+    <string name="answer">Answer</string>
+    <string name="eraser">Eraser</string>
+    <string name="hint">Hint</string>
+    <string name="next_word">Next Word</string>
+    <string name="play">Play</string>
     <string name="share_the_app">Share the app</string>
 </resources>

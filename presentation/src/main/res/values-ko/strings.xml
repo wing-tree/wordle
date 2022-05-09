@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Wordle</string>
 
+    <string name="answer">정답</string>
     <string name="eraser">지우개</string>
     <string name="hint">힌트</string>
     <string name="next_word">NEXT WORD</string>

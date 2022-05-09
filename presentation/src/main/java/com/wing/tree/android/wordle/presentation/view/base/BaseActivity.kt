@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
+import com.google.android.material.snackbar.BaseTransientBottomBar
 
 abstract class BaseActivity<VB: ViewBinding>  : AppCompatActivity() {
     abstract fun inflate(): VB
@@ -44,7 +45,7 @@ abstract class BaseActivity<VB: ViewBinding>  : AppCompatActivity() {
         }
     }
 
-    protected fun showToast(text: String,  duration: Int = Toast.LENGTH_SHORT) {
+    protected fun showToast(text: String, duration: Int = Toast.LENGTH_SHORT) {
         Toast.makeText(this, text, duration).show()
     }
 }

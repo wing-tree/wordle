@@ -14,3 +14,5 @@ val alphabet = arrayOf(
     "u", "v", "w", "x",
     "y", "z"
 )
+
+val Int.isZero: Boolean get() = this == 0
