@@ -5,21 +5,39 @@
     android:layout_height="match_parent"
     tools:parentTag="android.widget.FrameLayout">
 
-    <TextView
-        android:id="@+id/text_view_back"
+    <FrameLayout
+        android:id="@+id/frame_layout_back"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/background_letter_view"
         android:backgroundTintMode="src_over"
-        android:visibility="gone"
-        style="@style/Widget.MaterialComponents.TextView.LetterView"
-        tools:text="A" />
+        android:visibility="gone">
 
-    <TextView
-        android:id="@+id/text_view_front"
+        <TextView
+            android:id="@+id/text_view_back"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTintMode="src_over"
+            style="@style/Widget.MaterialComponents.TextView.LetterView"
+            tools:text="A" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/frame_layout_front"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:backgroundTintMode="src_over"
-        style="@style/Widget.MaterialComponents.TextView.LetterView"
-        tools:text="A" />
+        android:background="@drawable/background_letter_view"
+        android:backgroundTintMode="src_over">
+
+        <TextView
+            android:id="@+id/text_view_front"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTintMode="src_over"
+            style="@style/Widget.MaterialComponents.TextView.LetterView"
+            tools:text="A" />
+
+    </FrameLayout>
 
 </merge>

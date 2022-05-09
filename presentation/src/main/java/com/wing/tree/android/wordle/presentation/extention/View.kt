@@ -1,10 +1,9 @@
 package com.wing.tree.android.wordle.presentation.extention
 
+import android.animation.Animator
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationSet
-import android.view.animation.AnimationUtils
-import android.view.animation.ScaleAnimation
+import android.view.animation.*
+import android.widget.TextView
 import com.wing.tree.android.wordle.presentation.R
 
 fun View.scale(from: Float, to: Float, duration: Long, withEndAction: Runnable = Runnable {  }) {
@@ -49,4 +48,53 @@ fun View.shake() {
     }
 
     startAnimation(animationSet)
+}
+
+fun TextView.textFadeIn(text: CharSequence, duration: Long = 120L) {
+    this.text = text
+
+    alpha = 0.0F
+    visible()
+
+    animate()
+        .alpha(1.0F)
+        .setDuration(duration)
+        .setInterpolator(DecelerateInterpolator())
+        .setListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator?) = Unit
+
+            override fun onAnimationEnd(animation: Animator?) = Unit
+
+            override fun onAnimationCancel(animation: Animator?) {
+                alpha = 1.0F
+            }
+
+            override fun onAnimationRepeat(animation: Animator?) = Unit
+        }).withLayer()
+}
+
+fun TextView.textFadeOut(duration: Long = 120L) {
+    alpha = 1.0F
+    visible()
+
+    animate()
+        .alpha(0.0F)
+        .setDuration(duration)
+        .setInterpolator(AccelerateInterpolator())
+        .setListener(object : Animator.AnimatorListener {
+            override fun onAnimationStart(animation: Animator?) = Unit
+
+            override fun onAnimationEnd(animation: Animator?) {
+                text = null
+                gone()
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+                alpha = 0.0F
+                text = null
+                gone()
+            }
+
+            override fun onAnimationRepeat(animation: Animator?) = Unit
+        }).withLayer()
 }

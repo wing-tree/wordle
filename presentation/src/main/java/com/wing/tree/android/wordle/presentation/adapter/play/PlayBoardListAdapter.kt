@@ -6,9 +6,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.android.wordle.presentation.databinding.LineItemBinding
+import com.wing.tree.android.wordle.presentation.extention.scale
 import com.wing.tree.android.wordle.presentation.model.play.PlayBoard
 import com.wing.tree.android.wordle.presentation.model.play.Letter
-import com.wing.tree.android.wordle.presentation.widget.LetterView
+import com.wing.tree.android.wordle.presentation.widget.LetterView.*
 import com.wing.tree.android.wordle.presentation.model.play.Line as Model
 
 class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterItem, PlayBoardListAdapter.ViewHolder>(DiffCallback()) {
@@ -28,9 +29,9 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
                         setOnLetterClickListener(null)
 
                         val featureFlag = if (runsAnimation) {
-                            LetterView.Flag.Submit
+                            Flag.Submit
                         } else {
-                            LetterView.Flag.Restore
+                            Flag.Restore
                         }
 
                         submitLetters(item.letters, featureFlag)
@@ -41,19 +42,25 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
                             flipAll { callbacks.onAnimationEnd() }
                         }
                     } else {
-                        setOnLetterClickListener { _, index ->
+                        setOnLetterClickListener { letterView, index ->
+                            with(letterView) {
+                                scale(1.0F, 1.15F, 150L) {
+                                    scale(1.15F, 1.0F, 150L)
+                                }
+                            }
+
                             callbacks.onLetterClick(adapterPosition, index)
                         }
 
-                        item.letters.zip(item.previousLetters).forEachIndexed { index, (letter, previousLetter) ->
-                            if (letter.isSubmitted) {
+                        item.letters.zip(item.previousLetters).forEachIndexed { index, (currentLetter, previousLetter) ->
+                            if (currentLetter.isSubmitted) {
                                 val featureFlag = if (runsAnimation) {
-                                    LetterView.Flag.Submit
+                                    Flag.Submit
                                 } else {
-                                    LetterView.Flag.Restore
+                                    Flag.Restore
                                 }
 
-                                get(index).submitLetter(letter, featureFlag)
+                                get(index).submitLetter(currentLetter, featureFlag)
 
                                 if (runsAnimation) {
                                     callbacks.beforeAnimationStart()
@@ -66,19 +73,19 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
                                     get(index).isFlippable = false
                                 }
                             } else {
-                                val featureFlag = if (runsAnimation) {
-                                    LetterView.Flag.Normal
+                                val flag = if (runsAnimation) {
+                                    val action = when {
+                                        currentLetter.isNotBlank && previousLetter.isBlank && runsAnimation -> Flag.Action.Add
+                                        currentLetter.isBlank && previousLetter.isNotBlank -> Flag.Action.Remove
+                                        else -> Flag.Action.Nothing
+                                    }
+
+                                    Flag.Default(action)
                                 } else {
-                                    LetterView.Flag.Restore
+                                    Flag.Restore
                                 }
 
-                                get(index).submitLetter(letter, featureFlag)
-
-                                if (previousLetter.isBlank && letter.isNotBlank && runsAnimation) {
-                                    scaleAt(index)
-                                } else if (previousLetter.isNotBlank && letter.isBlank) {
-                                    // 딜리트.. 페이딩이나,, 등등.
-                                }
+                                get(index).submitLetter(currentLetter, flag)
                             }
                         }
                     }

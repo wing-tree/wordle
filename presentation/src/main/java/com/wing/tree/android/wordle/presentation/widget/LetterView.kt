@@ -6,6 +6,9 @@ import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.LetterViewBinding
+import com.wing.tree.android.wordle.presentation.extention.scale
+import com.wing.tree.android.wordle.presentation.extention.textFadeIn
+import com.wing.tree.android.wordle.presentation.extention.textFadeOut
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.util.flip
 
@@ -17,8 +20,10 @@ class LetterView : FrameLayout, Flippable<LetterView> {
     override var isFlippable = true
     override var isAnimating = false
 
-    private var back = viewBinding.textViewBack
-    private var front = viewBinding.textViewFront
+    private var backFrame = viewBinding.frameLayoutBack
+    private var backText = viewBinding.textViewBack
+    private var frontFrame = viewBinding.frameLayoutFront
+    private var frontText = viewBinding.textViewFront
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
@@ -32,7 +37,7 @@ class LetterView : FrameLayout, Flippable<LetterView> {
         if (isFlippable && isNotAnimating) {
             isAnimating = true
 
-            flip(back, front) {
+            flip(backFrame, frontFrame) {
                 swap()
                 doOnEnd?.invoke(this)
                 isAnimating = false
@@ -45,11 +50,15 @@ class LetterView : FrameLayout, Flippable<LetterView> {
     private fun swap() {
         with(viewBinding) {
             if (isFlipped) {
-                back = textViewFront
-                front = textViewBack
+                backText = textViewFront
+                frontText = textViewBack
+                backFrame = frameLayoutFront
+                frontFrame = frameLayoutBack
             } else {
-                back = textViewBack
-                front = textViewFront
+                backText = textViewBack
+                frontText = textViewFront
+                backFrame = frameLayoutBack
+                frontFrame = frameLayoutFront
             }
         }
     }
@@ -59,31 +68,45 @@ class LetterView : FrameLayout, Flippable<LetterView> {
         val tint = letter.getTint(context)
 
         when(flag) {
-            is Flag.Normal -> {
-                back.text = text
-                back.backgroundTintList = tint
+            is Flag.Default -> {
+                backFrame.backgroundTintList = tint
+                backText.text = text
 
-                front.text = text
+                when(flag.action) {
+                    Flag.Action.Add -> {
+                        frontText.textFadeIn(text)
+
+                        scale(1.0F, 1.15F, 150L) {
+                            scale(1.15F, 1.0F, 150L)
+                        }
+                    }
+                    Flag.Action.Nothing -> frontText.text = text
+                    Flag.Action.Remove -> frontText.textFadeOut()
+                }
             }
             is Flag.Restore -> {
-                front.text = text
-                front.backgroundTintList = tint
+                frontFrame.backgroundTintList = tint
+                frontText.text = text
             }
             is Flag.Result -> {
-                front.text = text
-                front.backgroundTintList = tint
+                frontFrame.backgroundTintList = tint
+                frontText.text = text
             }
             is Flag.Submit -> {
-                back.text = text
-                back.backgroundTintList = tint
+                backFrame.backgroundTintList = tint
+                backText.text = text
             }
         }
     }
 
     sealed class Flag {
-        object Normal : Flag()
+        data class Default(val action: Action) : Flag()
         object Restore : Flag()
         object Result : Flag()
         object Submit : Flag()
+
+        enum class Action {
+            Add, Nothing, Remove
+        }
     }
 }
