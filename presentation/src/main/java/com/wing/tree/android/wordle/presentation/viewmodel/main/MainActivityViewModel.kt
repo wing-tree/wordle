@@ -89,6 +89,8 @@ class MainActivityViewModel @Inject constructor(
                     when {
                         Skus.CREDITS_240 in skus -> purchaseCreditsUseCase(240)
                         Skus.CREDITS_720 in skus -> purchaseCreditsUseCase(720)
+                        Skus.CREDITS_2000 in skus -> purchaseCreditsUseCase(2000)
+                        Skus.CREDITS_6000 in skus -> purchaseCreditsUseCase(6000)
                     }
                 }
             }
