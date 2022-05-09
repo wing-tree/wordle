@@ -129,7 +129,7 @@ class PlayViewModel @Inject constructor(
                     is PlayResult.RoundOver -> {
                         val isRoundAdded = playBoard.value?.isRoundAdded ?: false
 
-                        _viewState.value = ViewState.Finish.RoundOver(isRoundAdded)
+                        _viewState.value = ViewState.RoundOver(isRoundAdded)
                     }
                     is PlayResult.Win -> _viewState.value = ViewState.Finish.Win(playResult)
                 }
@@ -146,7 +146,7 @@ class PlayViewModel @Inject constructor(
                     is PlayResult.RoundOver -> {
                         val isRoundAdded = playBoard.value?.isRoundAdded ?: false
 
-                        _viewState.value = ViewState.Finish.RoundOver(isRoundAdded)
+                        _viewState.value = ViewState.RoundOver(isRoundAdded)
                     }
                     is PlayResult.Win -> _viewState.value = ViewState.Finish.Win(playResult)
                 }
@@ -262,7 +262,7 @@ class PlayViewModel @Inject constructor(
     @DelicateCoroutinesApi
     fun updatePlayState() {
         GlobalScope.launch(ioDispatcher) {
-            if (viewState.value is ViewState.Finish.Lose || viewState.value is ViewState.Finish.Win) {
+            if (viewState.value is ViewState.Finish) {
                 cancel()
             } else {
                 val keyboard = keyboard.value?.toDomainModel() ?: Keyboard().toDomainModel()

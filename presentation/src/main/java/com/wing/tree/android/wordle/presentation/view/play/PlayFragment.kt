@@ -138,13 +138,13 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
                 is ViewState.Ready -> {
                     viewModel.disableKeyboard()
                 }
+                is ViewState.RoundOver -> {
+                    RoundOverDialogFragment.newInstance(viewState.isRoundAdded).also {
+                        it.show(childFragmentManager, it.tag)
+                    }
+                }
                 is ViewState.Finish -> {
                     when(viewState) {
-                        is ViewState.Finish.RoundOver -> {
-                            RoundOverDialogFragment.newInstance(viewState.isRoundAdded).also {
-                                it.show(childFragmentManager, it.tag)
-                            }
-                        }
                         is ViewState.Finish.Lose -> {
                             val directions = PlayFragmentDirections.actionPlayFragmentToResultFragment(viewState.playResult)
 
