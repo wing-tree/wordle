@@ -23,6 +23,9 @@ data class Letter(val position: Int, val value: String = BLANK) {
     val isNotBlank: Boolean
         get() = value.isNotBlank()
 
+    @ColorInt
+    fun getTextColor(context: Context) = context.getColor(state.textColorRes)
+
     fun getTint(context: Context): ColorStateList {
         return ColorStateList.valueOf(context.getColor(state.backgroundColorRes))
     }

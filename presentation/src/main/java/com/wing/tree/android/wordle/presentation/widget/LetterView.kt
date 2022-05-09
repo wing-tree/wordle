@@ -65,12 +65,14 @@ class LetterView : FrameLayout, Flippable<LetterView> {
 
     fun submitLetter(letter: Letter, flag: Flag) {
         val text = letter.value.uppercase()
+        val textColor = letter.getTextColor(context)
         val tint = letter.getTint(context)
 
         when(flag) {
             is Flag.Default -> {
                 backFrame.backgroundTintList = tint
                 backText.text = text
+                backText.setTextColor(textColor)
 
                 when(flag.action) {
                     Flag.Action.Add -> {
@@ -87,14 +89,17 @@ class LetterView : FrameLayout, Flippable<LetterView> {
             is Flag.Restore -> {
                 frontFrame.backgroundTintList = tint
                 frontText.text = text
+                frontText.setTextColor(textColor)
             }
             is Flag.Result -> {
                 frontFrame.backgroundTintList = tint
                 frontText.text = text
+                frontText.setTextColor(textColor)
             }
             is Flag.Submit -> {
                 backFrame.backgroundTintList = tint
                 backText.text = text
+                backText.setTextColor(textColor)
             }
         }
     }
