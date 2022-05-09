@@ -18,39 +18,39 @@ import kotlinx.coroutines.CoroutineDispatcher
 @InstallIn(ViewModelComponent::class)
 @Module
 internal object UseCaseModule {
-    @Provides
-    @ViewModelScoped
-    fun providesContainUseCase(
-        repository: WordRepository,
-        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-    ): ContainsUseCase {
-        return ContainsUseCase(repository, coroutineDispatcher)
-    }
-
-    @Provides
-    @ViewModelScoped
-    fun providesGetCreditsUseCase(
-        repository: PreferencesRepository,
-        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-    ): GetCreditsUseCase {
-        return GetCreditsUseCase(repository, coroutineDispatcher)
-    }
-
-    @Provides
-    @ViewModelScoped
-    fun providesGetStatisticsUseCase(
-        repository: StatisticsRepository,
-        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-    ): GetStatisticsUseCase {
-        return GetStatisticsUseCase(repository, coroutineDispatcher)
-    }
-
-    @Provides
-    @ViewModelScoped
-    fun providesGetWordUseCase(
-        repository: WordRepository,
-        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-    ): GetWordUseCase {
-        return GetWordUseCase(repository, coroutineDispatcher)
-    }
+//    @Provides
+//    @ViewModelScoped
+//    fun providesContainUseCase(
+//        repository: WordRepository,
+//        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+//    ): ContainsUseCase {
+//        return ContainsUseCase(repository, coroutineDispatcher)
+//    }
+//
+//    @Provides
+//    @ViewModelScoped
+//    fun providesGetCreditsUseCase(
+//        repository: PreferencesRepository,
+//        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+//    ): GetCreditsUseCase {
+//        return GetCreditsUseCase(repository, coroutineDispatcher)
+//    }
+//
+//    @Provides
+//    @ViewModelScoped
+//    fun providesGetStatisticsUseCase(
+//        repository: StatisticsRepository,
+//        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+//    ): GetStatisticsUseCase {
+//        return GetStatisticsUseCase(repository, coroutineDispatcher)
+//    }
+//
+//    @Provides
+//    @ViewModelScoped
+//    fun providesGetWordUseCase(
+//        repository: WordRepository,
+//        @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
+//    ): GetWordUseCase {
+//        return GetWordUseCase(repository, coroutineDispatcher)
+//    }
 }
