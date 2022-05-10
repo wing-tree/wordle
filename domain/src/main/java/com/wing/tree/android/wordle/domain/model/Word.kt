@@ -1,8 +1,22 @@
 package com.wing.tree.android.wordle.domain.model
 
-interface Word {
+interface Word : Iterable<Char> {
     val index: Int
     val value: String
+
+    override fun iterator(): Iterator<Char> {
+        return object : Iterator<Char> {
+            private var index = 0
+
+            override fun hasNext(): Boolean {
+                return index <= value.lastIndex
+            }
+
+            override fun next(): Char {
+                return value[index++]
+            }
+        }
+    }
 
     companion object {
         val Sorry = object : Word {

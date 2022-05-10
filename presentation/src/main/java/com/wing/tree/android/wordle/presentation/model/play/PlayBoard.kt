@@ -2,6 +2,7 @@ package com.wing.tree.android.wordle.presentation.model.play
 
 import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toPresentationModel
+import com.wing.tree.android.wordle.presentation.model.play.Letter.*
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import timber.log.Timber
@@ -27,11 +28,11 @@ class PlayBoard {
     val currentLine: Line get() = lines[round]
     val notUnknownLetters: List<Letter> get() = letters.filter { it.state.notUndefined }
 
-    fun getNotMatchedYetLetters(word: Word): List<Letter> {
-        val matchedPositions = letters.filterWithState<Letter.State.In.Matched>().map { it.position }.distinct()
+    fun getHintLetters(word: Word): List<Letter> {
+        val matchedPositions = letters.filterWithState<State.In.Matched>().map { it.position }.distinct()
 
         return mutableListOf<Letter>().apply {
-            word.value.forEachIndexed { index, letter ->
+            word.forEachIndexed { index, letter ->
                 if (matchedPositions.contains(index).not()) {
                     add(Letter(index, letter))
                 }
@@ -72,11 +73,11 @@ class PlayBoard {
         ++_round
     }
 
-    inline fun <reified R: Letter.State> List<Letter>.filterWithState(): List<Letter> {
+    inline fun <reified R: State> List<Letter>.filterWithState(): List<Letter> {
         return filter { it.state is R }
     }
 
-    inline fun <reified R: Letter.State> filterWithState(): List<Letter> {
+    inline fun <reified R: State> filterWithState(): List<Letter> {
         return letters.filterWithState<R>()
     }
 

@@ -11,6 +11,8 @@ class Keyboard {
     val alphabetKeys = Array(alphabet.size) { Key.Alphabet(alphabet[it]) }
     val runsAnimation = AtomicBoolean(false)
 
+    fun getErasableAlphabetKeys(word: Word): List<Key.Alphabet> = alphabetKeys.filter(ErasePredicate(word))
+
     fun erase(word: Word) {
         val predicate = ErasePredicate(word)
         val seed = System.currentTimeMillis()
@@ -25,8 +27,8 @@ class Keyboard {
 
     inner class ErasePredicate(val word: Word): (Key.Alphabet) -> Boolean {
         override fun invoke(alphabet: Key.Alphabet) = when {
-            alphabet.state == Key.State.NotIn() -> false
             alphabet.letter in word.value -> false
+            alphabet.state is Key.State.NotIn -> false
             else -> true
         }
     }

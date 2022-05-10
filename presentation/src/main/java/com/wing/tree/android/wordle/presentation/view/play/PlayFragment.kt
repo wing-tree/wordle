@@ -78,23 +78,19 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
 
             keyboardView.setOnKeyListener { key ->
-                viewModel.playSound()
-
                 when(key) {
                     is Key.Alphabet -> viewModel.add(key.letter)
-                    is Key.Return -> {
-                        viewModel.submit { it.onFailure { currentItemView?.shake() } }
-                    }
+                    is Key.Return -> viewModel.submit { it.onFailure { currentItemView?.shake() } }
                     is Key.Backspace -> viewModel.removeLast()
                 }
             }
 
             eraser.setOnClickListener {
-                viewModel.useItem(Item.Type.ERASER)
+                viewModel.consumeItem(Item.Type.ERASER)
             }
 
             hint.setOnClickListener {
-                viewModel.useItem(Item.Type.HINT)
+                viewModel.consumeItem(Item.Type.HINT)
             }
         }
     }
@@ -166,7 +162,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     }
 
     override fun onOneMoreTryClick() {
-        viewModel.useItem(Item.Type.ONE_MORE_TRY)
+        viewModel.consumeItem(Item.Type.ONE_MORE_TRY)
     }
 
     override fun onPlayAgainClick() {

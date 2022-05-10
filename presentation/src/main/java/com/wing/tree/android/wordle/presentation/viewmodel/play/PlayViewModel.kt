@@ -1,7 +1,6 @@
 package com.wing.tree.android.wordle.presentation.viewmodel.play
 
 import android.app.Application
-import android.media.MediaPlayer
 import androidx.annotation.MainThread
 import androidx.lifecycle.*
 import com.wing.tree.android.wordle.domain.model.Result
@@ -18,7 +17,6 @@ import com.wing.tree.android.wordle.domain.usecase.playstate.UpdatePlayStateUseC
 import com.wing.tree.android.wordle.domain.usecase.statistics.UpdateStatisticsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.ContainsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetWordUseCase
-import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.delegate.play.*
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toDomainModel
 import com.wing.tree.android.wordle.presentation.model.play.*
@@ -43,7 +41,7 @@ class PlayViewModel @Inject constructor(
     getWordUseCase: GetWordUseCase,
     application: Application
 ) : AndroidViewModel(application),
-    ItemHandler by ItemHandlerImpl(
+    ItemConsumer by ItemConsumerImpl(
         consumeCreditsUseCase = consumeCreditsUseCase,
         consumeItemCountUseCase = consumeItemCountUseCase,
         getItemCountUseCase = getItemCountUseCase
@@ -56,11 +54,10 @@ class PlayViewModel @Inject constructor(
     val word: Word get() = _word
 
     private val ioDispatcher = Dispatchers.IO
-
-    private val mediaPlayer = MediaPlayer.create(application, R.raw.sound)
+    private val mainDispatcher = Dispatchers.Main
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(mainDispatcher.immediate) {
             getPlayStateUseCase().collect { result ->
                 _viewState.value = ViewState.Loading
 
@@ -68,15 +65,15 @@ class PlayViewModel @Inject constructor(
                     cancel()
                 } else {
                     result.getOrNull()?.let { playState ->
+                        _word = playState.word
                         _playBoard.value = PlayBoard.from(playState.playBoard)
                         _keyboard.value = Keyboard.from(playState.keyboard)
-                        _word = playState.word
                     } ?: run {
                         _playBoard.value = PlayBoard()
                         _keyboard.value = Keyboard()
                     }
 
-                    if (_word.value.isBlank()) {
+                    if (word.value.isBlank()) {
                         _word = loadAtRandom() ?: run {
                             Timber.e(NullPointerException())
                             Word.Sorry
@@ -101,8 +98,12 @@ class PlayViewModel @Inject constructor(
 
     private val playResult = MutableLiveData<PlayResult>()
 
-    private val _viewState = MediatorLiveData<ViewState>()
+    private val _viewState by lazy { MediatorLiveData<ViewState>() }
     val viewState: LiveData<ViewState> get() = _viewState
+
+    val isEraserAvailable: Boolean get() = keyboard.value?.getErasableAlphabetKeys(word)?.isNotEmpty() ?: false
+    val isHintAvailable: Boolean get() = (playBoard.value?.getHintLetters(word)?.count() ?: 0) > 1
+    val isOneMoreTryAvailable: Boolean get() = true
 
     val round: Int get() = playBoard.value?.round ?: 0
 
@@ -158,8 +159,8 @@ class PlayViewModel @Inject constructor(
         _playBoard.setValueAfter { add(letter) }
     }
 
-    fun removeAt(attempt: Int, index: Int) {
-        _playBoard.setValueAfter { removeAt(attempt, index) }
+    fun removeAt(round: Int, index: Int) {
+        _playBoard.setValueAfter { removeAt(round, index) }
     }
 
     fun removeLast() {
@@ -280,13 +281,17 @@ class PlayViewModel @Inject constructor(
         }
     }
 
-    fun useItem(@ItemType itemType: Int) {
+    fun consumeItem(@ItemType itemType: Int) {
         viewModelScope.launch {
-            if (use(itemType).isSuccess) {
+            if(isItemAvailable(itemType).not()) {
+                return@launch
+            }
+
+            if (consume(itemType).isSuccess) {
                 when(itemType) {
-                    Item.Type.ERASER -> useEraser()
-                    Item.Type.HINT -> useHint()
-                    Item.Type.ONE_MORE_TRY -> useOneMoreTry()
+                    Item.Type.ERASER -> onEraserConsumed()
+                    Item.Type.HINT -> onHintConsumed()
+                    Item.Type.ONE_MORE_TRY -> onOneMoreTryConsumed()
                 }
             } else {
                 println("wwwww")
@@ -294,36 +299,31 @@ class PlayViewModel @Inject constructor(
         }
     }
 
-    private fun useEraser() {
-        keyboard.value?.let {
-            it.erase(word)
-
-            _keyboard.value = it
-        }
+    private fun isItemAvailable(@ItemType itemType: Int) = when(itemType) {
+        Item.Type.ERASER -> isEraserAvailable
+        Item.Type.HINT -> isHintAvailable
+        Item.Type.ONE_MORE_TRY -> isOneMoreTryAvailable
+        else -> throw IllegalArgumentException("$itemType")
     }
 
-    private fun useHint() {
+    private fun onEraserConsumed() {
+        _keyboard.setValueAfter { erase(word) }
+    }
+
+    private fun onHintConsumed() {
         playBoard.value?.let {
             if (it.filterWithState<Letter.State.In.Matched>().distinct().count() < WORD_LENGTH.dec()) {
-                submitLetter(it.getNotMatchedYetLetters(_word).random())
+                submitLetter(it.getHintLetters(_word).random())
             }
         }
     }
 
-    private fun useOneMoreTry() {
-        playBoard.value?.let {
-            it.addRound()
-            _playBoard.value = it
-        }
+    private fun onOneMoreTryConsumed() {
+        _playBoard.setValueAfter { addRound() }
     }
 
     fun tryAgain() {
         _playBoard.value = PlayBoard()
         _keyboard.value = Keyboard()
-    }
-
-
-    fun playSound() {
-        mediaPlayer.start()
     }
 }

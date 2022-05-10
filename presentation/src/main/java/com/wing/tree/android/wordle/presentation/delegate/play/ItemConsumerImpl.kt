@@ -13,11 +13,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-class ItemHandlerImpl(
+class ItemConsumerImpl(
     private val consumeCreditsUseCase: ConsumeCreditsUseCase,
     private val consumeItemCountUseCase: ConsumeItemCountUseCase,
     getItemCountUseCase: GetItemCountUseCase
-) : ItemHandler {
+) : ItemConsumer {
     override val itemCount: Flow<ItemCount> = getItemCountUseCase().map {
         it.getOrDefault(object : ItemCount {
             override val eraser: Int = ItemCount.Default.ERASER
@@ -26,7 +26,7 @@ class ItemHandlerImpl(
         })
     }
 
-    override suspend fun use(@ItemType itemType: Int): Result<Int> {
+    override suspend fun consume(@ItemType itemType: Int): Result<Int> {
         val result = itemCount.first()
         val itemCount = when(itemType) {
             Type.ERASER -> result.eraser
@@ -38,7 +38,6 @@ class ItemHandlerImpl(
         return if (itemCount > 0) {
             consumeItemCountUseCase(itemType).getOrNull() ?: Result.failure(UnknownError("$itemType"))
         } else {
-            println("oooooo:$itemCount")
             val credits = when(itemType) {
                 Type.ERASER -> Credits.ERASER
                 Type.HINT -> Credits.HINT
