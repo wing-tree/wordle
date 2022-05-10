@@ -69,15 +69,13 @@ class PlayViewModel @Inject constructor(
                         _playBoard.value = PlayBoard.from(playState.playBoard)
                         _keyboard.value = Keyboard.from(playState.keyboard)
                     } ?: run {
-                        _playBoard.value = PlayBoard()
-                        _keyboard.value = Keyboard()
-                    }
-
-                    if (word.value.isBlank()) {
                         _word = loadAtRandom() ?: run {
                             Timber.e(NullPointerException())
                             Word.Sorry
                         }
+
+                        _playBoard.value = PlayBoard()
+                        _keyboard.value = Keyboard()
                     }
 
                     _viewState.value = ViewState.Play
@@ -102,7 +100,7 @@ class PlayViewModel @Inject constructor(
     val viewState: LiveData<ViewState> get() = _viewState
 
     val isEraserAvailable: Boolean get() = keyboard.value?.getErasableAlphabetKeys(word)?.isNotEmpty() ?: false
-    val isHintAvailable: Boolean get() = (playBoard.value?.getHintLetters(word)?.count() ?: 0) > 1
+    val isHintAvailable: Boolean get() = (playBoard.value?.availableHintCount(word) ?: 0) > 1
     val isOneMoreTryAvailable: Boolean get() = true
 
     val round: Int get() = playBoard.value?.round ?: 0
@@ -246,7 +244,6 @@ class PlayViewModel @Inject constructor(
     @DelicateCoroutinesApi
     private fun updateStatistics(result: Result) {
         val round = playBoard.value?.round ?: 0
-
         val parameter = UpdateStatisticsUseCase.Parameter(result, round)
 
         GlobalScope.launch(ioDispatcher) {
@@ -255,9 +252,7 @@ class PlayViewModel @Inject constructor(
     }
 
     private fun submitLetter(letter: Letter) {
-        _playBoard.setValueAfter {
-            currentLine.submit(letter)
-        }
+        _playBoard.setValueAfter { currentLine.submit(letter) }
     }
 
     @DelicateCoroutinesApi
@@ -266,8 +261,8 @@ class PlayViewModel @Inject constructor(
             if (viewState.value is ViewState.Finish) {
                 cancel()
             } else {
-                val keyboard = keyboard.value?.toDomainModel() ?: Keyboard().toDomainModel()
-                val playBoard = playBoard.value?.toDomainModel() ?: PlayBoard().toDomainModel()
+                val keyboard = keyboard.value?.toDomainModel() ?: return@launch
+                val playBoard = playBoard.value?.toDomainModel() ?: return@launch
                 val word = Word.from(word)
 
                 val playState = object : PlayState {
@@ -287,15 +282,15 @@ class PlayViewModel @Inject constructor(
                 return@launch
             }
 
-            if (consume(itemType).isSuccess) {
-                when(itemType) {
-                    Item.Type.ERASER -> onEraserConsumed()
-                    Item.Type.HINT -> onHintConsumed()
-                    Item.Type.ONE_MORE_TRY -> onOneMoreTryConsumed()
+            consume(itemType)
+                .onFailure { Timber.e(it) }
+                .onSuccess {
+                    when(itemType) {
+                        Item.Type.ERASER -> onEraserConsumed()
+                        Item.Type.HINT -> onHintConsumed()
+                        Item.Type.ONE_MORE_TRY -> onOneMoreTryConsumed()
+                    }
                 }
-            } else {
-                println("wwwww")
-            }
         }
     }
 
@@ -312,8 +307,8 @@ class PlayViewModel @Inject constructor(
 
     private fun onHintConsumed() {
         playBoard.value?.let {
-            if (it.filterWithState<Letter.State.In.Matched>().distinct().count() < WORD_LENGTH.dec()) {
-                submitLetter(it.getHintLetters(_word).random())
+            if (it.matched().distinct().count() < WORD_LENGTH.dec()) {
+                submitLetter(it.getAvailableHints(word).random())
             }
         }
     }

@@ -47,8 +47,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     )
 
     private val currentItemView: View?
-        get() = viewBinding.recyclerView
-            .findViewHolderForAdapterPosition(viewModel.round)?.itemView
+        get() = viewBinding.recyclerView.findViewHolderForAdapterPosition(viewModel.round)?.itemView
 
     override fun onPause() {
         viewModel.updatePlayState()

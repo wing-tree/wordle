@@ -2,7 +2,8 @@ package com.wing.tree.android.wordle.presentation.model.play
 
 import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toPresentationModel
-import com.wing.tree.android.wordle.presentation.model.play.Letter.*
+import com.wing.tree.android.wordle.presentation.model.play.Letter.State
+import com.wing.tree.android.wordle.presentation.model.play.Letter.State.*
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import timber.log.Timber
@@ -28,12 +29,12 @@ class PlayBoard {
     val currentLine: Line get() = lines[round]
     val notUnknownLetters: List<Letter> get() = letters.filter { it.state.notUndefined }
 
-    fun getHintLetters(word: Word): List<Letter> {
-        val matchedPositions = letters.filterWithState<State.In.Matched>().map { it.position }.distinct()
+    fun getAvailableHints(word: Word): List<Letter> {
+        val positions = filterIsState<In.Matched>().map { it.position }.distinct()
 
         return mutableListOf<Letter>().apply {
             word.forEachIndexed { index, letter ->
-                if (matchedPositions.contains(index).not()) {
+                if (index !in positions) {
                     add(Letter(index, letter))
                 }
             }
@@ -47,6 +48,10 @@ class PlayBoard {
             }
         }
     }
+
+    fun availableHintCount(word: Word) = getAvailableHints(word).count()
+
+    fun matched() = filterIsState<In.Matched>()
 
     fun removeAt(attempt: Int, index: Int) {
         try {
@@ -73,12 +78,12 @@ class PlayBoard {
         ++_round
     }
 
-    inline fun <reified R: State> List<Letter>.filterWithState(): List<Letter> {
+    inline fun <reified R: State> List<Letter>.filterIsState(): List<Letter> {
         return filter { it.state is R }
     }
 
-    inline fun <reified R: State> filterWithState(): List<Letter> {
-        return letters.filterWithState<R>()
+    inline fun <reified R: State> filterIsState(): List<Letter> {
+        return letters.filterIsState<R>()
     }
 
     companion object {
