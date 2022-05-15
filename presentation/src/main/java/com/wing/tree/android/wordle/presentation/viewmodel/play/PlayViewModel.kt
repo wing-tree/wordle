@@ -54,37 +54,6 @@ class PlayViewModel @Inject constructor(
     val word: Word get() = _word
 
     private val ioDispatcher = Dispatchers.IO
-    private val mainDispatcher = Dispatchers.Main
-
-    init {
-        viewModelScope.launch(mainDispatcher.immediate) {
-            getPlayStateUseCase().collect { result ->
-                _viewState.value = ViewState.Loading
-
-                if (viewState.value is ViewState.Finish) {
-                    cancel()
-                } else {
-                    result.getOrNull()?.let { playState ->
-                        _word = playState.word
-                        _playBoard.value = PlayBoard.from(playState.playBoard)
-                        _keyboard.value = Keyboard.from(playState.keyboard)
-                    } ?: run {
-                        _word = loadAtRandom() ?: run {
-                            Timber.e(NullPointerException())
-                            Word.Sorry
-                        }
-
-                        _playBoard.value = PlayBoard()
-                        _keyboard.value = Keyboard()
-                    }
-
-                    _viewState.value = ViewState.Play
-
-                    cancel()
-                }
-            }
-        }
-    }
 
     private val isAnimating = MutableLiveData<Boolean>()
 
@@ -96,7 +65,7 @@ class PlayViewModel @Inject constructor(
 
     private val playResult = MutableLiveData<PlayResult>()
 
-    private val _viewState by lazy { MediatorLiveData<ViewState>() }
+    private val _viewState = MediatorLiveData<ViewState>()
     val viewState: LiveData<ViewState> get() = _viewState
 
     val isEraserAvailable: Boolean get() = keyboard.value?.getErasableAlphabetKeys(word)?.isNotEmpty() ?: false
@@ -107,6 +76,36 @@ class PlayViewModel @Inject constructor(
 
     init {
         _viewState.value = ViewState.Ready
+
+        viewModelScope.launch {
+            getPlayStateUseCase().collect { result ->
+                _viewState.value = ViewState.Loading
+
+                if (viewState.value is ViewState.Finish) {
+                    cancel()
+                } else {
+                    result.getOrNull()?.let { playState ->
+                        _word = playState.word
+                        _playBoard.value = PlayBoard.from(playState.playBoard)
+                        _keyboard.value = Keyboard.from(playState.keyboard)
+                    } ?: run {
+                        _playBoard.value = PlayBoard()
+                        _keyboard.value = Keyboard()
+                    }
+
+                    if (word.value.isBlank()) {
+                        _word = loadAtRandom() ?: run {
+                            Timber.e(NullPointerException())
+                            Word.Sorry
+                        }
+                    }
+
+                    _viewState.value = ViewState.Play
+
+                    cancel()
+                }
+            }
+        }
 
         _keyboard.addSource(playBoard) { board ->
             val value = _keyboard.value ?: return@addSource
@@ -176,14 +175,16 @@ class PlayViewModel @Inject constructor(
 
     // 콜백 너무많다.. todo 콜백 좀 줄입시더.
     fun submit(@MainThread commitCallback: (kotlin.Result<Line>) -> Unit) {
-        val currentLetters = playBoard.value?.currentLine ?: return
+        val currentLine = playBoard.value?.currentLine ?: return
 
-        if (currentLetters.notBlankCount < WORD_LENGTH) return
+        if (currentLine.notBlankCount < WORD_LENGTH) {
+            return
+        }
 
         viewModelScope.launch(ioDispatcher) {
             submit(
                 word,
-                currentLetters,
+                currentLine,
                 onFailure = {
                     commitCallback(kotlin.Result.failure(it))
                 },

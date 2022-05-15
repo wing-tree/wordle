@@ -1,7 +1,6 @@
 package com.wing.tree.android.wordle.presentation.widget
 
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.github.mikephil.charting.charts.HorizontalBarChart
@@ -48,7 +47,10 @@ class StatisticsView : ConstraintLayout {
     }
 
     private fun initHorizontalBarChart(horizontalBarChart: HorizontalBarChart, guesses: Guesses) {
+        val barDataSet: BarDataSet
         val barEntries = ArrayList<BarEntry>()
+        val color = context.getColor(R.color.matched)
+        val textColor = context.getColor(R.color.text)
 
         repeat(MAXIMUM_ROUND) {
             val index = it.inc()
@@ -56,16 +58,17 @@ class StatisticsView : ConstraintLayout {
             barEntries.add(BarEntry(index.float, guesses[index].float))
         }
 
-        val barDataSet = BarDataSet(barEntries, BLANK)
+        barDataSet = BarDataSet(barEntries, BLANK)
 
         barDataSet.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                return value.toInt().toString()
+                return "${value.toInt()}"
             }
         }
 
-        barDataSet.valueTextColor = Color.WHITE
-        barDataSet.valueTextSize = 20.0F
+        barDataSet.color = color
+        barDataSet.valueTextColor = textColor
+        barDataSet.valueTextSize = 16.0F
 
         with(horizontalBarChart) {
             data = BarData(barDataSet)
@@ -74,6 +77,8 @@ class StatisticsView : ConstraintLayout {
 
             setDrawGridBackground(false)
             setPinchZoom(false)
+            setScaleEnabled(false)
+            setTouchEnabled(false)
 
             axisLeft.setDrawAxisLine(false)
             axisLeft.setDrawGridLines(false)
@@ -89,6 +94,7 @@ class StatisticsView : ConstraintLayout {
             xAxis.setDrawAxisLine(false)
             xAxis.setDrawGridLines(false)
             xAxis.setDrawLabels(true)
+            xAxis.textColor = textColor
             xAxis.textSize = 20F
 
             invalidate()
