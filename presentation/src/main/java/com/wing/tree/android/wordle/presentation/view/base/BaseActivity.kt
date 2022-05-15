@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.annotation.CallSuper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
-import com.google.android.material.snackbar.BaseTransientBottomBar
 
 abstract class BaseActivity<VB: ViewBinding>  : AppCompatActivity() {
     abstract fun inflate(): VB
@@ -38,7 +37,12 @@ abstract class BaseActivity<VB: ViewBinding>  : AppCompatActivity() {
             }
         } else {
             @Suppress("DEPRECATION")
-            val visibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+            val visibility = View.SYSTEM_UI_FLAG_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 
             @Suppress("DEPRECATION")
             window.decorView.systemUiVisibility = visibility
