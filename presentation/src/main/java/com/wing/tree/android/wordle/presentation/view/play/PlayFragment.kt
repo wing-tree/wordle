@@ -139,17 +139,11 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
                     }
                 }
                 is ViewState.Finish -> {
+                    val directions = PlayFragmentDirections.actionPlayFragmentToResultFragment(viewState.playResult)
+
                     when(viewState) {
-                        is ViewState.Finish.Lose -> {
-                            val directions = PlayFragmentDirections.actionPlayFragmentToResultFragment(viewState.playResult)
-
-                            navigate(directions)
-                        }
-                        is ViewState.Finish.Win -> {
-                            val directions = PlayFragmentDirections.actionPlayFragmentToResultFragment(viewState.playResult)
-
-                            navigate(directions)
-                        }
+                        is ViewState.Finish.Lose -> navigate(directions)
+                        is ViewState.Finish.Win -> navigate(directions)
                     }
                 }
             }

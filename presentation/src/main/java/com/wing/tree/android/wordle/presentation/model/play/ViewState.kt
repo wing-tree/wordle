@@ -8,7 +8,9 @@ sealed class ViewState {
     object Ready: ViewState()
 
     sealed class Finish : ViewState() {
-        data class Lose(val playResult: PlayResult.Lose) : Finish()
-        data class Win(val playResult: PlayResult.Win) : Finish()
+        abstract val playResult: PlayResult
+
+        data class Lose(override val playResult: PlayResult.Lose) : Finish()
+        data class Win(override val playResult: PlayResult.Win) : Finish()
     }
 }

@@ -63,7 +63,7 @@ class PlayViewModel @Inject constructor(
     private val _playBoard = MutableLiveData<PlayBoard>()
     val playBoard: LiveData<PlayBoard> get() = _playBoard
 
-    private val playResult = MutableLiveData<PlayResult>()
+    private val playResult = MutableLiveData<PlayResult>(PlayResult.Undefined)
 
     private val _viewState = MediatorLiveData<ViewState>()
     val viewState: LiveData<ViewState> get() = _viewState
@@ -130,6 +130,8 @@ class PlayViewModel @Inject constructor(
                         _viewState.value = ViewState.RoundOver(isRoundAdded)
                     }
                     is PlayResult.Win -> _viewState.value = ViewState.Finish.Win(playResult)
+                    is PlayResult.Undefined -> {
+                    }
                 }
             }
         }
@@ -147,6 +149,8 @@ class PlayViewModel @Inject constructor(
                         _viewState.value = ViewState.RoundOver(isRoundAdded)
                     }
                     is PlayResult.Win -> _viewState.value = ViewState.Finish.Win(playResult)
+                    is PlayResult.Undefined -> {
+                    }
                 }
             }
         }
@@ -278,11 +282,11 @@ class PlayViewModel @Inject constructor(
     }
 
     fun consumeItem(@ItemType itemType: Int) {
-        viewModelScope.launch {
-            if(isItemAvailable(itemType).not()) {
-                return@launch
-            }
+        if(isItemAvailable(itemType).not()) {
+            return
+        }
 
+        viewModelScope.launch {
             consume(itemType)
                 .onFailure { Timber.e(it) }
                 .onSuccess {
@@ -319,7 +323,8 @@ class PlayViewModel @Inject constructor(
     }
 
     fun tryAgain() {
-        _playBoard.value = PlayBoard()
         _keyboard.value = Keyboard()
+        _playBoard.value = PlayBoard()
+        playResult.value = PlayResult.Undefined
     }
 }

@@ -20,4 +20,6 @@ open class PlayResult : Parcelable {
         val round: Int,
         val word: String
     ) : PlayResult()
+
+    object Undefined : PlayResult()
 }
