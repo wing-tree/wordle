@@ -5,4 +5,8 @@
     <color name="disabled">#61FFFFFF</color>
 
     <color name="surface">@color/grey_900</color>
+
+    <color name="text">@color/white</color>
+
+    <color name="ripple_material">@color/ripple_material_dark</color>
 </resources>

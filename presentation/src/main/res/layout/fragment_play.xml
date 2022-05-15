@@ -14,17 +14,18 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:padding="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:clipChildren="false"
         android:clipToPadding="false"
-        app:layout_constraintBottom_toBottomOf="@+id/recycler_view"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -32,14 +33,15 @@
             android:id="@+id/keyboard_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
             android:clipChildren="false"
             android:clipToPadding="false"
+            app:layout_constraintBottom_toTopOf="@+id/button_submit"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/hint"
+            android:id="@+id/text_view_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -51,33 +53,51 @@
             app:layout_constraintTop_toBottomOf="@+id/keyboard_view" />
 
         <TextView
-            android:id="@+id/hint_count"
+            android:id="@+id/text_view_hint_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:elevation="1dp"
-            app:layout_constraintEnd_toEndOf="@+id/hint"
-            app:layout_constraintTop_toTopOf="@+id/hint"
-            tools:text="3"/>
+            app:layout_constraintEnd_toEndOf="@+id/text_view_hint"
+            app:layout_constraintTop_toTopOf="@+id/text_view_hint"
+            tools:text="3" />
 
         <TextView
-            android:id="@+id/eraser"
+            android:id="@+id/text_view_eraser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="12dp"
             android:text="@string/eraser"
             android:textAllCaps="true"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/hint"
-            app:layout_constraintTop_toTopOf="@+id/hint" />
+            app:layout_constraintStart_toEndOf="@id/text_view_hint"
+            app:layout_constraintTop_toTopOf="@+id/text_view_hint" />
 
         <TextView
-            android:id="@+id/eraser_count"
+            android:id="@+id/text_view_eraser_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/eraser"
-            app:layout_constraintTop_toTopOf="@+id/eraser"
-            tools:text="3"/>
+            app:layout_constraintEnd_toEndOf="@+id/text_view_eraser"
+            app:layout_constraintTop_toTopOf="@+id/text_view_eraser"
+            tools:text="3" />
+
+        <Button
+            android:id="@+id/button_submit"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/button"
+            android:paddingTop="6dp"
+            android:text="@string/submit"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

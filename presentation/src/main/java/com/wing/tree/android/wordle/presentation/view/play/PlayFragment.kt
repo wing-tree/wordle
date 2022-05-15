@@ -79,17 +79,21 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             keyboardView.setOnKeyListener { key ->
                 when(key) {
                     is Key.Alphabet -> viewModel.add(key.letter)
-                    is Key.Return -> viewModel.submit { it.onFailure { currentItemView?.shake() } }
+                    is Key.Return -> buttonSubmit.callOnClick()
                     is Key.Backspace -> viewModel.removeLast()
                 }
             }
 
-            eraser.setOnClickListener {
+            textViewEraser.setOnClickListener {
                 viewModel.consumeItem(Item.Type.ERASER)
             }
 
-            hint.setOnClickListener {
+            textViewHint.setOnClickListener {
                 viewModel.consumeItem(Item.Type.HINT)
+            }
+
+            buttonSubmit.setOnClickListener {
+                viewModel.submit { it.onFailure { currentItemView?.shake() } }
             }
         }
     }
@@ -100,8 +104,8 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
         lifecycleScope.launch {
             viewModel.itemCount.collect {
-                viewBinding.eraserCount.text = "${it.eraser}"
-                viewBinding.hintCount.text = "${it.hint}"
+                viewBinding.textViewEraserCount.text = "${it.eraser}"
+                viewBinding.textViewHintCount.text = "${it.hint}"
             }
         }
 
