@@ -45,7 +45,7 @@ sealed class Key {
         data class Undefined(
             override val backgroundColorRes: Int = R.color.undefined,
             override val priority: Int = Priority.UNDEFINED,
-            override val textColorRes: Int = R.color.white
+            override val textColorRes: Int = R.color.text
         ): State()
 
         data class NotIn(
