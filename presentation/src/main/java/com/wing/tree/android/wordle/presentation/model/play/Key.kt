@@ -51,7 +51,7 @@ sealed class Key {
         data class NotIn(
             override val backgroundColorRes: Int = R.color.not_in,
             override val priority: Int = Priority.NOT_IN,
-            override val textColorRes: Int = R.color.white
+            override val textColorRes: Int = R.color.disabled
         ): State()
 
         sealed class In : State() {
@@ -72,7 +72,7 @@ sealed class Key {
             const val UNDEFINED = 0
             const val NOT_IN = 1
             const val MISMATCHED = 2
-            const val MATCHED = 4
+            const val MATCHED = 6
         }
 
         companion object {

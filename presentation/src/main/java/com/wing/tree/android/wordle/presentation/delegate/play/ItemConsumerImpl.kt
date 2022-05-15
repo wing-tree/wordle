@@ -48,6 +48,7 @@ class ItemConsumerImpl(
             if (consumeCreditsUseCase(credits).getOrDefault(false)) {
                 Result.success(itemType)
             } else {
+                // todo 돈 부족 exception.
                 Result.failure(UnknownError("$itemType"))
             }
         }
