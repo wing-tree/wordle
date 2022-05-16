@@ -6,7 +6,9 @@ import android.view.Gravity
 import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import com.wing.tree.android.wordle.presentation.R
+import com.wing.tree.android.wordle.presentation.constant.Duration
 import com.wing.tree.android.wordle.presentation.databinding.KeyboardViewBinding
+import com.wing.tree.android.wordle.presentation.extention.scaleUpDown
 import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.model.play.Keyboard
 
@@ -74,7 +76,7 @@ class KeyboardView : LinearLayout {
                 else -> throw IllegalArgumentException("${view.id}")
             }
 
-            (view as? KeyView)?.scale()
+            (view as? KeyView)?.scaleUpDown(1.0F, 1.15F, Duration.Animation.SCALE_UP_DOWN)
             onKeyListener?.onKey(key)
         }
 

@@ -5,6 +5,7 @@ import android.view.View
 import android.view.animation.*
 import android.widget.TextView
 import com.wing.tree.android.wordle.presentation.R
+import com.wing.tree.android.wordle.presentation.constant.Duration
 
 fun View.scale(from: Float, to: Float, duration: Long, withEndAction: Runnable = Runnable {  }) {
     val pivotXType = Animation.RELATIVE_TO_SELF
@@ -56,7 +57,7 @@ fun View.shake() {
     startAnimation(animationSet)
 }
 
-fun TextView.textFadeIn(text: CharSequence, duration: Long = 120L) {
+fun TextView.textFadeIn(text: CharSequence, duration: Long = Duration.Animation.FADE_IN) {
     this.text = text
 
     alpha = 0.0F
@@ -79,7 +80,7 @@ fun TextView.textFadeIn(text: CharSequence, duration: Long = 120L) {
         }).withLayer()
 }
 
-fun TextView.textFadeOut(duration: Long = 120L) {
+fun TextView.textFadeOut(duration: Long = Duration.Animation.FADE_OUT) {
     alpha = 1.0F
     visible()
 

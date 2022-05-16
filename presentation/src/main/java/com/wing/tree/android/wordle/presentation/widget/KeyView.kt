@@ -99,12 +99,6 @@ class KeyView : FrameLayout, Flippable<KeyView> {
         }
     }
 
-    fun scale() {
-        scale(1.0F, 1.15F, 150L) {
-            scale(1.15F, 1.0F, 150L)
-        }
-    }
-
     private fun swap() {
         with(viewBinding) {
             if (isFlipped) {

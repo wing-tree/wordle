@@ -6,8 +6,8 @@ import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import com.wing.tree.android.wordle.presentation.R
+import com.wing.tree.android.wordle.presentation.constant.Duration
 import com.wing.tree.android.wordle.presentation.databinding.LetterViewBinding
-import com.wing.tree.android.wordle.presentation.extention.scale
 import com.wing.tree.android.wordle.presentation.extention.scaleUpDown
 import com.wing.tree.android.wordle.presentation.extention.textFadeIn
 import com.wing.tree.android.wordle.presentation.extention.textFadeOut
@@ -53,7 +53,7 @@ class LetterView : FrameLayout, Flippable<LetterView> {
         val transitionDrawable = frontFrame.background as? TransitionDrawable
 
         transitionDrawable?.isCrossFadeEnabled = true
-        transitionDrawable?.startTransition(240)
+        transitionDrawable?.startTransition(Duration.Animation.TRANSITION)
     }
 
     private fun swap() {
@@ -87,7 +87,7 @@ class LetterView : FrameLayout, Flippable<LetterView> {
                     Flag.Action.Add -> {
                         if (frontText.text.isBlank()) {
                             frontText.textFadeIn(text)
-                            scaleUpDown(1.0F, 1.15F, 150L)
+                            scaleUpDown(1.0F, 1.15F, Duration.Animation.SCALE_UP_DOWN)
                         }
                     }
                     Flag.Action.Nothing -> frontText.text = text
