@@ -9,7 +9,6 @@ import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.KeyboardViewBinding
 import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.model.play.Keyboard
-import com.wing.tree.android.wordle.presentation.model.play.Letter
 
 class KeyboardView : LinearLayout {
     private val viewBinding: KeyboardViewBinding = KeyboardViewBinding.bind(inflate(context, R.layout.keyboard_view, this))
@@ -155,7 +154,7 @@ class KeyboardView : LinearLayout {
 
     fun submitKeyboard(keyboard: Keyboard, commitCallback: () -> Unit) {
         with(keyboard) {
-            alphabetKeys.forEach {
+            alphabets.forEach {
                 findViewByKey(it.letter)?.updateState(it.state, runsAnimation.get())
             }
         }
