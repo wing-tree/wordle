@@ -13,6 +13,9 @@ data class Line(val round: Int) : Iterable<Letter> {
     private var _isSubmitted: Boolean = false
     val isSubmitted: Boolean get() = _isSubmitted
 
+    private var _isFocused: Boolean = false
+    val isFocused: Boolean get() = _isFocused
+
     val currentLetters: Array<Letter> = Array(WORD_LENGTH) { Letter(position = it) }
     val previousLetters: Array<Letter> = Array(WORD_LENGTH) { Letter(position = it) }
     val undefinedLetters: List<Letter> get() = currentLetters.filterWithState<Letter.State.Undefined>()
@@ -63,6 +66,10 @@ data class Line(val round: Int) : Iterable<Letter> {
         }
     }
 
+    fun removeFocus() {
+        _isFocused = false
+    }
+
     fun removeLast() {
         if (isNotEmpty) {
             val index = currentLetters.indexOfLast { it.isSubmitted.not() && it.isNotBlank  }
@@ -72,6 +79,10 @@ data class Line(val round: Int) : Iterable<Letter> {
                 set(index, Letter(index, BLANK))
             }
         }
+    }
+
+    fun requestFocus() {
+        _isFocused = true
     }
 
     fun submit() {
@@ -108,7 +119,7 @@ data class Line(val round: Int) : Iterable<Letter> {
     companion object {
         fun from(line: DomainLine): Line {
             return Line(line.round).apply {
-                line.letters.sortedBy { it.position }.forEachIndexed { index, letter ->
+                line.currentLetters.sortedBy { it.position }.forEachIndexed { index, letter ->
                     currentLetters[index] = letter.toPresentationModel()
                 }
 
@@ -116,6 +127,7 @@ data class Line(val round: Int) : Iterable<Letter> {
                     previousLetters[index] = letter.toPresentationModel()
                 }
 
+                _isFocused = line.isFocused
                 _isSubmitted = line.isSubmitted
             }
         }

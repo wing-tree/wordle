@@ -41,6 +41,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
 
             override fun onAnimationEnd() {
+                viewModel.requestFocus()
                 viewModel.setAnimating(false)
             }
 

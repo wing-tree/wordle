@@ -84,8 +84,9 @@ private fun DomainLine.toDataModel(): Line {
     val line = this
     val builder = Line.newBuilder().apply {
         round = line.round
-        addAllLetter(line.letters.map { it.toDataModel() })
+        addAllCurrentLetter(line.currentLetters.map { it.toDataModel() })
         addAllPreviousLetter(line.previousLetters.map { it.toDataModel() })
+        isFocused = line.isFocused
         isSubmitted = line.isSubmitted
     }
 
@@ -94,15 +95,16 @@ private fun DomainLine.toDataModel(): Line {
 
 private fun Line.toDomainModel(): DomainLine {
     val line = this
-    val letters = line.letterList
+    val currentLetters = line.currentLetterList
     val previousLetters = line.previousLetterList
 
     return object : DomainLine {
         override val round: Int = line.round
-        override val letters: List<DomainLetter>
-            get() = letters.map { it.toDomainModel() }
+        override val currentLetters: List<DomainLetter>
+            get() = currentLetters.map { it.toDomainModel() }
         override val previousLetters: List<DomainLetter>
             get() = previousLetters.map { it.toDomainModel() }
+        override val isFocused: Boolean = line.isFocused
         override val isSubmitted: Boolean = line.isSubmitted
     }
 }

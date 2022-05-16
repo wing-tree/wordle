@@ -50,8 +50,9 @@ object PlayStateMapper {
 
         return object : DomainLine {
             override val round: Int = line.round
-            override val letters: List<DomainLetter> = line.currentLetters.map { it.toDomainModel() }
+            override val currentLetters: List<DomainLetter> = line.currentLetters.map { it.toDomainModel() }
             override val previousLetters: List<DomainLetter> = line.previousLetters.map { it.toDomainModel() }
+            override val isFocused: Boolean = line.isFocused
             override val isSubmitted: Boolean = line.isSubmitted
         }
     }

@@ -3,7 +3,7 @@ package com.wing.tree.android.wordle.presentation.model.play
 import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toPresentationModel
 import com.wing.tree.android.wordle.presentation.model.play.Letter.State
-import com.wing.tree.android.wordle.presentation.model.play.Letter.State.*
+import com.wing.tree.android.wordle.presentation.model.play.Letter.State.In
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import timber.log.Timber
@@ -22,12 +22,14 @@ class PlayBoard {
 
     private val letters get() = lines.flatten()
 
+    val currentLine: Line get() = lines[round]
+
     val isRoundAdded: Boolean get() = maximumRound > MAXIMUM_ROUND
     val isRoundOver: Boolean get() = round.inc() >= maximumRound
     val runsAnimation = AtomicBoolean(false)
 
     val closest: Line get() = lines.maxByOrNull { it.proximity } ?: currentLine
-    val currentLine: Line get() = lines[round]
+
     val notUnknownLetters: List<Letter> get() = letters.filter { it.state.notUndefined }
 
     fun add(letter: String) {
@@ -67,6 +69,7 @@ class PlayBoard {
     }
 
     fun submit() {
+        currentLine.removeFocus()
         currentLine.submit()
     }
 

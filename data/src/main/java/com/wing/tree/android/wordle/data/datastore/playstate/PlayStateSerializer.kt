@@ -5,10 +5,7 @@ import androidx.datastore.core.Serializer
 import com.google.protobuf.InvalidProtocolBufferException
 import com.wing.tree.android.wordle.domain.model.playstate.Key
 import com.wing.tree.android.wordle.domain.model.playstate.Letter.State.UNDEFINED
-import com.wing.tree.wordle.core.constant.BLANK
-import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
-import com.wing.tree.wordle.core.constant.WORD_LENGTH
-import com.wing.tree.wordle.core.constant.alphabet
+import com.wing.tree.wordle.core.constant.*
 import java.io.InputStream
 import java.io.OutputStream
 
@@ -36,8 +33,9 @@ object PlayStateSerializer : Serializer<PlayState> {
 
     private fun getDefaultLine(round: Int): Line = Line.newBuilder()
         .setRound(round)
-        .addAllLetter(List<Letter>(WORD_LENGTH) { getDefaultLetter(it) })
+        .addAllCurrentLetter(List<Letter>(WORD_LENGTH) { getDefaultLetter(it) })
         .addAllPreviousLetter(List<Letter>(WORD_LENGTH) { getDefaultLetter(it) })
+        .setIsFocused(round.isZero)
         .setIsSubmitted(false)
         .build()
 

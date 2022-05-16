@@ -26,9 +26,10 @@ message PlayBoard {
 
 message Line {
   int32 round = 1;
-  repeated Letter letter = 2;
+  repeated Letter current_letter = 2;
   repeated Letter previous_letter = 3;
-  bool is_submitted = 4;
+  bool is_focused = 4;
+  bool is_submitted = 5;
 }
 
 message Letter {

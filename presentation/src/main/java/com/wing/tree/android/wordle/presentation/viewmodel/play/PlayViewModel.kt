@@ -77,20 +77,20 @@ class PlayViewModel @Inject constructor(
     init {
         _viewState.value = ViewState.Ready
 
-        viewModelScope.launch {
+        viewModelScope.launch(ioDispatcher) {
             getPlayStateUseCase().collect { result ->
-                _viewState.value = ViewState.Loading
+                _viewState.postValue(ViewState.Loading)
 
                 if (viewState.value is ViewState.Finish) {
                     cancel()
                 } else {
                     result.getOrNull()?.let { playState ->
                         _word = playState.word
-                        _playBoard.value = PlayBoard.from(playState.playBoard)
-                        _keyboard.value = Keyboard.from(playState.keyboard)
+                        _playBoard.postValue(PlayBoard.from(playState.playBoard))
+                        _keyboard.postValue(Keyboard.from(playState.keyboard))
                     } ?: run {
-                        _playBoard.value = PlayBoard()
-                        _keyboard.value = Keyboard()
+                        _playBoard.postValue(PlayBoard())
+                        _keyboard.postValue(Keyboard())
                     }
 
                     if (word.value.isBlank()) {
@@ -100,7 +100,7 @@ class PlayViewModel @Inject constructor(
                         }
                     }
 
-                    _viewState.value = ViewState.Play
+                    _viewState.postValue(ViewState.Play)
 
                     cancel()
                 }
@@ -166,6 +166,10 @@ class PlayViewModel @Inject constructor(
 
     fun removeLast() {
         _playBoard.setValueAfter { removeLast() }
+    }
+
+    fun requestFocus() {
+        _playBoard.setValueAfter { currentLine.requestFocus() }
     }
 
     fun setAnimating(value: Boolean) {

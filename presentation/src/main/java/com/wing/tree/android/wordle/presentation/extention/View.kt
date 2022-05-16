@@ -30,6 +30,12 @@ fun View.scale(from: Float, to: Float, duration: Long, withEndAction: Runnable =
     startAnimation(scaleAnimation)
 }
 
+fun View.scaleUpDown(from: Float, to: Float, duration: Long) {
+    scale(from, to, duration) {
+        scale(to, from, duration)
+    }
+}
+
 fun View.visible() {
     visibility = View.VISIBLE
 }

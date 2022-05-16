@@ -12,7 +12,6 @@ import com.wing.tree.android.wordle.presentation.model.play.PlayBoard
 import com.wing.tree.android.wordle.presentation.widget.LetterView.Flag
 import com.wing.tree.android.wordle.presentation.model.play.Line as PresentationLine
 
-
 class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<AdapterItem, PlayBoardListAdapter.ViewHolder>(DiffCallback()) {
     private var round = 0
     private var runsAnimation = false
@@ -27,8 +26,6 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
         fun bind(item: AdapterItem) {
             when(item) {
                 is AdapterItem.Line -> with(viewBinding.lineView) {
-                    isCurrentLine = adapterPosition == round
-
                     if (item.isSubmitted) {
                         setOnLetterClickListener(null)
 
@@ -42,9 +39,13 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
 
                         if (runsAnimation) {
                             callbacks.beforeAnimationStart()
-                            flipAll { callbacks.onAnimationEnd() }
+                            flipAll {
+                                callbacks.onAnimationEnd()
+                            }
                         }
                     } else {
+                        isCurrentLine = item.isFocused
+
                         setOnLetterClickListener { letterView, index ->
                             with(letterView) {
                                 scale(1.0F, 1.15F, 150L) {
@@ -55,7 +56,7 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
                             callbacks.onLetterClick(adapterPosition, index)
                         }
 
-                        item.currentLetters.zip(item.previousLetters).forEachIndexed { index, (currentLetter, previousLetter) ->
+                        item.currentLetters.forEachIndexed { index, currentLetter ->
                             if (currentLetter.isSubmitted) {
                                 val featureFlag = if (runsAnimation) {
                                     Flag.Submit
@@ -109,12 +110,12 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
     }
 
     fun submitPlayBoard(playBoard: PlayBoard, commitCallback: Runnable? = null) {
+        round = playBoard.round
+        runsAnimation = playBoard.runsAnimation.get()
+
         val list = playBoard.lines.mapIndexed { index, line ->
             AdapterItem.Line.from(index, line)
         }
-
-        round = playBoard.round
-        runsAnimation = playBoard.runsAnimation.get()
 
         submitList(list, commitCallback)
     }
@@ -137,6 +138,7 @@ sealed class AdapterItem {
         override val index: Int,
         val currentLetters: Array<Letter>,
         val previousLetters: Array<Letter>,
+        val isFocused: Boolean = false,
         val isSubmitted: Boolean = false
     ) : AdapterItem() {
         fun isAdded(index: Int) = currentLetters[index].isNotBlank && previousLetters[index].isBlank
@@ -149,6 +151,7 @@ sealed class AdapterItem {
             if (index != other.index) return false
             if (!currentLetters.contentEquals(other.currentLetters)) return false
             if (!previousLetters.contentEquals(other.previousLetters)) return false
+            if (isFocused != other.isFocused) return false
             if (isSubmitted != other.isSubmitted) return false
 
             return true
@@ -158,6 +161,7 @@ sealed class AdapterItem {
             var result = index
             result = 31 * result + currentLetters.contentHashCode()
             result = 31 * result + previousLetters.contentHashCode()
+            result = 31 * result + isFocused.hashCode()
             result = 31 * result + isSubmitted.hashCode()
             return result
         }
@@ -167,6 +171,7 @@ sealed class AdapterItem {
                 index = index,
                 currentLetters = line.currentLetters.copyOf(),
                 previousLetters = line.previousLetters.copyOf(),
+                isFocused = line.isFocused,
                 isSubmitted = line.isSubmitted
             )
         }
