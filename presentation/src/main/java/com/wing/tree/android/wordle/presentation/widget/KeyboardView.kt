@@ -45,8 +45,8 @@ class KeyboardView : LinearLayout {
     private fun bind() {
         val onClickListener = OnClickListener { view ->
             val key = when(view.id) {
-                R.id.image_view_backspace -> Key.Backspace
-                R.id.image_view_return -> Key.Return
+                R.id.image_view_keyboard_backspace -> Key.Backspace
+                R.id.image_view_keyboard_return -> Key.Return
                 R.id.key_view_a -> Key.Alphabet("a")
                 R.id.key_view_b -> Key.Alphabet("b")
                 R.id.key_view_c -> Key.Alphabet("c")
@@ -81,8 +81,8 @@ class KeyboardView : LinearLayout {
         }
 
         with(viewBinding) {
-            imageViewBackspace.setOnClickListener(onClickListener)
-            imageViewReturn.setOnClickListener(onClickListener)
+            imageViewKeyboardBackspace.setOnClickListener(onClickListener)
+            imageViewKeyboardReturn.setOnClickListener(onClickListener)
             keyViewA.setOnClickListener(onClickListener)
             keyViewB.setOnClickListener(onClickListener)
             keyViewC.setOnClickListener(onClickListener)

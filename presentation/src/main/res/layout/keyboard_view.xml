@@ -131,15 +131,18 @@
         android:showDividers="middle">
 
         <ImageView
-            android:id="@+id/image_view_return"
+            android:id="@+id/image_view_keyboard_return"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="48dp"
             android:layout_marginEnd="2dp"
             android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
             android:layout_weight="1"
+            android:background="@drawable/ripple_key_view"
             android:scaleType="center"
             android:src="@drawable/ic_round_keyboard_return_24"
             app:srcCompat="@drawable/ic_round_keyboard_return_24"
+            app:tint="@color/icon"
             tools:ignore="ContentDescription" />
 
         <com.wing.tree.android.wordle.presentation.widget.KeyView
@@ -178,14 +181,17 @@
             style="@style/Widget.MaterialComponents.TextView.KeyView.Parent" />
 
         <ImageView
-            android:id="@+id/image_view_backspace"
+            android:id="@+id/image_view_keyboard_backspace"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="2dp"
             android:layout_marginStart="2dp"
+            android:layout_marginTop="2dp"
             android:layout_weight="1"
+            android:background="@drawable/ripple_key_view"
             android:scaleType="center"
             android:src="@drawable/ic_round_keyboard_backspace_24"
+            app:tint="@color/icon"
             app:srcCompat="@drawable/ic_round_keyboard_backspace_24"
             tools:ignore="ContentDescription" />
 

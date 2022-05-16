@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.225" />
+        <entry key="presentation/src/main/res/drawable/background_image_button.xml" value="0.18020833333333333" />
         <entry key="presentation/src/main/res/drawable/background_key_view.xml" value="0.21458333333333332" />
         <entry key="presentation/src/main/res/drawable/background_letter.xml" value="0.2" />
         <entry key="presentation/src/main/res/drawable/background_letter_view.xml" value="0.21458333333333332" />
@@ -14,7 +15,9 @@
         <entry key="presentation/src/main/res/drawable/focused_background_letter_view.xml" value="0.29791666666666666" />
         <entry key="presentation/src/main/res/drawable/ic_outline_backspace_24.xml" value="0.4197916666666667" />
         <entry key="presentation/src/main/res/drawable/ic_outline_keyboard_return_24.xml" value="0.4197916666666667" />
+        <entry key="presentation/src/main/res/drawable/ic_round_backspace_24.xml" value="0.18020833333333333" />
         <entry key="presentation/src/main/res/drawable/letter_background.xml" value="0.41333333333333333" />
+        <entry key="presentation/src/main/res/drawable/ripple_image_button.xml" value="0.18020833333333333" />
         <entry key="presentation/src/main/res/drawable/rounded_corners_24.xml" value="0.21875" />
         <entry key="presentation/src/main/res/drawable/rounded_corners_28.xml" value="0.24114583333333334" />
         <entry key="presentation/src/main/res/drawable/transition_letter_view.xml" value="0.29791666666666666" />
@@ -29,7 +32,7 @@
         <entry key="presentation/src/main/res/layout/fragment_result.xml" value="0.23802083333333332" />
         <entry key="presentation/src/main/res/layout/key_view.xml" value="0.15260416666666668" />
         <entry key="presentation/src/main/res/layout/keyboard.xml" value="0.35507246376811596" />
-        <entry key="presentation/src/main/res/layout/keyboard_view.xml" value="0.4933627776013717" />
+        <entry key="presentation/src/main/res/layout/keyboard_view.xml" value="0.30497592295345105" />
         <entry key="presentation/src/main/res/layout/letter.xml" value="0.25677083333333334" />
         <entry key="presentation/src/main/res/layout/letter_view.xml" value="0.42631993695823484" />
         <entry key="presentation/src/main/res/layout/letters.xml" value="0.21451272910161626" />

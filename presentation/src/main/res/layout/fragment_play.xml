@@ -14,13 +14,13 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:padding="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintBottom_toTopOf="@+id/constraint_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/constraint_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:clipChildren="false"
@@ -96,8 +96,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <ImageView
+            android:id="@+id/image_view_backspace"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="24dp"
+            android:background="@drawable/ripple_image_button"
+            app:layout_constraintBottom_toBottomOf="@+id/button_submit"
+            app:layout_constraintStart_toEndOf="@+id/button_submit"
+            app:layout_constraintTop_toTopOf="@+id/button_submit"
+            tools:ignore="ContentDescription" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

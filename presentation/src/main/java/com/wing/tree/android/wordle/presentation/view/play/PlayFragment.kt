@@ -87,7 +87,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
                 when(key) {
                     is Key.Alphabet -> viewModel.add(key.letter)
                     is Key.Return -> buttonSubmit.callOnClick()
-                    is Key.Backspace -> viewModel.removeLast()
+                    is Key.Backspace -> imageViewBackspace.callOnClick()
                 }
             }
 
@@ -101,6 +101,10 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
             buttonSubmit.setOnClickListener {
                 viewModel.submit { it.onFailure { currentItemView?.shake() } }
+            }
+
+            imageViewBackspace.setOnClickListener {
+                viewModel.removeLast()
             }
         }
     }
