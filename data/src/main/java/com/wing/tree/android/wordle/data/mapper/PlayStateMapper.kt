@@ -20,30 +20,22 @@ fun PlayState.toDomainModel(): DomainPlayState {
 }
 
 fun DomainKeyboard.toDataModel(): Keyboard {
-    val keyboard = this
-    val builder = Keyboard.newBuilder()
-        .addAllAlphabet(keyboard.alphabets.map { it.toDataModel() })
-
-    return builder.build()
+    return Keyboard.newBuilder()
+        .addAllAlphabet(alphabets.map { it.toDataModel() })
+        .build()
 }
 
 fun Keyboard.toDomainModel(): DomainKeyboard {
-    val keyboard = this
-    val alphabets = keyboard.alphabetList
-
     return object : DomainKeyboard {
-        override val alphabets: List<Key.Alphabet> = alphabets.map { it.toDomainModel() }
+        override val alphabets: List<Key.Alphabet> = alphabetList.map { it.toDomainModel() }
     }
 }
 
 fun Key.Alphabet.toDataModel(): AlphabetKey {
-    val alphabet = this
-    val builder = AlphabetKey.newBuilder().apply {
-        letter = alphabet.letter
-        state = alphabet.state
-    }
-
-    return builder.build()
+    return AlphabetKey.newBuilder()
+        .setLetter(letter)
+        .setState(state)
+        .build()
 }
 
 fun AlphabetKey.toDomainModel(): Key.Alphabet {
@@ -56,15 +48,11 @@ fun AlphabetKey.toDomainModel(): Key.Alphabet {
 }
 
 fun DomainPlayBoard.toDataModel(): PlayBoard {
-    val playBoard = this
-
-    val builder = PlayBoard.newBuilder().apply {
-        round = playBoard.round
-        maximumRound = playBoard.maximumRound
-        addAllLine(playBoard.lines.map { it.toDataModel() })
-    }
-
-    return builder.build()
+    return PlayBoard.newBuilder()
+        .setRound(round)
+        .setMaximumRound(maximumRound)
+        .addAllLine(lines.map { it.toDataModel() })
+        .build()
 }
 
 
@@ -81,16 +69,13 @@ fun PlayBoard.toDomainModel(): DomainPlayBoard {
 }
 
 private fun DomainLine.toDataModel(): Line {
-    val line = this
-    val builder = Line.newBuilder().apply {
-        round = line.round
-        addAllCurrentLetter(line.currentLetters.map { it.toDataModel() })
-        addAllPreviousLetter(line.previousLetters.map { it.toDataModel() })
-        isFocused = line.isFocused
-        isSubmitted = line.isSubmitted
-    }
-
-    return builder.build()
+    return Line.newBuilder()
+        .setRound(round)
+        .addAllCurrentLetter(currentLetters.map { it.toDataModel() })
+        .addAllPreviousLetter(previousLetters.map { it.toDataModel() })
+        .setIsFocused(isFocused)
+        .setIsSubmitted(isSubmitted)
+        .build()
 }
 
 private fun Line.toDomainModel(): DomainLine {
@@ -110,15 +95,12 @@ private fun Line.toDomainModel(): DomainLine {
 }
 
 private fun DomainLetter.toDataModel(): Letter {
-    val letter = this
-    val builder = Letter.newBuilder().apply {
-        position = letter.position
-        value = letter.value
-        state = letter.state
-        isSubmitted = letter.isSubmitted
-    }
-
-    return builder.build()
+    return Letter.newBuilder()
+        .setPosition(position)
+        .setValue(value)
+        .setState(state)
+        .setIsSubmitted(isSubmitted)
+        .build()
 }
 
 private fun Letter.toDomainModel(): DomainLetter {
@@ -133,20 +115,17 @@ private fun Letter.toDomainModel(): DomainLetter {
 }
 
 fun DomainWord.toDataModel(): Word {
-    val word = this
-    val builder = Word.newBuilder().apply {
-        index = word.index
-        value = word.value
-    }
-
-    return builder.build()
+    return Word.newBuilder()
+        .setIndex(index)
+        .setValue(value)
+        .build()
 }
 
 fun Word.toDomainModel(): DomainWord {
-    val word = this
+    val dataWord = this
 
     return object : DomainWord {
-        override val index: Int = word.index
-        override val value: String = word.value
+        override val index: Int = dataWord.index
+        override val value: String = dataWord.value
     }
 }

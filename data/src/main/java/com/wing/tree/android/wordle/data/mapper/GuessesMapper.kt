@@ -7,17 +7,11 @@ object GuessesMapper {
     fun Guesses.toDomainModel() = object : DomainGuesses {
         val guesses = this@toDomainModel
 
-        override val one: Int
-            get() = guesses.one
-        override val two: Int
-            get() = guesses.two
-        override val three: Int
-            get() = guesses.three
-        override val four: Int
-            get() = guesses.four
-        override val five: Int
-            get() = guesses.five
-        override val sixOrMore: Int
-            get() = guesses.sixOrMore
+        override val one: Int = guesses.one
+        override val two: Int = guesses.two
+        override val three: Int = guesses.three
+        override val four: Int = guesses.four
+        override val five: Int = guesses.five
+        override val sixOrMore: Int = guesses.sixOrMore
     }
 }

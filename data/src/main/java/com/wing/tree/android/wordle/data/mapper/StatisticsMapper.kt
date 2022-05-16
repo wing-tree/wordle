@@ -9,15 +9,10 @@ internal object StatisticsMapper {
     fun Statistics.toDomainModel() = object : DomainStatistics {
         val statistics = this@toDomainModel
 
-        override val maximumWinStreak: Int
-            get() = statistics.maximumWinStreak
-        override val played: Int
-            get() = statistics.played
-        override val winningStreak: Int
-            get() = statistics.winningStreak
-        override val won: Int
-            get() = statistics.won
-        override val guesses: Guesses
-            get() = statistics.guesses.toDomainModel()
+        override val maximumWinStreak: Int = statistics.maximumWinStreak
+        override val played: Int = statistics.played
+        override val winningStreak: Int = statistics.winningStreak
+        override val won: Int = statistics.won
+        override val guesses: Guesses = statistics.guesses.toDomainModel()
     }
 }
