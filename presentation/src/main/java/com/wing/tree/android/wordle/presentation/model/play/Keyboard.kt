@@ -8,17 +8,16 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 class Keyboard {
-    val alphabetKeys = Array(alphabet.size) { Key.Alphabet(alphabet[it]) }
+    val alphabets = Array(alphabet.size) { Key.Alphabet(alphabet[it]) }
     val runsAnimation = AtomicBoolean(false)
 
-    fun getErasableAlphabetKeys(word: Word): List<Key.Alphabet> = alphabetKeys.filter(ErasePredicate(word))
+    fun erasableAlphabets(word: Word): List<Key.Alphabet> = alphabets.filter(ErasePredicate(word))
 
     fun erase(word: Word) {
-        val predicate = ErasePredicate(word)
         val seed = System.currentTimeMillis()
         val random = Random(seed)
 
-        val shuffled = alphabetKeys.filter(predicate).shuffled(random)
+        val shuffled = erasableAlphabets(word).shuffled(random)
 
         shuffled.take(3).forEach {
             it.erase()
@@ -37,7 +36,7 @@ class Keyboard {
         fun from(keyboard: DomainKeyboard): Keyboard {
             return Keyboard().apply {
                 keyboard.alphabets.forEachIndexed { index, alphabet ->
-                    alphabetKeys[index] = alphabet.toPresentationModel()
+                    alphabets[index] = alphabet.toPresentationModel()
                 }
             }
         }
