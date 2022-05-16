@@ -1,6 +1,7 @@
 package com.wing.tree.android.wordle.presentation.widget
 
 import android.content.Context
+import android.graphics.drawable.TransitionDrawable
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import androidx.core.view.isVisible
@@ -45,6 +46,13 @@ class LetterView : FrameLayout, Flippable<LetterView> {
         } else {
             doOnEnd?.invoke(this)
         }
+    }
+
+    fun startTransition() {
+        val transitionDrawable = frontFrame.background as? TransitionDrawable
+
+        transitionDrawable?.isCrossFadeEnabled = true
+        transitionDrawable?.startTransition(150)
     }
 
     private fun swap() {

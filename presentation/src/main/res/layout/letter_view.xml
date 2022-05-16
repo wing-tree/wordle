@@ -9,7 +9,7 @@
         android:id="@+id/frame_layout_back"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_letter_view"
+        android:background="@drawable/transition_letter_view"
         android:backgroundTintMode="src_over"
         android:visibility="gone">
 
@@ -27,7 +27,7 @@
         android:id="@+id/frame_layout_front"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_letter_view"
+        android:background="@drawable/transition_letter_view"
         android:backgroundTintMode="src_over">
 
         <TextView

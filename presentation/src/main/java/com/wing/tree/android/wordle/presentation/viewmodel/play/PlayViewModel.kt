@@ -68,7 +68,7 @@ class PlayViewModel @Inject constructor(
     private val _viewState = MediatorLiveData<ViewState>()
     val viewState: LiveData<ViewState> get() = _viewState
 
-    val isEraserAvailable: Boolean get() = keyboard.value?.getErasableAlphabetKeys(word)?.isNotEmpty() ?: false
+    val isEraserAvailable: Boolean get() = keyboard.value?.erasableAlphabets(word)?.isNotEmpty() ?: false
     val isHintAvailable: Boolean get() = (playBoard.value?.availableHintCount(word) ?: 0) > 1
     val isOneMoreTryAvailable: Boolean get() = true
 
@@ -109,7 +109,7 @@ class PlayViewModel @Inject constructor(
 
         _keyboard.addSource(playBoard) { board ->
             val value = _keyboard.value ?: return@addSource
-            val alphabetKeys = value.alphabetKeys
+            val alphabetKeys = value.alphabets
 
             board.notUnknownLetters.forEach { letter ->
                 alphabetKeys.find { it.letter == letter.value }?.updateState(Key.State.from(letter.state))
@@ -194,9 +194,7 @@ class PlayViewModel @Inject constructor(
                 },
                 onSuccess = { line ->
                     playBoard.value?.let { playBoard ->
-                        playBoard.submit()
-
-                        _playBoard.value = playBoard
+                        _playBoard.setValueAfter { submit() }
                         isAnimating.value = true
 
                         commitCallback(kotlin.Result.success(line))
@@ -313,7 +311,7 @@ class PlayViewModel @Inject constructor(
     private fun onHintConsumed() {
         playBoard.value?.let {
             if (it.matched().distinct().count() < WORD_LENGTH.dec()) {
-                submitLetter(it.getAvailableHints(word).random())
+                submitLetter(it.availableHints(word).random())
             }
         }
     }

@@ -3,6 +3,7 @@ package com.wing.tree.android.wordle.presentation.view.play
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -17,18 +18,21 @@ import com.wing.tree.android.wordle.presentation.extention.shake
 import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.model.play.ViewState
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
+import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityViewModel
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.concurrent.atomic.AtomicBoolean
 
 @DelicateCoroutinesApi
 @AndroidEntryPoint
 class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     RoundOverDialogFragment.OnClickListener, InterstitialAdDelegate by InterstitialAdDelegateImpl()
 {
+    private val activityViewModel by activityViewModels<MainActivityViewModel>()
     private val viewModel by viewModels<PlayViewModel>()
     private val playBoardListAdapter = PlayBoardListAdapter(
         object : PlayBoardListAdapter.Callbacks {
@@ -48,6 +52,8 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
     private val currentItemView: View?
         get() = viewBinding.recyclerView.findViewHolderForAdapterPosition(viewModel.round)?.itemView
+
+    private val isAdsRemoved = AtomicBoolean(false)
 
     override fun onPause() {
         viewModel.updatePlayState()
@@ -101,6 +107,10 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     override fun initData() {
         loadInterstitialAd(requireContext())
         viewModel.setRunsAnimation(false)
+
+        activityViewModel.isAdsRemoved.observe(viewLifecycleOwner) {
+            isAdsRemoved.set(it)
+        }
 
         lifecycleScope.launch {
             viewModel.itemCount.collect {
@@ -163,15 +173,19 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     }
 
     override fun onPlayAgainClick() {
-        showInterstitialAd(
-            requireActivity(),
-            onAdFailedToShowFullScreenContent = {
-                Timber.e("$it")
-                viewModel.tryAgain()
-            },
-            onAdShowedFullScreenContent = {
-                viewModel.tryAgain()
-            }
-        )
+        if (isAdsRemoved.get()) {
+            viewModel.tryAgain()
+        } else {
+            showInterstitialAd(
+                requireActivity(),
+                onAdFailedToShowFullScreenContent = {
+                    Timber.e("$it")
+                    viewModel.tryAgain()
+                },
+                onAdShowedFullScreenContent = {
+                    viewModel.tryAgain()
+                }
+            )
+        }
     }
 }

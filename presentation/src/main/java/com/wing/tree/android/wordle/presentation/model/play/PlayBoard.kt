@@ -20,26 +20,15 @@ class PlayBoard {
     private val _lines = MutableList(MAXIMUM_ROUND) { Line(it) }
     val lines: List<Line> get() = _lines
 
+    private val letters get() = lines.flatten()
+
     val isRoundAdded: Boolean get() = maximumRound > MAXIMUM_ROUND
     val isRoundOver: Boolean get() = round.inc() >= maximumRound
     val runsAnimation = AtomicBoolean(false)
 
-    val letters get() = lines.flatten()
     val closest: Line get() = lines.maxByOrNull { it.proximity } ?: currentLine
     val currentLine: Line get() = lines[round]
     val notUnknownLetters: List<Letter> get() = letters.filter { it.state.notUndefined }
-
-    fun getAvailableHints(word: Word): List<Letter> {
-        val positions = filterIsState<In.Matched>().map { it.position }.distinct()
-
-        return mutableListOf<Letter>().apply {
-            word.forEachIndexed { index, letter ->
-                if (index !in positions) {
-                    add(Letter(index, letter))
-                }
-            }
-        }
-    }
 
     fun add(letter: String) {
         with(currentLine) {
@@ -49,7 +38,19 @@ class PlayBoard {
         }
     }
 
-    fun availableHintCount(word: Word) = getAvailableHints(word).count()
+    fun availableHints(word: Word): List<Letter> {
+        val distinct = matched().map { it.position }.distinct()
+
+        return mutableListOf<Letter>().apply {
+            word.forEachIndexed { index, letter ->
+                if (index !in distinct) {
+                    add(Letter(index, letter))
+                }
+            }
+        }
+    }
+
+    fun availableHintCount(word: Word) = availableHints(word).count()
 
     fun matched() = filterIsState<In.Matched>()
 
@@ -78,11 +79,11 @@ class PlayBoard {
         ++_round
     }
 
-    inline fun <reified R: State> List<Letter>.filterIsState(): List<Letter> {
+    private inline fun <reified R: State> List<Letter>.filterIsState(): List<Letter> {
         return filter { it.state is R }
     }
 
-    inline fun <reified R: State> filterIsState(): List<Letter> {
+    private inline fun <reified R: State> filterIsState(): List<Letter> {
         return letters.filterIsState<R>()
     }
 

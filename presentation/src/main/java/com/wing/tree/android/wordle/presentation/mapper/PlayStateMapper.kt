@@ -12,7 +12,7 @@ object PlayStateMapper {
         val keyboard = this
 
         return object : DomainKeyboard {
-            override val alphabets: List<DomainAlphabet> = keyboard.alphabetKeys.map { it.toDomainModel() }
+            override val alphabets: List<DomainAlphabet> = keyboard.alphabets.map { it.toDomainModel() }
         }
     }
 
@@ -50,7 +50,7 @@ object PlayStateMapper {
 
         return object : DomainLine {
             override val round: Int = line.round
-            override val letters: List<DomainLetter> = line.letters.map { it.toDomainModel() }
+            override val letters: List<DomainLetter> = line.currentLetters.map { it.toDomainModel() }
             override val previousLetters: List<DomainLetter> = line.previousLetters.map { it.toDomainModel() }
             override val isSubmitted: Boolean = line.isSubmitted
         }

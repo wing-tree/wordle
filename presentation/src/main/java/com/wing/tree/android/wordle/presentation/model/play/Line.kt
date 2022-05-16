@@ -13,36 +13,36 @@ data class Line(val round: Int) : Iterable<Letter> {
     private var _isSubmitted: Boolean = false
     val isSubmitted: Boolean get() = _isSubmitted
 
-    val letters: Array<Letter> = Array(WORD_LENGTH) { Letter(position = it) }
+    val currentLetters: Array<Letter> = Array(WORD_LENGTH) { Letter(position = it) }
     val previousLetters: Array<Letter> = Array(WORD_LENGTH) { Letter(position = it) }
-    val undefinedLetters: List<Letter> get() = letters.filterWithState<Letter.State.Undefined>()
+    val undefinedLetters: List<Letter> get() = currentLetters.filterWithState<Letter.State.Undefined>()
 
     val notBlankCount: Int
-        get() = letters.count { it.isNotBlank }
+        get() = currentLetters.count { it.isNotBlank }
 
-    val proximity: Int get() = letters.sumOf { it.state.priority }
+    val proximity: Int get() = currentLetters.sumOf { it.state.priority }
 
     val string: String
-        get() = letters.joinToString(EMPTY) { it.value }
+        get() = currentLetters.joinToString(EMPTY) { it.value }
 
     private fun backup() {
-        letters.copyInto(previousLetters)
+        currentLetters.copyInto(previousLetters)
     }
 
-    operator fun get(index: Int) = letters[index]
+    operator fun get(index: Int) = currentLetters[index]
 
     operator fun set(index: Int, letter: Letter) {
-        letters[index] = letter
+        currentLetters[index] = letter
     }
 
     fun add(letter: String) {
         if (notBlankCount < WORD_LENGTH) {
             backup()
 
-            val index = letters.indexOfFirst { it.value.isBlank() }
+            val index = currentLetters.indexOfFirst { it.value.isBlank() }
 
             if (index in 0 until WORD_LENGTH) {
-                letters[index] = Letter(index, letter)
+                currentLetters[index] = Letter(index, letter)
             }
         }
     }
@@ -65,7 +65,7 @@ data class Line(val round: Int) : Iterable<Letter> {
 
     fun removeLast() {
         if (isNotEmpty) {
-            val index = letters.indexOfLast { it.isSubmitted.not() && it.isNotBlank  }
+            val index = currentLetters.indexOfLast { it.isSubmitted.not() && it.isNotBlank  }
 
             if (index in 0 until WORD_LENGTH) {
                 backup()
@@ -84,7 +84,7 @@ data class Line(val round: Int) : Iterable<Letter> {
     }
 
     inline fun <reified R: Letter.State> filterWithState(): List<Letter> {
-        return letters.filterWithState<R>()
+        return currentLetters.filterWithState<R>()
     }
 
     inline fun <reified R: Letter.State> Array<Letter>.filterWithState(): List<Letter> {
@@ -96,11 +96,11 @@ data class Line(val round: Int) : Iterable<Letter> {
             private var index = 0
 
             override fun hasNext(): Boolean {
-                return index <= letters.lastIndex
+                return index <= currentLetters.lastIndex
             }
 
             override fun next(): Letter {
-                return letters[index++]
+                return currentLetters[index++]
             }
         }
     }
@@ -109,7 +109,7 @@ data class Line(val round: Int) : Iterable<Letter> {
         fun from(line: DomainLine): Line {
             return Line(line.round).apply {
                 line.letters.sortedBy { it.position }.forEachIndexed { index, letter ->
-                    letters[index] = letter.toPresentationModel()
+                    currentLetters[index] = letter.toPresentationModel()
                 }
 
                 line.previousLetters.sortedBy { it.position }.forEachIndexed { index, letter ->

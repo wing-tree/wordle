@@ -11,11 +11,13 @@
         <entry key="presentation/src/main/res/drawable/background_round_over.xml" value="0.20833333333333334" />
         <entry key="presentation/src/main/res/drawable/background_rounded_corners_12dp.xml" value="0.2828125" />
         <entry key="presentation/src/main/res/drawable/divider_keyboard.xml" value="0.21458333333333332" />
+        <entry key="presentation/src/main/res/drawable/focused_background_letter_view.xml" value="0.29791666666666666" />
         <entry key="presentation/src/main/res/drawable/ic_outline_backspace_24.xml" value="0.4197916666666667" />
         <entry key="presentation/src/main/res/drawable/ic_outline_keyboard_return_24.xml" value="0.4197916666666667" />
         <entry key="presentation/src/main/res/drawable/letter_background.xml" value="0.41333333333333333" />
         <entry key="presentation/src/main/res/drawable/rounded_corners_24.xml" value="0.21875" />
         <entry key="presentation/src/main/res/drawable/rounded_corners_28.xml" value="0.24114583333333334" />
+        <entry key="presentation/src/main/res/drawable/transition_letter_view.xml" value="0.29791666666666666" />
         <entry key="presentation/src/main/res/font/font_family_gimpo_gothic.xml" value="0.39382316482759755" />
         <entry key="presentation/src/main/res/layout/activity_main.xml" value="0.468557336621455" />
         <entry key="presentation/src/main/res/layout/activity_main2.xml" value="0.35507246376811596" />
@@ -29,7 +31,7 @@
         <entry key="presentation/src/main/res/layout/keyboard.xml" value="0.35507246376811596" />
         <entry key="presentation/src/main/res/layout/keyboard_view.xml" value="0.4933627776013717" />
         <entry key="presentation/src/main/res/layout/letter.xml" value="0.25677083333333334" />
-        <entry key="presentation/src/main/res/layout/letter_view.xml" value="0.661048785372171" />
+        <entry key="presentation/src/main/res/layout/letter_view.xml" value="0.42631993695823484" />
         <entry key="presentation/src/main/res/layout/letters.xml" value="0.21451272910161626" />
         <entry key="presentation/src/main/res/layout/letters_item.xml" value="0.23020833333333332" />
         <entry key="presentation/src/main/res/layout/letters_view.xml" value="0.28242477350949624" />

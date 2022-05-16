@@ -20,6 +20,7 @@ import com.wing.tree.wordle.core.constant.isZero
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import timber.log.Timber
+import java.util.concurrent.atomic.AtomicBoolean
 
 @DelicateCoroutinesApi
 @AndroidEntryPoint
@@ -28,6 +29,7 @@ class ResultFragment : BaseFragment<FragmentResultBinding>(), InterstitialAdDele
     private val viewModel by viewModels<ResultViewModel>()
 
     private val flag = LetterView.Flag.Result
+    private val isAdsRemoved = AtomicBoolean(false)
     private val navArgs: ResultFragmentArgs by navArgs()
 
     override fun inflate(inflater: LayoutInflater, container: ViewGroup?): FragmentResultBinding {
@@ -35,6 +37,10 @@ class ResultFragment : BaseFragment<FragmentResultBinding>(), InterstitialAdDele
     }
 
     override fun initData() {
+        activityViewModel.isAdsRemoved.observe(viewLifecycleOwner) {
+            isAdsRemoved.set(it)
+        }
+
         viewModel.statistics.observe(viewLifecycleOwner) {
             viewBinding.statisticsView.setStatistics(it)
         }
@@ -70,22 +76,26 @@ class ResultFragment : BaseFragment<FragmentResultBinding>(), InterstitialAdDele
                 val directions = ResultFragmentDirections.actionResultFragmentToPlayFragment()
 
                 if (activityViewModel.played.getAndIncrement().mod(INTERSTITIAL_AD_CYCLE).isZero) {
-                    loadInterstitialAd(
-                        requireContext(),
-                        onAdFailedToLoad = {
-                            Timber.e("$it")
-                            navigate(directions)
-                        },
-                        onAdLoaded = {
-                            showInterstitialAd(
-                                activity = requireActivity(),
-                                interstitialAd = it,
-                                onAdDismissedFullScreenContent = {  },
-                                onAdFailedToShowFullScreenContent = { navigate(directions) },
-                                onAdShowedFullScreenContent = { navigate(directions) },
-                            )
-                        }
-                    )
+                    if (isAdsRemoved.get()) {
+                        navigate(directions)
+                    } else {
+                        loadInterstitialAd(
+                            requireContext(),
+                            onAdFailedToLoad = {
+                                Timber.e("$it")
+                                navigate(directions)
+                            },
+                            onAdLoaded = {
+                                showInterstitialAd(
+                                    activity = requireActivity(),
+                                    interstitialAd = it,
+                                    onAdDismissedFullScreenContent = { },
+                                    onAdFailedToShowFullScreenContent = { navigate(directions) },
+                                    onAdShowedFullScreenContent = { navigate(directions) },
+                                )
+                            }
+                        )
+                    }
                 } else {
                     navigate(directions)
                 }
@@ -94,22 +104,26 @@ class ResultFragment : BaseFragment<FragmentResultBinding>(), InterstitialAdDele
             if (playResult is PlayResult.Lose) {
                 textViewAnswer.visible()
                 textViewAnswer.setOnClickListener {
-                    loadInterstitialAd(
-                        requireContext(),
-                        onAdFailedToLoad = {
-                            Timber.e("$it")
-                            showAnswer(playResult)
-                        },
-                        onAdLoaded = {
-                            showInterstitialAd(
-                                activity = requireActivity(),
-                                interstitialAd = it,
-                                onAdDismissedFullScreenContent = { showAnswer(playResult) },
-                                onAdFailedToShowFullScreenContent = { showAnswer(playResult) },
-                                onAdShowedFullScreenContent = {  },
-                            )
-                        }
-                    )
+                    if (isAdsRemoved.get()) {
+                        showAnswer(playResult)
+                    } else {
+                        loadInterstitialAd(
+                            requireContext(),
+                            onAdFailedToLoad = {
+                                Timber.e("$it")
+                                showAnswer(playResult)
+                            },
+                            onAdLoaded = {
+                                showInterstitialAd(
+                                    activity = requireActivity(),
+                                    interstitialAd = it,
+                                    onAdDismissedFullScreenContent = { showAnswer(playResult) },
+                                    onAdFailedToShowFullScreenContent = { showAnswer(playResult) },
+                                    onAdShowedFullScreenContent = { },
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }

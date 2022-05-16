@@ -4,9 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.MainThread
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.forEach
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.LineViewBinding
-import com.wing.tree.android.wordle.presentation.extention.scale
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import kotlinx.coroutines.*
@@ -19,6 +19,23 @@ class LineView : ConstraintLayout {
     private val lastIndex = WORD_LENGTH.dec()
 
     private var onLetterClickListener: OnLetterClickListener? = null
+
+    var isCurrentLine: Boolean = false
+        set(value) {
+            val isChanged = field != value
+
+            field = value
+
+            if (isChanged) {
+                repeat(WORD_LENGTH) {
+                    with(get(it)) {
+                        if (field) {
+                            startTransition()
+                        }
+                    }
+                }
+            }
+        }
 
     fun interface OnLetterClickListener {
         fun onLetterViewClick(letterView: LetterView, index: Int)
@@ -81,7 +98,7 @@ class LineView : ConstraintLayout {
                             }
                         }
 
-                        delay(200)
+                        delay(150L)
                     } else {
                         if (index == lastFlippableIndex) {
                             doOnEnd?.invoke()
@@ -94,14 +111,6 @@ class LineView : ConstraintLayout {
 
     fun flipAt(index: Int, @MainThread doOnEnd: ((LetterView) -> Unit)? = null) {
         get(index).flip(doOnEnd)
-    }
-
-    fun scaleAt(index: Int) {
-        with(get(index)) {
-            scale(1.0F, 1.15F, 200L) {
-                scale(1.15F, 1.0F, 200L)
-            }
-        }
     }
 
     fun setOnLetterClickListener(onLetterClickListener: OnLetterClickListener?) {
