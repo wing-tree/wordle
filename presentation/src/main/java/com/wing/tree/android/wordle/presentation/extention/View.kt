@@ -1,9 +1,12 @@
 package com.wing.tree.android.wordle.presentation.extention
 
 import android.animation.Animator
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.animation.*
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearSmoothScroller
+import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.constant.Duration
 
@@ -104,4 +107,21 @@ fun TextView.textFadeOut(duration: Long = Duration.Animation.FADE_OUT) {
 
             override fun onAnimationRepeat(animation: Animator?) = Unit
         }).withLayer()
+}
+
+fun RecyclerView.smoothSnapToPosition(position: Int, snapPreference: Int = LinearSmoothScroller.SNAP_TO_START) {
+    val duration = 500.0F
+    val linearSmoothScroller = object : LinearSmoothScroller(context) {
+        override fun getVerticalSnapPreference(): Int = snapPreference
+
+        override fun getHorizontalSnapPreference(): Int = snapPreference
+
+        override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics?): Float {
+            return duration / computeVerticalScrollRange()
+        }
+    }
+
+    linearSmoothScroller.targetPosition = position
+
+    layoutManager?.startSmoothScroll(linearSmoothScroller)
 }

@@ -32,6 +32,10 @@ class PlayBoard {
 
     val notUnknownLetters: List<Letter> get() = letters.filter { it.state.notUndefined }
 
+    init {
+        lines.first().requestFocus()
+    }
+
     fun add(letter: String) {
         with(currentLine) {
             if (notBlankCount < WORD_LENGTH) {
@@ -75,7 +79,12 @@ class PlayBoard {
 
     fun addRound() {
         incrementRound()
-        _lines.add(Line(_lastRound++))
+
+        val line = Line(_lastRound++).apply {
+            requestFocus()
+        }
+
+        _lines.add(line)
     }
 
     fun incrementRound() {

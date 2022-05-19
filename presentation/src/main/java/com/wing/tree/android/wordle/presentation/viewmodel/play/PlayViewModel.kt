@@ -72,6 +72,9 @@ class PlayViewModel @Inject constructor(
     val isHintAvailable: Boolean get() = (playBoard.value?.availableHintCount(word) ?: 0) > 1
     val isOneMoreTryAvailable: Boolean get() = true
 
+    private var _try = 0
+    val `try`: Int get() = _try
+
     val round: Int get() = playBoard.value?.round ?: 0
 
     init {
@@ -332,12 +335,16 @@ class PlayViewModel @Inject constructor(
     }
 
     private fun onOneMoreTryConsumed() {
+        _viewState.value = ViewState.Play
+        playResult.value = PlayResult.Undefined
+
         _playBoard.setValueAfter { addRound() }
     }
 
-    fun tryAgain() {
-        _keyboard.value = Keyboard()
+    fun playAgain() {
+        ++_try
         _playBoard.value = PlayBoard()
+        _viewState.value = ViewState.Play
         playResult.value = PlayResult.Undefined
     }
 }

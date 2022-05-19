@@ -1,6 +1,5 @@
 package com.wing.tree.android.wordle.presentation.view.play
 
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +8,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSmoothScroller
-import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.android.wordle.domain.model.item.Item
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.play.PlayBoardListAdapter
@@ -20,6 +17,7 @@ import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDeleg
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegateImpl
 import com.wing.tree.android.wordle.presentation.extention.scaleUpDown
 import com.wing.tree.android.wordle.presentation.extention.shake
+import com.wing.tree.android.wordle.presentation.extention.smoothSnapToPosition
 import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.model.play.ViewState
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
@@ -29,6 +27,7 @@ import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
 import com.wing.tree.wordle.core.util.half
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
@@ -42,22 +41,6 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     private val viewModel by viewModels<PlayViewModel>()
     private val playBoardListAdapter = PlayBoardListAdapter(
         object : PlayBoardListAdapter.Callbacks {
-            private fun RecyclerView.smoothSnapToPosition(position: Int, snapPreference: Int = LinearSmoothScroller.SNAP_TO_START) {
-                val duration = 240.0F
-                val linearSmoothScroller = object : LinearSmoothScroller(context) {
-                    override fun getVerticalSnapPreference(): Int = snapPreference
-
-                    override fun getHorizontalSnapPreference(): Int = snapPreference
-
-                    override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics?): Float {
-                        return duration / computeVerticalScrollRange()
-                    }
-                }
-                linearSmoothScroller.targetPosition = position
-
-                layoutManager?.startSmoothScroll(linearSmoothScroller)
-            }
-
             override fun onLetterClick(adapterPosition: Int, index: Int) {
                 viewModel.removeAt(adapterPosition, index)
             }
@@ -157,6 +140,13 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         viewModel.playBoard.observe(viewLifecycleOwner) {
             playBoardListAdapter.submitPlayBoard(it) {
                 it.runsAnimation.set(true)
+
+                if (it.isRoundAdded) {
+                    lifecycleScope.launch {
+                        delay(240L)
+                        viewBinding.recyclerView.smoothSnapToPosition(it.round)
+                    }
+                }
             }
         }
 
@@ -209,18 +199,23 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
     override fun onPlayAgainClick() {
         if (isAdsRemoved.get()) {
-            viewModel.tryAgain()
+            playAgain()
         } else {
             showInterstitialAd(
                 requireActivity(),
                 onAdFailedToShowFullScreenContent = {
                     Timber.e("$it")
-                    viewModel.tryAgain()
+                    playAgain()
                 },
                 onAdShowedFullScreenContent = {
-                    viewModel.tryAgain()
+                    playAgain()
                 }
             )
         }
+    }
+
+    private fun playAgain() {
+        viewBinding.recyclerView.removeAllViewsInLayout()
+        viewModel.playAgain()
     }
 }
