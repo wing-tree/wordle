@@ -53,10 +53,6 @@ class PlayViewModel @Inject constructor(
     private lateinit var _word: Word
     val word: Word get() = _word
 
-    private val ioDispatcher = Dispatchers.IO
-
-    private val isAnimating = MutableLiveData<Boolean>()
-
     private val _keyboard = MediatorLiveData<Keyboard>()
     val keyboard: LiveData<Keyboard> get() = _keyboard
 
@@ -67,6 +63,10 @@ class PlayViewModel @Inject constructor(
 
     private val _viewState = MediatorLiveData<ViewState>()
     val viewState: LiveData<ViewState> get() = _viewState
+
+    private val currentLine: Line? get() = playBoard.value?.currentLine
+    private val isAnimating = MutableLiveData<Boolean>()
+    private val ioDispatcher = Dispatchers.IO
 
     val isEraserAvailable: Boolean get() = keyboard.value?.erasableAlphabets(word)?.isNotEmpty() ?: false
     val isHintAvailable: Boolean get() = (playBoard.value?.availableHintCount(word) ?: 0) > 1
@@ -167,19 +167,20 @@ class PlayViewModel @Inject constructor(
     }
 
     fun requestFocus() {
-        //round.inc() >= maximumRound todo 여기.. 다 해결됨 ㅋㅋ.
-        if (playBoard.value?.isRoundOver == true) {
-            return
-        }
+        //round.inc() >= maximumRound todo 여기.. 다 해결됨 ㅋㅋ.응 해결안되.
+//        if (playBoard.value?.isRoundOver == true) {
+//            return
+//        }
 
-        _playBoard.setValueAfter {
-            if (currentLine.isFocused) {
-                return@setValueAfter
-            } else {
+        currentLine?.let {
+            if (it.isSubmitted) {
+                return@let
+            }
+
+            _playBoard.setValueAfter {
                 currentLine.requestFocus()
             }
         }
-
     }
 
     fun setAnimating(value: Boolean) {

@@ -6,6 +6,7 @@ import com.google.protobuf.InvalidProtocolBufferException
 import com.wing.tree.android.wordle.domain.model.playstate.Key
 import com.wing.tree.android.wordle.domain.model.playstate.Letter.State.UNDEFINED
 import com.wing.tree.wordle.core.constant.*
+import com.wing.tree.wordle.core.util.isZero
 import java.io.InputStream
 import java.io.OutputStream
 

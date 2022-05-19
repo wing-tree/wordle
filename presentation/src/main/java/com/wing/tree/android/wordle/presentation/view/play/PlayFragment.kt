@@ -1,5 +1,6 @@
 package com.wing.tree.android.wordle.presentation.view.play
 
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
+import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.android.wordle.domain.model.item.Item
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.play.PlayBoardListAdapter
@@ -23,6 +26,7 @@ import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityViewModel
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
+import com.wing.tree.wordle.core.util.half
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.launch
@@ -38,11 +42,31 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     private val viewModel by viewModels<PlayViewModel>()
     private val playBoardListAdapter = PlayBoardListAdapter(
         object : PlayBoardListAdapter.Callbacks {
+            private fun RecyclerView.smoothSnapToPosition(position: Int, snapPreference: Int = LinearSmoothScroller.SNAP_TO_START) {
+                val duration = 240.0F
+                val linearSmoothScroller = object : LinearSmoothScroller(context) {
+                    override fun getVerticalSnapPreference(): Int = snapPreference
+
+                    override fun getHorizontalSnapPreference(): Int = snapPreference
+
+                    override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics?): Float {
+                        return duration / computeVerticalScrollRange()
+                    }
+                }
+                linearSmoothScroller.targetPosition = position
+
+                layoutManager?.startSmoothScroll(linearSmoothScroller)
+            }
+
             override fun onLetterClick(adapterPosition: Int, index: Int) {
                 viewModel.removeAt(adapterPosition, index)
             }
 
             override fun onAnimationEnd() {
+                if (viewModel.round > MAXIMUM_ROUND.half) {
+                    viewBinding.recyclerView.smoothSnapToPosition(viewModel.round)
+                }
+
                 viewModel.requestFocus()
                 viewModel.setAnimating(false)
             }

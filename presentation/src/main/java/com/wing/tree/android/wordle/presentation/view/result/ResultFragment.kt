@@ -16,7 +16,7 @@ import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityView
 import com.wing.tree.android.wordle.presentation.viewmodel.result.ResultViewModel
 import com.wing.tree.android.wordle.presentation.widget.LetterView
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
-import com.wing.tree.wordle.core.constant.isZero
+import com.wing.tree.wordle.core.util.isZero
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import timber.log.Timber
