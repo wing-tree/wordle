@@ -14,8 +14,8 @@ class PlayBoard {
     private var _round: Int = 0
     val round: Int get() = _round
 
-    private var _maximumRound: Int = MAXIMUM_ROUND
-    val maximumRound: Int get() = _maximumRound
+    private var _lastRound: Int = MAXIMUM_ROUND
+    val lastRound: Int get() = _lastRound
 
     private val _lines = MutableList(MAXIMUM_ROUND) { Line(it) }
     val lines: List<Line> get() = _lines
@@ -24,8 +24,8 @@ class PlayBoard {
 
     val currentLine: Line get() = lines[round]
 
-    val isRoundAdded: Boolean get() = maximumRound > MAXIMUM_ROUND
-    val isRoundOver: Boolean get() = round.inc() >= maximumRound
+    val isRoundAdded: Boolean get() = lastRound > MAXIMUM_ROUND
+    val isRoundOver: Boolean get() = round.inc() >= lastRound
     val runsAnimation = AtomicBoolean(false)
 
     val closest: Line get() = lines.maxByOrNull { it.proximity } ?: currentLine
@@ -75,7 +75,7 @@ class PlayBoard {
 
     fun addRound() {
         incrementRound()
-        _lines.add(Line(_maximumRound++))
+        _lines.add(Line(_lastRound++))
     }
 
     fun incrementRound() {
@@ -94,10 +94,10 @@ class PlayBoard {
         fun from(playBoard: DomainPlayBoard): PlayBoard {
             return PlayBoard().apply {
                 _round = playBoard.round
-                _maximumRound = playBoard.maximumRound
+                _lastRound = playBoard.maximumRound
 
-                if (lines.size < maximumRound) {
-                    _lines.add(Line(maximumRound.dec()))
+                if (lines.size < lastRound) {
+                    _lines.add(Line(lastRound.dec()))
                 }
 
                 playBoard.lines.forEachIndexed { index, line ->

@@ -90,7 +90,7 @@ class StatisticsView : ConstraintLayout {
 
             data.barWidth = 0.25F
 
-            xAxis.position = XAxis.XAxisPosition.BOTTOM_INSIDE
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.setDrawAxisLine(false)
             xAxis.setDrawGridLines(false)
             xAxis.setDrawLabels(true)

@@ -38,7 +38,7 @@ object PlayStateMapper {
 
         return object : DomainPlayBoard {
             override val round: Int = playBoard.round
-            override val maximumRound: Int = playBoard.maximumRound
+            override val maximumRound: Int = playBoard.lastRound
             override val lines: List<DomainLine> = playBoard.lines.map { it.toDomainModel() }
         }
     }

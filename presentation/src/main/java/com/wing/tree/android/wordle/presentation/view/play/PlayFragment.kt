@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.wing.tree.android.wordle.domain.model.item.Item
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.play.PlayBoardListAdapter
+import com.wing.tree.android.wordle.presentation.constant.Duration
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegate
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegateImpl
+import com.wing.tree.android.wordle.presentation.extention.scaleUpDown
 import com.wing.tree.android.wordle.presentation.extention.shake
 import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.model.play.ViewState
@@ -104,6 +106,10 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
 
             imageViewBackspace.setOnClickListener {
+                if (it.isPressed) {
+                    it.scaleUpDown(1.0F, 1.15F, Duration.Animation.SCALE_UP_DOWN)
+                }
+
                 viewModel.removeLast()
             }
         }

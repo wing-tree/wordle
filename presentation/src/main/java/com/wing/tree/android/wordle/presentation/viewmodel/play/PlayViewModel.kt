@@ -130,8 +130,7 @@ class PlayViewModel @Inject constructor(
                         _viewState.value = ViewState.RoundOver(isRoundAdded)
                     }
                     is PlayResult.Win -> _viewState.value = ViewState.Finish.Win(playResult)
-                    is PlayResult.Undefined -> {
-                    }
+                    is PlayResult.Undefined -> Unit
                 }
             }
         }
@@ -149,8 +148,7 @@ class PlayViewModel @Inject constructor(
                         _viewState.value = ViewState.RoundOver(isRoundAdded)
                     }
                     is PlayResult.Win -> _viewState.value = ViewState.Finish.Win(playResult)
-                    is PlayResult.Undefined -> {
-                    }
+                    is PlayResult.Undefined -> Unit
                 }
             }
         }
@@ -169,7 +167,19 @@ class PlayViewModel @Inject constructor(
     }
 
     fun requestFocus() {
-        _playBoard.setValueAfter { currentLine.requestFocus() }
+        //round.inc() >= maximumRound todo 여기.. 다 해결됨 ㅋㅋ.
+        if (playBoard.value?.isRoundOver == true) {
+            return
+        }
+
+        _playBoard.setValueAfter {
+            if (currentLine.isFocused) {
+                return@setValueAfter
+            } else {
+                currentLine.requestFocus()
+            }
+        }
+
     }
 
     fun setAnimating(value: Boolean) {
