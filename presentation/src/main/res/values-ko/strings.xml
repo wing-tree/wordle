@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Wordle</string>
 
+    <string name="an_error_occured">오류가 발생했습니다</string>
     <string name="answer">정답</string>
     <string name="eraser">지우개</string>
     <string name="hint">힌트</string>

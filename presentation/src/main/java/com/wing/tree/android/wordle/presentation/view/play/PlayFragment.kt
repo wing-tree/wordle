@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.wing.tree.android.wordle.domain.model.item.Item
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.play.PlayBoardListAdapter
-import com.wing.tree.android.wordle.presentation.constant.Duration
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegate
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegateImpl
@@ -166,7 +165,16 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             when(viewState) {
-                is ViewState.Error -> {}
+                is ViewState.Error -> {
+                    val message = viewState.throwable.message
+                    val cause = viewState.throwable.cause
+                    val text = """
+                        message: $message
+                        cause :$cause
+                    """.trimIndent()
+
+                    showToast(text)
+                }
                 is ViewState.Loading -> { viewModel.disableKeyboard() }
                 is ViewState.Play -> { viewModel.enableKeyboard() }
                 is ViewState.Ready -> {

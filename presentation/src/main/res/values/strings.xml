@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Wordle</string>
 
+    <string name="an_error_occured">An error occurred</string>
     <string name="answer">Answer</string>
     <string name="eraser">Eraser</string>
     <string name="hint">Hint</string>
