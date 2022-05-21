@@ -25,12 +25,12 @@
 
     <style name="Widget.MaterialComponents.TextView.KeyView" parent="Widget.MaterialComponents.TextView">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_height">@dimen/key_view_height</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:background">@drawable/ripple_key_view</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingTop">3dp</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">@dimen/key_view_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
 

@@ -1,6 +1,7 @@
 package com.wing.tree.android.wordle.presentation.view.main
 
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
@@ -13,6 +14,8 @@ import com.wing.tree.android.wordle.presentation.view.play.PlayFragmentDirection
 import com.wing.tree.android.wordle.presentation.view.result.ResultFragmentDirections
 import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -28,8 +31,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private val onDestinationChangedListener by lazy {
         NavController.OnDestinationChangedListener { _, destination, _ ->
             when(destination.id) {
-                R.id.billingFragment -> viewBinding.textViewCredits.isClickable = false
-                else -> viewBinding.textViewCredits.isClickable = true
+                R.id.billingFragment -> viewBinding.linearLayoutCredits.isClickable = false
+                else -> viewBinding.linearLayoutCredits.isClickable = true
             }
         }
     }
@@ -92,8 +95,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun bind(viewBinding: ActivityMainBinding) {
         with(viewBinding) {
-            textViewCredits.setOnClickListener {
-                viewModel.callOnCreditsClick()
+            linearLayoutCredits.setOnClickListener {
+                lifecycleScope.launch {
+                    delay(120L)
+                    viewModel.callOnCreditsClick()
+                }
             }
         }
     }

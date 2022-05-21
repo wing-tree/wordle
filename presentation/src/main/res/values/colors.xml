@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="dark_grey">#121212</color>
+    <color name="gold">#FFD700</color>
 
     <color name="green_800">#2E7D32</color>
     <color name="light_green_200">#C5E1A5</color>
@@ -30,6 +31,7 @@
     <color name="mismatched">@color/yellow_500</color>
     <color name="matched">@color/green_800</color>
 
+    <color name="background_credits">#61000000</color>
     <color name="icon">@color/dark_grey</color>
     <color name="text">@color/dark_grey</color>
 
