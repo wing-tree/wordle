@@ -1,12 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Wordle</string>
 
-    <string name="an_error_occured">An error occurred</string>
-    <string name="answer">Answer</string>
-    <string name="eraser">Eraser</string>
-    <string name="hint">Hint</string>
-    <string name="next_word">Next Word</string>
-    <string name="play">Play</string>
-    <string name="share_the_app">Share the app</string>
-    <string name="submit">Submit</string>
+    <string name="an_error_occurred">an error occurred</string>
+    <string name="answer">answer</string>
+    <string name="eraser">eraser</string>
+    <string name="hint">hint</string>
+    <string name="maximum_win_streak">maximum win streak</string>
+    <string name="next_word">next word</string>
+    <string name="play">play</string>
+    <string name="played">played</string>
+    <string name="share_the_app">share the app</string>
+    <string name="submit">submit</string>
+    <string name="winning_streak">winning streak</string>
+    <string name="won">won</string>
 </resources>
