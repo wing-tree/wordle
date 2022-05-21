@@ -87,7 +87,7 @@ class LetterView : FrameLayout, Flippable<LetterView> {
                     Flag.Action.Add -> {
                         if (frontText.text.isBlank()) {
                             frontText.textFadeIn(text)
-                            scaleUpDown(1.0F, 1.15F, Duration.Animation.SCALE_UP_DOWN)
+                            scaleUpDown()
                         }
                     }
                     Flag.Action.Nothing -> frontText.text = text

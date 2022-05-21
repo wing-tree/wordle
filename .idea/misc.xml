@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.225" />
+        <entry key="presentation/src/main/res/drawable/background_count.xml" value="0.3764102564102564" />
+        <entry key="presentation/src/main/res/drawable/background_credits.xml" value="0.3764102564102564" />
         <entry key="presentation/src/main/res/drawable/background_image_button.xml" value="0.18020833333333333" />
         <entry key="presentation/src/main/res/drawable/background_key_view.xml" value="0.21458333333333332" />
         <entry key="presentation/src/main/res/drawable/background_letter.xml" value="0.2" />
@@ -18,6 +20,7 @@
         <entry key="presentation/src/main/res/drawable/ic_outline_backspace_24.xml" value="0.4197916666666667" />
         <entry key="presentation/src/main/res/drawable/ic_outline_keyboard_return_24.xml" value="0.4197916666666667" />
         <entry key="presentation/src/main/res/drawable/ic_round_backspace_24.xml" value="0.18020833333333333" />
+        <entry key="presentation/src/main/res/drawable/ic_round_search_24.xml" value="0.1" />
         <entry key="presentation/src/main/res/drawable/letter_background.xml" value="0.41333333333333333" />
         <entry key="presentation/src/main/res/drawable/ripple_button.xml" value="0.3104166666666667" />
         <entry key="presentation/src/main/res/drawable/ripple_credits.xml" value="0.2111111111111111" />
@@ -27,6 +30,7 @@
         <entry key="presentation/src/main/res/drawable/rounded_corners_28.xml" value="0.24114583333333334" />
         <entry key="presentation/src/main/res/drawable/transition_letter_view.xml" value="0.29791666666666666" />
         <entry key="presentation/src/main/res/font/font_family_gimpo_gothic.xml" value="0.39382316482759755" />
+        <entry key="presentation/src/main/res/font/font_family_happiness_sans.xml" value="0.2111111111111111" />
         <entry key="presentation/src/main/res/layout/activity_main.xml" value="0.31833910034602075" />
         <entry key="presentation/src/main/res/layout/activity_main2.xml" value="0.35507246376811596" />
         <entry key="presentation/src/main/res/layout/fragment_billing.xml" value="0.3188405797101449" />
@@ -35,6 +39,8 @@
         <entry key="presentation/src/main/res/layout/fragment_on_boarding.xml" value="0.1984375" />
         <entry key="presentation/src/main/res/layout/fragment_play.xml" value="0.33272557309982526" />
         <entry key="presentation/src/main/res/layout/fragment_result.xml" value="0.23802083333333332" />
+        <entry key="presentation/src/main/res/layout/item_button.xml" value="0.5398147168241603" />
+        <entry key="presentation/src/main/res/layout/item_floating_action_button.xml" value="0.7085114857413916" />
         <entry key="presentation/src/main/res/layout/key_view.xml" value="0.15260416666666668" />
         <entry key="presentation/src/main/res/layout/keyboard.xml" value="0.35507246376811596" />
         <entry key="presentation/src/main/res/layout/keyboard_view.xml" value="0.30497592295345105" />

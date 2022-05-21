@@ -34,7 +34,7 @@ fun View.scale(from: Float, to: Float, duration: Long, withEndAction: Runnable =
     startAnimation(scaleAnimation)
 }
 
-fun View.scaleUpDown(from: Float, to: Float, duration: Long) {
+fun View.scaleUpDown(from: Float = 1.0F, to: Float = 1.15F, duration: Long = Duration.Animation.SCALE_UP_DOWN) {
     scale(from, to, duration) {
         scale(to, from, duration)
     }

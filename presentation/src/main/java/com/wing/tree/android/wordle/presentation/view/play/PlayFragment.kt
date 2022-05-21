@@ -100,11 +100,11 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
                 }
             }
 
-            textViewEraser.setOnClickListener {
+            itemFloatingActionButtonEraser.setOnClickListener {
                 viewModel.consumeItem(Item.Type.ERASER)
             }
 
-            textViewHint.setOnClickListener {
+            itemFloatingActionButtonHint.setOnClickListener {
                 viewModel.consumeItem(Item.Type.HINT)
             }
 
@@ -114,7 +114,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
             imageViewBackspace.setOnClickListener {
                 if (it.isPressed) {
-                    it.scaleUpDown(1.0F, 1.15F, Duration.Animation.SCALE_UP_DOWN)
+                    it.scaleUpDown()
                 }
 
                 viewModel.removeLast()
@@ -132,8 +132,8 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
         lifecycleScope.launch {
             viewModel.itemCount.collect {
-                viewBinding.textViewEraserCount.text = "${it.eraser}"
-                viewBinding.textViewHintCount.text = "${it.hint}"
+                viewBinding.itemFloatingActionButtonEraser.count = it.eraser
+                viewBinding.itemFloatingActionButtonHint.count = it.hint
             }
         }
 

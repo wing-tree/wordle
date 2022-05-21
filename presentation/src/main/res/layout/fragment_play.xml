@@ -41,44 +41,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/text_view_hint"
+        <com.wing.tree.android.wordle.presentation.widget.ItemFloatingActionButton
+            android:id="@+id/item_floating_action_button_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="@string/hint"
-            android:textAllCaps="true"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/keyboard_view"
+            app:src="@drawable/ic_round_search_24"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/text_view_hint_count"
+        <com.wing.tree.android.wordle.presentation.widget.ItemFloatingActionButton
+            android:id="@+id/item_floating_action_button_eraser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:elevation="1dp"
-            app:layout_constraintEnd_toEndOf="@+id/text_view_hint"
-            app:layout_constraintTop_toTopOf="@+id/text_view_hint"
-            tools:text="3" />
-
-        <TextView
-            android:id="@+id/text_view_eraser"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="@string/eraser"
-            android:textAllCaps="true"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/text_view_hint"
-            app:layout_constraintTop_toTopOf="@+id/text_view_hint" />
-
-        <TextView
-            android:id="@+id/text_view_eraser_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/text_view_eraser"
-            app:layout_constraintTop_toTopOf="@+id/text_view_eraser"
-            tools:text="3" />
+            app:src="@drawable/ic_erase_96px"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/item_floating_action_button_hint" />
 
         <Button
             android:id="@+id/button_submit"
@@ -86,7 +63,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/button"
-            android:paddingTop="6dp"
             android:text="@string/submit"
             android:textAllCaps="true"
             android:textColor="@color/white"

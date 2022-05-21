@@ -76,7 +76,7 @@ class KeyboardView : LinearLayout {
                 else -> throw IllegalArgumentException("${view.id}")
             }
 
-            view?.scaleUpDown(1.0F, 1.15F, Duration.Animation.SCALE_UP_DOWN)
+            view?.scaleUpDown()
 
             onKeyListener?.onKey(key)
         }

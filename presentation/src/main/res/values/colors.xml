@@ -8,9 +8,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="dark_charcoal">#FF2E2E2E</color>
     <color name="dark_grey">#121212</color>
     <color name="gold">#FFD700</color>
+    <color name="jet">#343434</color>
 
+    <color name="pink_600">#D81B60</color>
     <color name="green_800">#2E7D32</color>
     <color name="light_green_200">#C5E1A5</color>
     <color name="light_green_600_dark">#4B830D</color>
@@ -31,6 +34,7 @@
     <color name="mismatched">@color/yellow_500</color>
     <color name="matched">@color/green_800</color>
 
+    <color name="background_count">@color/pink_600</color>
     <color name="background_credits">#61000000</color>
     <color name="icon">@color/dark_grey</color>
     <color name="text">@color/dark_grey</color>
