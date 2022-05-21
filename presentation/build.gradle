@@ -59,6 +59,7 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:2.39.1"
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation "com.github.YvesCheung.RollingText:RollingText:1.2.11"
 
     implementation 'com.google.android.material:material:1.6.0'
 }

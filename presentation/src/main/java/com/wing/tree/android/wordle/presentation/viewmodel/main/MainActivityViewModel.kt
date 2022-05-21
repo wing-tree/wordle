@@ -43,9 +43,7 @@ class MainActivityViewModel @Inject constructor(
     private val _skuDetailsList = MutableLiveData<List<SkuDetails>>()
     val skuDetailsList: LiveData<List<SkuDetails>> get() = _skuDetailsList
 
-    val credits = getCreditsUseCase()
-        .map { it.getOrDefault(0) }
-        .asLiveData(viewModelScope.coroutineContext)
+    val credits = getCreditsUseCase().map { it.getOrDefault(0) }
 
     val isAdsRemoved = isRemoveAdsPurchasedUseCaseUseCase()
         .map { it.getOrDefault(false) }

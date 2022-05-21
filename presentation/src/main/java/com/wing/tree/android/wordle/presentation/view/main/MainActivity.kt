@@ -17,6 +17,14 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.repeatOnLifecycle
+
+import com.yy.mobile.rollingtextview.CharOrder
+import com.yy.mobile.rollingtextview.strategy.Strategy
+import kotlinx.coroutines.flow.collectLatest
+
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -49,8 +57,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         navController?.addOnDestinationChangedListener(onDestinationChangedListener)
 
-        viewModel.credits.observe(this) {
-            viewBinding.textViewCredits.text = "$it"
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.credits.collectLatest {
+                    viewBinding.rollingTextViewCredits.setText("$it")
+                }
+            }
         }
 
         viewModel.isAdsRemoved.observe(this) { isAdsRemoved ->
@@ -100,6 +112,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                     delay(120L)
                     viewModel.callOnCreditsClick()
                 }
+            }
+
+            with(rollingTextViewCredits) {
+                addCharOrder(CharOrder.Number)
+
+                animationDuration = 600L
+                animationInterpolator = AccelerateDecelerateInterpolator()
+                charStrategy = Strategy.NormalAnimation()
             }
         }
     }
