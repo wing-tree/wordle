@@ -4,12 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.wing.tree.android.wordle.presentation.databinding.FragmentMainBinding
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegate
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegateImpl
 import com.wing.tree.android.wordle.presentation.util.increment
+import com.wing.tree.android.wordle.presentation.util.startActivity
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
+import com.wing.tree.android.wordle.presentation.view.onboarding.OnBoardingActivity
 import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityViewModel
 import com.wing.tree.android.wordle.presentation.viewmodel.main.MainFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +32,11 @@ class MainFragment : BaseFragment<FragmentMainBinding>(), InterstitialAdDelegate
 
     override fun bind(viewBinding: FragmentMainBinding) {
         with(viewBinding) {
-            materialButtonPlay.setOnClickListener {
+            buttonHowToPlay.setOnClickListener {
+                startActivity<OnBoardingActivity>()
+            }
+
+            buttonPlay.setOnClickListener {
                 val directions = MainFragmentDirections.actionMainFragmentToPlayFragment()
 
                 activityViewModel.played.increment()

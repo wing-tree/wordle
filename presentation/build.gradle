@@ -62,4 +62,6 @@ dependencies {
     implementation "com.github.YvesCheung.RollingText:RollingText:1.2.11"
 
     implementation 'com.google.android.material:material:1.6.0'
+
+    implementation 'me.relex:circleindicator:2.1.6'
 }

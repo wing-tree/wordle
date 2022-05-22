@@ -24,7 +24,6 @@ import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityView
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
 import com.wing.tree.wordle.core.util.half
-import com.wing.tree.wordle.core.util.isZero
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.delay

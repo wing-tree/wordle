@@ -4,14 +4,28 @@
 
     <string name="an_error_occurred">an error occurred</string>
     <string name="answer">answer</string>
+    <string name="done">done</string>
     <string name="eraser">eraser</string>
+    <string name="examples">examples</string>
     <string name="hint">hint</string>
+    <string name="how_to_play">how to play</string>
     <string name="maximum_win_streak">maximum\nwin streak</string>
+    <string name="next">next</string>
     <string name="next_word">next word</string>
     <string name="play">play</string>
     <string name="played">played</string>
+    <string name="previous">previous</string>
     <string name="share_the_app">share the app</string>
     <string name="submit">submit</string>
     <string name="winning_streak">winning\nstreak</string>
     <string name="won">won</string>
+
+    <string name="how_to_play_000">
+        Guess the <b>WORDLE</b> in six tries.\n\n
+        Each guess must be a valid five-letter word. Hit the enter button to submit.\n\n
+        After each guess, the color of the tiles will change to show how close your guess was to the word.
+    </string>
+    <string name="how_to_play_001">The letter <b>W</b> is in the word and in the correct spot.</string>
+    <string name="how_to_play_002">The letter <b>I</b> is in the word but in the wrong spot.</string>
+    <string name="how_to_play_003">The letter <b>U</b> is not in the word in any spot.</string>
 </resources>

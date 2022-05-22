@@ -10,6 +10,8 @@ import com.wing.tree.android.wordle.domain.usecase.billing.IsRemoveAdsPurchasedU
 import com.wing.tree.android.wordle.domain.usecase.billing.PurchaseCreditsUseCase
 import com.wing.tree.android.wordle.domain.usecase.billing.PutRemoveAdsPurchasedUseCase
 import com.wing.tree.android.wordle.domain.usecase.core.getOrDefault
+import com.wing.tree.android.wordle.domain.usecase.onboarding.IsFirstTimeUseCase
+import com.wing.tree.android.wordle.domain.usecase.onboarding.PutFirstTimeUseCase
 import com.wing.tree.android.wordle.presentation.util.SingleLiveEvent
 import com.wing.tree.wordle.billing.callbacks.BillingClientStateCallbacks
 import com.wing.tree.wordle.billing.callbacks.PurchaseCallbacks
@@ -17,18 +19,19 @@ import com.wing.tree.wordle.billing.delegate.BillingDelegate
 import com.wing.tree.wordle.billing.delegate.BillingDelegateImpl
 import com.wing.tree.wordle.billing.skus.Skus
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
+    private val isFirstTimeUseCase: IsFirstTimeUseCase,
     private val purchaseCreditsUseCase: PurchaseCreditsUseCase,
+    private val putFirstTimeUseCase: PutFirstTimeUseCase,
     private val putRemoveAdsPurchasedUseCase: PutRemoveAdsPurchasedUseCase,
     getCreditsUseCase: GetCreditsUseCase,
     isRemoveAdsPurchasedUseCaseUseCase: IsRemoveAdsPurchasedUseCase,
@@ -44,6 +47,8 @@ class MainActivityViewModel @Inject constructor(
     val skuDetailsList: LiveData<List<SkuDetails>> get() = _skuDetailsList
 
     val credits = getCreditsUseCase().map { it.getOrDefault(0) }
+
+    val isFirstTime: Flow<Boolean> get() = isFirstTimeUseCase().map { it.getOrDefault(false) }
 
     val isAdsRemoved = isRemoveAdsPurchasedUseCaseUseCase()
         .map { it.getOrDefault(false) }
@@ -101,5 +106,11 @@ class MainActivityViewModel @Inject constructor(
 
     fun callOnCreditsClick() {
         _onCreditsClick.call()
+    }
+
+    fun putNotFirstTime() {
+        viewModelScope.launch(ioDispatcher) {
+            putFirstTimeUseCase(false)
+        }
     }
 }

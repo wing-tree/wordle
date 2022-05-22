@@ -1,7 +1,9 @@
 package com.wing.tree.android.wordle.presentation.util
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import androidx.fragment.app.Fragment
 import com.wing.tree.android.wordle.presentation.R
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -20,4 +22,12 @@ internal fun shareApp(context: Context) {
 
 fun AtomicInteger.increment() {
     set(get().inc())
+}
+
+inline fun <reified T: Activity> Activity.startActivity() {
+    startActivity(Intent(this, T::class.java))
+}
+
+inline fun <reified T: Activity> Fragment.startActivity() {
+    startActivity(Intent(requireContext(), T::class.java))
 }

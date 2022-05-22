@@ -90,7 +90,10 @@ class LetterView : FrameLayout, Flippable<LetterView> {
                             scaleUpDown()
                         }
                     }
-                    Flag.Action.Nothing -> frontText.text = text
+                    Flag.Action.Nothing -> {
+                        frontFrame.backgroundTintList = tint
+                        frontText.text = text
+                    }
                     Flag.Action.Remove -> frontText.textFadeOut()
                 }
             }

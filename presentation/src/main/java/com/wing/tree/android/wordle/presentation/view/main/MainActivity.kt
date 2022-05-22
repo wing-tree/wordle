@@ -1,7 +1,10 @@
 package com.wing.tree.android.wordle.presentation.view.main
 
+import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
@@ -9,22 +12,19 @@ import com.google.android.gms.ads.*
 import com.wing.tree.android.wordle.presentation.BuildConfig
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.ActivityMainBinding
+import com.wing.tree.android.wordle.presentation.util.startActivity
 import com.wing.tree.android.wordle.presentation.view.base.BaseActivity
+import com.wing.tree.android.wordle.presentation.view.onboarding.OnBoardingActivity
 import com.wing.tree.android.wordle.presentation.view.play.PlayFragmentDirections
 import com.wing.tree.android.wordle.presentation.view.result.ResultFragmentDirections
 import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityViewModel
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import timber.log.Timber
-import android.view.animation.AccelerateDecelerateInterpolator
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.repeatOnLifecycle
-
 import com.yy.mobile.rollingtextview.CharOrder
 import com.yy.mobile.rollingtextview.strategy.Strategy
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
-
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -61,6 +61,15 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 viewModel.credits.collectLatest {
                     viewBinding.rollingTextViewCredits.setText("$it")
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.isFirstTime.collectLatest {
+                if (it) {
+                    viewModel.putNotFirstTime()
+                    startActivity<OnBoardingActivity>()
                 }
             }
         }
