@@ -170,18 +170,13 @@ class PlayViewModel @Inject constructor(
     }
 
     fun requestFocus() {
-        //round.inc() >= maximumRound todo 여기.. 다 해결됨 ㅋㅋ.응 해결안되.
-//        if (playBoard.value?.isRoundOver == true) {
-//            return
-//        }
-
         currentLine?.let {
             if (it.isSubmitted) {
                 return@let
             }
 
             _playBoard.setValueAfter {
-                currentLine.requestFocus()
+                it.requestFocus()
             }
         }
     }

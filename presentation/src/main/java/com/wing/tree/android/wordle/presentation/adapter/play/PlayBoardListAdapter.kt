@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.android.wordle.presentation.databinding.LineItemBinding
-import com.wing.tree.android.wordle.presentation.extention.scale
+import com.wing.tree.android.wordle.presentation.extention.scaleUpDown
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.PlayBoard
 import com.wing.tree.android.wordle.presentation.widget.LetterView.Flag
@@ -44,15 +44,10 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
                             }
                         }
                     } else {
-                        isCurrentLine = item.isFocused
+                        requestFocus(item.isFocused, item.currentLetters)
 
                         setOnLetterClickListener { letterView, index ->
-                            with(letterView) {
-                                scale(1.0F, 1.15F, 150L) {
-                                    scale(1.15F, 1.0F, 150L)
-                                }
-                            }
-
+                            letterView.scaleUpDown()
                             callbacks.onLetterClick(adapterPosition, index)
                         }
 

@@ -17,7 +17,6 @@ import com.wing.tree.android.wordle.presentation.util.flip
 class LetterView : FrameLayout, Flippable<LetterView> {
     private val viewBinding: LetterViewBinding = LetterViewBinding.bind(inflate(context, R.layout.letter_view, this))
     private val isFlipped: Boolean get() = viewBinding.textViewBack.isVisible
-    private val isNotAnimating: Boolean get() = isAnimating.not()
 
     override var isFlippable = true
     override var isAnimating = false
@@ -36,7 +35,7 @@ class LetterView : FrameLayout, Flippable<LetterView> {
     )
 
     override fun flip(doOnEnd: ((LetterView) -> Unit)?) {
-        if (isFlippable && isNotAnimating) {
+        if (isAnimating.not() && isFlippable) {
             isAnimating = true
 
             flip(backFrame, frontFrame) {
@@ -52,22 +51,23 @@ class LetterView : FrameLayout, Flippable<LetterView> {
     fun startTransition() {
         val transitionDrawable = frontFrame.background as? TransitionDrawable
 
-        transitionDrawable?.isCrossFadeEnabled = true
         transitionDrawable?.startTransition(Duration.Animation.TRANSITION)
     }
 
     private fun swap() {
         with(viewBinding) {
             if (isFlipped) {
-                backText = textViewFront
-                frontText = textViewBack
                 backFrame = frameLayoutFront
+                backText = textViewFront
+
                 frontFrame = frameLayoutBack
+                frontText = textViewBack
             } else {
-                backText = textViewBack
-                frontText = textViewFront
                 backFrame = frameLayoutBack
+                backText = textViewBack
+
                 frontFrame = frameLayoutFront
+                frontText = textViewFront
             }
         }
     }

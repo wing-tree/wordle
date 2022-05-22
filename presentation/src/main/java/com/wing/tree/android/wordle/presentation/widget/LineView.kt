@@ -9,6 +9,7 @@ import com.wing.tree.android.wordle.presentation.databinding.LineViewBinding
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import kotlinx.coroutines.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 class LineView : ConstraintLayout {
     private val supervisorJob = SupervisorJob()
@@ -17,24 +18,18 @@ class LineView : ConstraintLayout {
 
     private val lastIndex = WORD_LENGTH.dec()
 
+    private var isFocused = AtomicBoolean(false)
     private var onLetterClickListener: OnLetterClickListener? = null
 
-    var isCurrentLine: Boolean = false
-        set(value) {
-            val isChanged = field != value
-
-            field = value
-
-            if (isChanged) {
-                repeat(WORD_LENGTH) {
-                    with(get(it)) {
-                        if (field) {
-                            startTransition()
-                        }
-                    }
+    fun requestFocus(isFocused: Boolean, letters: Array<Letter>) {
+        if (this.isFocused.compareAndSet(isFocused.not(), isFocused)) {
+            letters.forEach {
+                if (it.isSubmitted.not()) {
+                    get(it.position).startTransition()
                 }
             }
         }
+    }
 
     fun interface OnLetterClickListener {
         fun onLetterViewClick(letterView: LetterView, index: Int)

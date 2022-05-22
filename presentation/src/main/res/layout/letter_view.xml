@@ -17,7 +17,6 @@
             android:id="@+id/text_view_back"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:backgroundTintMode="src_over"
             style="@style/Widget.MaterialComponents.TextView.LetterView"
             tools:text="A" />
 
@@ -34,7 +33,6 @@
             android:id="@+id/text_view_front"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:backgroundTintMode="src_over"
             style="@style/Widget.MaterialComponents.TextView.LetterView"
             tools:text="A" />
 
