@@ -41,19 +41,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.wing.tree.android.wordle.presentation.widget.ItemFloatingActionButton
+        <com.wing.tree.android.wordle.presentation.widget.ItemConsumptionFloatingActionButton
             android:id="@+id/item_floating_action_button_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:src="@drawable/ic_round_search_24"
+            app:tint="@color/orange_300"
+            app:tint_dark="@color/orange_400"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <com.wing.tree.android.wordle.presentation.widget.ItemFloatingActionButton
+        <com.wing.tree.android.wordle.presentation.widget.ItemConsumptionFloatingActionButton
             android:id="@+id/item_floating_action_button_eraser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:src="@drawable/ic_erase_96px"
+            app:tint="@color/purple_300"
+            app:tint_dark="@color/purple_500"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/item_floating_action_button_hint" />
 

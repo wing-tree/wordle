@@ -14,10 +14,14 @@
     <color name="jet">#343434</color>
 
     <color name="pink_600">#D81B60</color>
+    <color name="purple_300">#BA68C8</color>
+    <color name="purple_400">#AB47BC</color>
     <color name="green_800">#2E7D32</color>
     <color name="light_green_200">#C5E1A5</color>
     <color name="light_green_600_dark">#4B830D</color>
     <color name="yellow_500">#FFFFEB3B</color>
+    <color name="orange_300">#FFB74D</color>
+    <color name="orange_400">#FFA726</color>
     <color name="grey_200">#FFEEEEEE</color>
     <color name="grey_800">#FF424242</color>
     <color name="grey_900">#FF212121</color>

@@ -4,7 +4,9 @@
         <attr name="key" format="string" />
     </declare-styleable>
 
-    <declare-styleable name="ItemFloatingActionButton">
+    <declare-styleable name="ItemConsumptionFloatingActionButton">
         <attr name="src" format="reference" />
+        <attr name="tint" format="color" />
+        <attr name="tint_dark" format="color" />
     </declare-styleable>
 </resources>
