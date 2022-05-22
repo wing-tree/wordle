@@ -21,6 +21,7 @@ import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityView
 import com.yy.mobile.rollingtextview.CharOrder
 import com.yy.mobile.rollingtextview.strategy.Strategy
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -65,11 +66,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             }
         }
 
-        lifecycleScope.launchWhenStarted {
+        lifecycleScope.launch {
             viewModel.isFirstTime.collectLatest {
                 if (it) {
                     viewModel.putNotFirstTime()
                     startActivity<OnBoardingActivity>()
+                } else {
+                    cancel()
                 }
             }
         }
