@@ -72,7 +72,7 @@ sealed class Key {
             const val UNDEFINED = 0
             const val NOT_IN = 1
             const val MISMATCHED = 2
-            const val MATCHED = 6
+            const val MATCHED = 8
         }
 
         companion object {

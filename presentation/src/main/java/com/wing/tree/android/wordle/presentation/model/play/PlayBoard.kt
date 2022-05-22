@@ -44,11 +44,11 @@ class PlayBoard {
         }
     }
 
-    fun availableHints(word: Word): List<Letter> {
+    fun availableHints(answer: String): List<Letter> {
         val distinct = matched().map { it.position }.distinct()
 
         return mutableListOf<Letter>().apply {
-            word.forEachIndexed { index, letter ->
+            answer.forEachIndexed { index, letter ->
                 if (index !in distinct) {
                     add(Letter(index, letter))
                 }
@@ -56,7 +56,7 @@ class PlayBoard {
         }
     }
 
-    fun availableHintCount(word: Word) = availableHints(word).count()
+    fun availableHintCount(answer: String) = availableHints(answer).count()
 
     fun matched() = filterIsState<In.Matched>()
 

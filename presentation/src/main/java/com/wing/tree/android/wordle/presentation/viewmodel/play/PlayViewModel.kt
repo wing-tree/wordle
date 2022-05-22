@@ -50,8 +50,8 @@ class PlayViewModel @Inject constructor(
     LettersChecker by LettersCheckerImpl(containsUseCase),
     WordLoader by WordLoaderImpl(getWordUseCase)
 {
-    private lateinit var _word: Word
-    val word: Word get() = _word
+    private lateinit var word: Word
+    private val answer: String get() = word.value
 
     private val _keyboard = MediatorLiveData<Keyboard>()
     val keyboard: LiveData<Keyboard> get() = _keyboard
@@ -68,12 +68,9 @@ class PlayViewModel @Inject constructor(
     private val isAnimating = MutableLiveData<Boolean>()
     private val ioDispatcher = Dispatchers.IO
 
-    val isEraserAvailable: Boolean get() = keyboard.value?.erasableAlphabets(word)?.isNotEmpty() ?: false
-    val isHintAvailable: Boolean get() = (playBoard.value?.availableHintCount(word) ?: 0) > 1
-    val isOneMoreTryAvailable: Boolean get() = true
-
-    private var _try = 0
-    val `try`: Int get() = _try
+    private val isEraserAvailable: Boolean get() = keyboard.value?.erasable(answer)?.isNotEmpty() ?: false
+    private val isHintAvailable: Boolean get() = (playBoard.value?.availableHintCount(answer) ?: 0) > 1
+    private val isOneMoreTryAvailable: Boolean get() = true
 
     val round: Int get() = playBoard.value?.round ?: 0
 
@@ -88,7 +85,7 @@ class PlayViewModel @Inject constructor(
                     cancel()
                 } else {
                     result.getOrNull()?.let { playState ->
-                        _word = playState.word
+                        word = playState.word
                         _playBoard.postValue(PlayBoard.from(playState.playBoard))
                         _keyboard.postValue(Keyboard.from(playState.keyboard))
                     } ?: run {
@@ -97,7 +94,7 @@ class PlayViewModel @Inject constructor(
                     }
 
                     if (word.value.isBlank()) {
-                        _word = loadAtRandom() ?: run {
+                        word = loadAtRandom() ?: run {
                             Timber.e(NullPointerException())
                             Word.Sorry
                         }
@@ -171,13 +168,9 @@ class PlayViewModel @Inject constructor(
 
     fun requestFocus() {
         currentLine?.let {
-            if (it.isSubmitted) {
-                return@let
-            }
+            if (it.isSubmitted) { return@let }
 
-            _playBoard.setValueAfter {
-                it.requestFocus()
-            }
+            _playBoard.setValueAfter { it.requestFocus() }
         }
     }
 
@@ -191,6 +184,7 @@ class PlayViewModel @Inject constructor(
     }
 
     // 콜백 너무많다.. todo 콜백 좀 줄입시더.
+    @DelicateCoroutinesApi
     fun submit(@MainThread commitCallback: (kotlin.Result<Line>) -> Unit) {
         val currentLine = playBoard.value?.currentLine ?: return
 
@@ -293,9 +287,7 @@ class PlayViewModel @Inject constructor(
     }
 
     fun consumeItem(@ItemType itemType: Int) {
-        if(isItemAvailable(itemType).not()) {
-            return
-        }
+        if (isItemAvailable(itemType).not()) { return }
 
         viewModelScope.launch {
             consume(itemType)
@@ -318,15 +310,11 @@ class PlayViewModel @Inject constructor(
     }
 
     private fun onEraserConsumed() {
-        _keyboard.setValueAfter { erase(word) }
+        _keyboard.setValueAfter { erase(word.value) }
     }
 
     private fun onHintConsumed() {
-        playBoard.value?.let {
-            if (it.matched().distinct().count() < WORD_LENGTH.dec()) {
-                submitLetter(it.availableHints(word).random())
-            }
-        }
+        playBoard.value?.let { submitLetter(it.availableHints(answer).random()) }
     }
 
     private fun onOneMoreTryConsumed() {
@@ -337,7 +325,6 @@ class PlayViewModel @Inject constructor(
     }
 
     fun playAgain() {
-        ++_try
         _playBoard.value = PlayBoard()
         _viewState.value = ViewState.Play
         playResult.value = PlayResult.Undefined
