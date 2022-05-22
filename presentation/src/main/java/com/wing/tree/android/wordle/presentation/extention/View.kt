@@ -1,14 +1,63 @@
 package com.wing.tree.android.wordle.presentation.extention
 
 import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.util.DisplayMetrics
 import android.view.View
+import android.view.ViewPropertyAnimator
 import android.view.animation.*
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.constant.Duration
+
+fun View.fadeIn(
+    duration: Long = Duration.Animation.FADE_IN,
+    alphaFrom: Float = 0.0F,
+    onAnimationEnd: (() -> Unit)? = null
+): ViewPropertyAnimator {
+    this.apply {
+        alpha = alphaFrom
+        visibility = View.VISIBLE
+
+        return@fadeIn animate()
+            .alpha(1.0f)
+            .setDuration(duration)
+            .setInterpolator(DecelerateInterpolator())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    onAnimationEnd?.invoke()
+                }
+            }).withLayer()
+    }
+}
+
+fun View.fadeOut(
+    duration: Long = Duration.Animation.FADE_OUT,
+    invisible: Boolean = false,
+    onAnimationEnd: (() -> Unit)? = null
+): ViewPropertyAnimator {
+    this.apply {
+        alpha = 1.0F
+
+        return@fadeOut animate()
+            .alpha(0.0F)
+            .setDuration(duration)
+            .setInterpolator(AccelerateInterpolator())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    this@fadeOut.visibility = if (invisible)
+                        View.INVISIBLE
+                    else
+                        View.GONE
+
+                    onAnimationEnd?.invoke()
+                    super.onAnimationEnd(animation)
+                }
+            }).withLayer()
+    }
+}
 
 fun View.scale(from: Float, to: Float, duration: Long, withEndAction: Runnable = Runnable {  }) {
     val pivotXType = Animation.RELATIVE_TO_SELF
