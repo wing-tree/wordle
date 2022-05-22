@@ -43,6 +43,7 @@
         <entry key="presentation/src/main/res/layout/fragment_on_boarding_page_two.xml" value="0.2557291666666667" />
         <entry key="presentation/src/main/res/layout/fragment_play.xml" value="0.33272557309982526" />
         <entry key="presentation/src/main/res/layout/fragment_result.xml" value="0.23802083333333332" />
+        <entry key="presentation/src/main/res/layout/fragment_settings.xml" value="0.19895833333333332" />
         <entry key="presentation/src/main/res/layout/item_button.xml" value="0.5398147168241603" />
         <entry key="presentation/src/main/res/layout/item_floating_action_button.xml" value="0.7085114857413916" />
         <entry key="presentation/src/main/res/layout/key_view.xml" value="0.15260416666666668" />
@@ -55,10 +56,14 @@
         <entry key="presentation/src/main/res/layout/letters_view.xml" value="0.28242477350949624" />
         <entry key="presentation/src/main/res/layout/line_item.xml" value="0.1984375" />
         <entry key="presentation/src/main/res/layout/line_view.xml" value="0.19270833333333334" />
+        <entry key="presentation/src/main/res/layout/preference_category_item.xml" value="0.19895833333333332" />
+        <entry key="presentation/src/main/res/layout/preference_item.xml" value="0.19895833333333332" />
         <entry key="presentation/src/main/res/layout/sku_details_item.xml" value="0.3188405797101449" />
+        <entry key="presentation/src/main/res/layout/space_item.xml" value="0.19895833333333332" />
         <entry key="presentation/src/main/res/layout/statistics_item.xml" value="0.182518115942029" />
         <entry key="presentation/src/main/res/layout/statistics_view.xml" value="0.4668769716088328" />
         <entry key="presentation/src/main/res/layout/stats_item.xml" value="0.3938622763520591" />
+        <entry key="presentation/src/main/res/layout/switch_preference_item.xml" value="0.19895833333333332" />
       </map>
     </option>
   </component>

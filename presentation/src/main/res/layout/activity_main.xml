@@ -14,6 +14,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:id="@+id/image_view_arrow_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_view_title"
+            app:srcCompat="@drawable/ic_round_arrow_back_24"
+            app:tint="@color/icon"
+            tools:ignore="ContentDescription" />
+
         <TextView
             android:id="@+id/text_view_title"
             android:layout_width="wrap_content"
@@ -27,6 +39,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/image_view_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_view_title"
+            app:srcCompat="@drawable/ic_round_settings_24"
+            app:tint="@color/icon"
+            tools:ignore="ContentDescription" />
 
         <LinearLayout
             android:id="@+id/linear_layout_credits"
