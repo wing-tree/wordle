@@ -9,4 +9,10 @@ object Skus {
 
     val consumableList = listOf(CREDITS_240, CREDITS_720, CREDITS_2000, CREDITS_6000)
     val list = listOf(CREDITS_240, CREDITS_720, CREDITS_2000, CREDITS_6000, REMOVE_ADS)
+
+    val orders = HashMap<String, Int>(list.size).apply {
+        list.forEachIndexed { index, sku ->
+            put(sku, index)
+        }
+    }
 }

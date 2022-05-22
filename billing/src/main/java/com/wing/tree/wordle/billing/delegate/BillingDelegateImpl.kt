@@ -151,7 +151,7 @@ object BillingDelegateImpl : BillingDelegate {
 
         billingClient?.querySkuDetailsAsync(skuDetailsParams) { billingResult, skuDetailsList ->
             if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-                onSkuDetailsList.invoke(skuDetailsList ?: emptyList())
+                onSkuDetailsList.invoke(skuDetailsList?.sortedBy { Skus.orders[it.sku] } ?: emptyList())
             } else {
                 purchaseCallbacks?.onPurchaseFailure(billingResult.debugMessage, billingResult.responseCode)
             }
