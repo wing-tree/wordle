@@ -6,12 +6,12 @@
     <string name="answer">answer</string>
     <string name="eraser">eraser</string>
     <string name="hint">hint</string>
-    <string name="maximum_win_streak">maximum win streak</string>
+    <string name="maximum_win_streak">maximum\nwin streak</string>
     <string name="next_word">next word</string>
     <string name="play">play</string>
     <string name="played">played</string>
     <string name="share_the_app">share the app</string>
     <string name="submit">submit</string>
-    <string name="winning_streak">winning streak</string>
+    <string name="winning_streak">winning\nstreak</string>
     <string name="won">won</string>
 </resources>

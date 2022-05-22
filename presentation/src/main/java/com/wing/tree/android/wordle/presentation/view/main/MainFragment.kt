@@ -25,7 +25,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(), InterstitialAdDelegate
 
     override fun initData() {
         viewModel.statistics.observe(viewLifecycleOwner) {
-            viewBinding.statisticsView.setStatistics(it)
+            viewBinding.statisticsView.statistics = it
         }
     }
 

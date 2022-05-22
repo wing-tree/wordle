@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.annotation.MainThread
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.forEach
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.LineViewBinding
 import com.wing.tree.android.wordle.presentation.model.play.Letter

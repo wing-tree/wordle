@@ -2,6 +2,7 @@ package com.wing.tree.android.wordle.presentation.widget
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.XAxis
@@ -18,33 +19,37 @@ import com.wing.tree.wordle.core.constant.BLANK
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
 import java.util.*
 
-
 class StatisticsView : ConstraintLayout {
     private val viewBinding = StatisticsViewBinding.bind(inflate(context, R.layout.statistics_view, this))
 
-    private var statistics: Statistics? = null
+    var statistics: Statistics? = null
+        set(value) {
+            field = value
+
+            with(viewBinding) {
+                field?.let {
+                    played.textViewLabel.text = getString(R.string.played)
+                    played.textViewValue.text = "${it.played}"
+
+                    won.textViewLabel.text = getString(R.string.won)
+                    won.textViewValue.text = "${it.won}"
+
+                    winningStreak.textViewLabel.text = getString(R.string.winning_streak)
+                    winningStreak.textViewValue.text = "${it.winningStreak}"
+
+                    maximumWinStreak.textViewLabel.text = getString(R.string.maximum_win_streak)
+                    maximumWinStreak.textViewValue.text = "${it.maximumWinStreak}"
+
+                    initHorizontalBarChart(horizontalBarChart, it.guesses)
+                }
+            }
+        }
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    fun setStatistics(statistics: Statistics) {
-        this.statistics = statistics
-
-        val played = "PLAYED ${statistics.played}"
-        val maximumWinStreak = "MAXIMUM WIN STREAK ${statistics.maximumWinStreak}"
-        val winningStreak = "WINNING STREAK ${statistics.winningStreak}"
-        val won = "WON ${statistics.won}"
-
-        with(viewBinding) {
-            textViewMaximumWinStreak.text = maximumWinStreak
-            textViewPlayed.text = played
-            textViewWinningStreak.text = winningStreak
-            textViewWon.text = won
-
-            initHorizontalBarChart(horizontalBarChart, statistics.guesses)
-        }
-    }
+    private fun getString(@StringRes resId: Int) = context.getString(resId)
 
     private fun initHorizontalBarChart(horizontalBarChart: HorizontalBarChart, guesses: Guesses) {
         val barDataSet: BarDataSet

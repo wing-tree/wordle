@@ -42,7 +42,7 @@ class ResultFragment : BaseFragment<FragmentResultBinding>(), InterstitialAdDele
         }
 
         viewModel.statistics.observe(viewLifecycleOwner) {
-            viewBinding.statisticsView.setStatistics(it)
+            viewBinding.statisticsView.statistics = it
         }
     }
 

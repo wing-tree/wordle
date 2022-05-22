@@ -2,40 +2,140 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/text_view_played"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Played 10" />
+        app:layout_constraintBottom_toTopOf="@+id/horizontal_bar_chart">
 
-    <TextView
-        android:id="@+id/text_view_won"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_played"
-        tools:text="Won 8" />
+        <include
+            android:id="@+id/played"
+            layout="@layout/statistics_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/won"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/text_view_winning_streak"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_won"
-        tools:text="Winning Streak 7"/>
+        <include
+            android:id="@+id/won"
+            layout="@layout/statistics_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/winning_streak"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/played" />
 
-    <TextView
-        android:id="@+id/text_view_maximum_win_streak"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_winning_streak"
-        tools:text="Maximum Win Streak"/>
+        <include
+            android:id="@+id/winning_streak"
+            layout="@layout/statistics_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toStartOf="@+id/maximum_win_streak"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/won" />
+
+        <include
+            android:id="@+id/maximum_win_streak"
+            layout="@layout/statistics_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/winning_streak" />
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/text_view_played_value"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginStart="24dp"-->
+        <!--            app:layout_constraintEnd_toStartOf="@+id/text_view_won_value"-->
+        <!--            app:layout_constraintHorizontal_bias="0.5"-->
+        <!--            app:layout_constraintHorizontal_chainStyle="spread_inside"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            tools:text="10" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/text_view_played_label"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="@string/played"-->
+        <!--            android:textAllCaps="true"-->
+        <!--            android:textSize="12dp"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/text_view_played_value"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/text_view_played_value" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/text_view_won_value"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:layout_constraintEnd_toStartOf="@+id/text_view_winning_streak_value"-->
+        <!--            app:layout_constraintHorizontal_bias="0.5"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/text_view_played_value"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            tools:text="8" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/text_view_won_label"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:text="@string/won"-->
+        <!--            android:textAllCaps="true"-->
+        <!--            android:textSize="12dp"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/text_view_won_value"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/text_view_won_value"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/text_view_won_value" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/text_view_winning_streak_value"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:layout_constraintEnd_toStartOf="@+id/text_view_maximum_win_streak_value"-->
+        <!--            app:layout_constraintHorizontal_bias="0.5"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/text_view_won_value"-->
+        <!--            tools:layout_editor_absoluteY="0dp"-->
+        <!--            tools:text="7" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/text_view_winning_streak_label"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:gravity="center"-->
+        <!--            android:text="@string/winning_streak"-->
+        <!--            android:textAllCaps="true"-->
+        <!--            android:textSize="12dp"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/text_view_winning_streak_value"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/text_view_winning_streak_value"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/text_view_winning_streak_value" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/text_view_maximum_win_streak_value"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginEnd="24dp"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0.5"-->
+        <!--            app:layout_constraintStart_toEndOf="@+id/text_view_winning_streak_value"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            tools:text="10"/>-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/text_view_maximum_win_streak_label"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:gravity="center"-->
+        <!--            android:text="@string/maximum_win_streak"-->
+        <!--            android:textAllCaps="true"-->
+        <!--            android:textSize="12dp"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/text_view_maximum_win_streak_value"-->
+        <!--            app:layout_constraintStart_toStartOf="@+id/text_view_maximum_win_streak_value"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/text_view_maximum_win_streak_value" />-->
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.github.mikephil.charting.charts.HorizontalBarChart
         android:id="@+id/horizontal_bar_chart"
