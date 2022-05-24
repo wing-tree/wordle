@@ -6,6 +6,7 @@ import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -17,6 +18,7 @@ import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.StatisticsViewBinding
 import com.wing.tree.wordle.core.constant.BLANK
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
+import com.wing.tree.wordle.core.util.isZero
 import java.util.*
 
 class StatisticsView : ConstraintLayout {
@@ -59,8 +61,10 @@ class StatisticsView : ConstraintLayout {
 
         repeat(MAXIMUM_ROUND) {
             val index = it.inc()
+            val x = index.float
+            val y = guesses[index].float
 
-            barEntries.add(BarEntry(index.float, guesses[index].float))
+            barEntries.add(BarEntry(x, y))
         }
 
         barDataSet = BarDataSet(barEntries, BLANK)
@@ -100,7 +104,7 @@ class StatisticsView : ConstraintLayout {
             xAxis.setDrawGridLines(false)
             xAxis.setDrawLabels(true)
             xAxis.textColor = textColor
-            xAxis.textSize = 20F
+            xAxis.textSize = 20.0F
 
             invalidate()
         }
