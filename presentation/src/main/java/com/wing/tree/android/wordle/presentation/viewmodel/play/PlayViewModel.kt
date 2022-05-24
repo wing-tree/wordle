@@ -23,6 +23,7 @@ import com.wing.tree.android.wordle.presentation.util.setValueAfter
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collectLatest
 import timber.log.Timber
 import javax.inject.Inject
 import com.wing.tree.android.wordle.domain.model.playstate.Keyboard as DomainKeyboard
@@ -64,11 +65,13 @@ class PlayViewModel @Inject constructor(
     val viewState: LiveData<ViewState> get() = _viewState
 
     private val currentLine: Line? get() = playBoard.value?.currentLine
+
     private val isAnimating = MutableLiveData<Boolean>()
+
     private val ioDispatcher = Dispatchers.IO
 
     private val isEraserAvailable: Boolean get() = keyboard.value?.erasable(answer)?.isNotEmpty() ?: false
-    private val isHintAvailable: Boolean get() = (playBoard.value?.availableHintCount(answer) ?: 0) > 1
+    private val isHintAvailable: Boolean get() = playBoard.value?.isHintAvailable(answer) ?: false
     private val isOneMoreTryAvailable: Boolean get() = true
 
     val round: Int get() = playBoard.value?.round ?: 0
@@ -77,7 +80,7 @@ class PlayViewModel @Inject constructor(
         _viewState.value = ViewState.Ready
 
         viewModelScope.launch(ioDispatcher) {
-            getPlayStateUseCase().collect { result ->
+            getPlayStateUseCase().collectLatest { result ->
                 _viewState.postValue(ViewState.Loading)
 
                 if (viewState.value is ViewState.Finish) {
@@ -247,7 +250,8 @@ class PlayViewModel @Inject constructor(
     @DelicateCoroutinesApi
     private fun win() {
         updateStatistics(Result.Win(round))
-        playResult.value = PlayResult.Win(round, word.value)
+
+        playResult.value = PlayResult.Win(round, answer)
     }
 
     @DelicateCoroutinesApi
@@ -261,7 +265,7 @@ class PlayViewModel @Inject constructor(
     }
 
     private fun submitLetter(letter: Letter) {
-        _playBoard.setValueAfter { currentLine.submit(letter) }
+        _playBoard.setValueAfter { currentLine.submitLetter(letter) }
     }
 
     @DelicateCoroutinesApi
@@ -317,8 +321,8 @@ class PlayViewModel @Inject constructor(
     }
 
     private fun onOneMoreTryConsumed() {
-        _viewState.value = ViewState.Play
         playResult.value = PlayResult.Undefined
+        _viewState.value = ViewState.Play
 
         _playBoard.setValueAfter { addRound() }
     }

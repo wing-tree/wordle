@@ -89,7 +89,7 @@ data class Line(val round: Int) : Iterable<Letter> {
         _isSubmitted = true
     }
 
-    fun submit(letter: Letter) {
+    fun submitLetter(letter: Letter) {
         backup()
         set(letter.position, letter.apply { submit() })
     }

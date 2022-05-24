@@ -1,6 +1,5 @@
 package com.wing.tree.android.wordle.presentation.model.play
 
-import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toPresentationModel
 import com.wing.tree.android.wordle.presentation.model.play.Letter.State
 import com.wing.tree.android.wordle.presentation.model.play.Letter.State.In
@@ -45,7 +44,7 @@ class PlayBoard {
     }
 
     fun availableHints(answer: String): List<Letter> {
-        val distinct = matched().map { it.position }.distinct()
+        val distinct = filterIsState<In.Matched>().map { it.position }.distinct()
 
         return mutableListOf<Letter>().apply {
             answer.forEachIndexed { index, letter ->
@@ -56,9 +55,7 @@ class PlayBoard {
         }
     }
 
-    fun availableHintCount(answer: String) = availableHints(answer).count()
-
-    fun matched() = filterIsState<In.Matched>()
+    fun isHintAvailable(answer: String) = availableHints(answer).count() > 1
 
     fun removeAt(attempt: Int, index: Int) {
         try {
