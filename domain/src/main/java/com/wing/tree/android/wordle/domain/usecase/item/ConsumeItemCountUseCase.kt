@@ -1,7 +1,7 @@
 package com.wing.tree.android.wordle.domain.usecase.item
 
+import com.wing.tree.android.wordle.domain.model.item.Item
 import com.wing.tree.android.wordle.domain.repository.ItemCountRepository
-import com.wing.tree.android.wordle.domain.repository.PreferencesRepository
 import com.wing.tree.android.wordle.domain.usecase.core.CoroutineUseCase
 import com.wing.tree.android.wordle.domain.usecase.core.IOCoroutineDispatcher
 import kotlinx.coroutines.CoroutineDispatcher
@@ -10,8 +10,8 @@ import javax.inject.Inject
 class ConsumeItemCountUseCase @Inject constructor(
     private val repository: ItemCountRepository,
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-) : CoroutineUseCase<Int, Result<Int>>(coroutineDispatcher) {
-    override suspend fun execute(parameter: Int): Result<Int> {
+) : CoroutineUseCase<Item.Type, Result<Item.Type>>(coroutineDispatcher) {
+    override suspend fun execute(parameter: Item.Type): Result<Item.Type> {
         return repository.consume(parameter)
     }
 }

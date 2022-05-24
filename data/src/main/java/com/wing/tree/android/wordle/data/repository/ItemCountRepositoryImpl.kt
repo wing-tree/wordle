@@ -15,21 +15,21 @@ class ItemCountRepositoryImpl @Inject constructor(private val dataStore: DataSto
         return dataStore.data.map { it.toDomainModel() }
     }
 
-    override suspend fun consume(itemType: Int): Result<Int> {
+    override suspend fun consume(type: Item.Type): Result<Item.Type> {
         return try {
             dataStore.updateData {
                 val builder = it.toBuilder()
 
-                when (itemType) {
-                    Item.Type.ERASER -> builder.eraser = it.eraser.dec()
-                    Item.Type.HINT -> builder.hint = it.hint.dec()
-                    Item.Type.ONE_MORE_TRY -> builder.oneMoreTry = it.oneMoreTry.dec()
+                when (type) {
+                    Item.Type.Eraser -> builder.eraser = it.eraser.dec()
+                    Item.Type.Hint -> builder.hint = it.hint.dec()
+                    Item.Type.OneMoreTry -> builder.oneMoreTry = it.oneMoreTry.dec()
                 }
 
                 builder.build()
             }
 
-            Result.success(itemType)
+            Result.success(type)
         } catch (exception: Exception) {
             Result.failure(exception)
         }

@@ -6,7 +6,6 @@ import androidx.lifecycle.*
 import com.wing.tree.android.wordle.domain.model.Result
 import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.domain.model.item.Item
-import com.wing.tree.android.wordle.domain.model.item.ItemType
 import com.wing.tree.android.wordle.domain.model.playstate.PlayState
 import com.wing.tree.android.wordle.domain.usecase.billing.ConsumeCreditsUseCase
 import com.wing.tree.android.wordle.domain.usecase.core.getOrNull
@@ -286,27 +285,27 @@ class PlayViewModel @Inject constructor(
         }
     }
 
-    fun consumeItem(@ItemType itemType: Int) {
-        if (isItemAvailable(itemType).not()) { return }
+    fun consumeItem(type: Item.Type) {
+        if (isItemAvailable(type).not()) { return }
 
         viewModelScope.launch {
-            consume(itemType)
+            consume(type)
                 .onFailure { Timber.e(it) }
                 .onSuccess {
-                    when(itemType) {
-                        Item.Type.ERASER -> onEraserConsumed()
-                        Item.Type.HINT -> onHintConsumed()
-                        Item.Type.ONE_MORE_TRY -> onOneMoreTryConsumed()
+                    when(it) {
+                        Item.Type.Eraser -> onEraserConsumed()
+                        Item.Type.Hint -> onHintConsumed()
+                        Item.Type.OneMoreTry -> onOneMoreTryConsumed()
                     }
                 }
         }
     }
 
-    private fun isItemAvailable(@ItemType itemType: Int) = when(itemType) {
-        Item.Type.ERASER -> isEraserAvailable
-        Item.Type.HINT -> isHintAvailable
-        Item.Type.ONE_MORE_TRY -> isOneMoreTryAvailable
-        else -> throw IllegalArgumentException("$itemType")
+    private fun isItemAvailable(type: Item.Type) = when(type) {
+        Item.Type.Eraser -> isEraserAvailable
+        Item.Type.Hint -> isHintAvailable
+        Item.Type.OneMoreTry -> isOneMoreTryAvailable
+        else -> throw IllegalArgumentException("$type")
     }
 
     private fun onEraserConsumed() {
