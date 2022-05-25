@@ -1,10 +1,10 @@
 package com.wing.tree.android.wordle.domain.model.playstate
 
 interface Letter {
+    val isSubmitted: Boolean
     val position: Int
     val value: String
     val state: Int
-    val isSubmitted: Boolean
 
     object State {
         const val UNDEFINED = 0
