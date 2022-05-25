@@ -69,6 +69,7 @@ class PlayViewModel @Inject constructor(
     private val isAnimating = MutableLiveData<Boolean>()
 
     private val ioDispatcher = Dispatchers.IO
+    private val mainDispatcher = Dispatchers.Main
 
     private val isEraserAvailable: Boolean get() = keyboard.value?.erasable(answer)?.isNotEmpty() ?: false
     private val isHintAvailable: Boolean get() = playBoard.value?.isHintAvailable(answer) ?: false
@@ -111,10 +112,10 @@ class PlayViewModel @Inject constructor(
 
         _keyboard.addSource(playBoard) { board ->
             val value = _keyboard.value ?: return@addSource
-            val alphabetKeys = value.alphabets
+            val alphabets = value.alphabets
 
             board.notUnknownLetters.forEach { letter ->
-                alphabetKeys.find { it.letter == letter.value }?.updateState(Key.State.from(letter.state))
+                alphabets.find { it.letter == letter.value }?.updateState(Key.State.from(letter.state))
             }
 
             _keyboard.value = value
@@ -195,23 +196,18 @@ class PlayViewModel @Inject constructor(
         }
 
         viewModelScope.launch(ioDispatcher) {
-            submit(
-                word,
-                currentLine,
-                onFailure = {
-                    commitCallback(kotlin.Result.failure(it))
-                },
-                onSuccess = { line ->
+            val result = submit(answer, currentLine)
+
+            withContext(mainDispatcher) {
+                if (result.isSuccess) {
                     playBoard.value?.let { playBoard ->
                         _playBoard.setValueAfter { submit() }
                         isAnimating.value = true
 
-                        commitCallback(kotlin.Result.success(line))
-
-                        if (line.matches(word.value)) {
+                        if (currentLine.matches(answer)) {
                             win()
                         } else {
-                            if (playBoard.isGameOver) {
+                            if (playBoard.isRoundOver) {
                                 playResult.value = PlayResult.RoundOver(playBoard.isRoundAdded)
                             } else {
                                 playBoard.incrementRound()
@@ -219,8 +215,10 @@ class PlayViewModel @Inject constructor(
                             }
                         }
                     }
+                } else {
+                    commitCallback(result)
                 }
-            )
+            }
         }
     }
 
@@ -230,7 +228,7 @@ class PlayViewModel @Inject constructor(
 
         playBoard.value?.let { playBoard ->
             val closest = playBoard.closest
-            val letters = closest.string
+            val letters = closest.letters
             val round = round
             val states = closest.map { it.state.toInt() }
             val word = word.value

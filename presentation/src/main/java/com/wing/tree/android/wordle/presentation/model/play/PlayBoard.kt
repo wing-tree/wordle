@@ -23,8 +23,8 @@ class PlayBoard {
 
     val currentLine: Line get() = lines[round]
 
-    val isGameOver: Boolean get() = round.inc() >= lastRound
     val isRoundAdded: Boolean get() = lastRound > MAXIMUM_ROUND
+    val isRoundOver: Boolean get() = round.inc() >= lastRound
     val runsAnimation = AtomicBoolean(false)
 
     val closest: Line get() = lines.maxByOrNull { it.proximity } ?: currentLine

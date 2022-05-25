@@ -25,7 +25,7 @@ data class Line(val round: Int) : Iterable<Letter> {
 
     val proximity: Int get() = currentLetters.sumOf { it.state.priority }
 
-    val string: String
+    val letters: String
         get() = currentLetters.joinToString(EMPTY) { it.value }
 
     private fun backup() {
@@ -50,7 +50,7 @@ data class Line(val round: Int) : Iterable<Letter> {
         }
     }
 
-    fun matches(letters: String) = letters == string
+    fun matches(letters: String) = letters == this.letters
 
     fun removeAt(index: Int) {
         if (isNotEmpty) {
