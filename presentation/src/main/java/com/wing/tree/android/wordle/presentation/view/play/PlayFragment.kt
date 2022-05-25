@@ -99,15 +99,15 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
                 }
             }
 
-            itemFloatingActionButtonEraser.credits = Item.Type.Eraser.credits
-            itemFloatingActionButtonHint.credits = Item.Type.Hint.credits
+            itemFloatingActionButtonEraser.credits = Item.Eraser.credits
+            itemFloatingActionButtonHint.credits = Item.Hint.credits
 
             itemFloatingActionButtonEraser.setOnClickListener {
-                viewModel.consumeItem(Item.Type.Eraser)
+                viewModel.consumeItem(Item.Eraser)
             }
 
             itemFloatingActionButtonHint.setOnClickListener {
-                viewModel.consumeItem(Item.Type.Hint)
+                viewModel.consumeItem(Item.Hint)
             }
 
             buttonSubmit.setOnClickListener {
@@ -205,7 +205,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     }
 
     override fun onOneMoreTryClick() {
-        viewModel.consumeItem(Item.Type.OneMoreTry)
+        viewModel.consumeItem(Item.OneMoreTry)
     }
 
     override fun onPlayAgainClick() {

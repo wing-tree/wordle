@@ -211,7 +211,7 @@ class PlayViewModel @Inject constructor(
                         if (line.matches(word.value)) {
                             win()
                         } else {
-                            if (playBoard.isRoundOver) {
+                            if (playBoard.isGameOver) {
                                 playResult.value = PlayResult.RoundOver(playBoard.isRoundAdded)
                             } else {
                                 playBoard.incrementRound()
@@ -289,27 +289,27 @@ class PlayViewModel @Inject constructor(
         }
     }
 
-    fun consumeItem(type: Item.Type) {
-        if (isItemAvailable(type).not()) { return }
+    fun consumeItem(item: Item) {
+        if (isItemAvailable(item).not()) { return }
 
         viewModelScope.launch {
-            consume(type)
+            consume(item)
                 .onFailure { Timber.e(it) }
                 .onSuccess {
                     when(it) {
-                        Item.Type.Eraser -> onEraserConsumed()
-                        Item.Type.Hint -> onHintConsumed()
-                        Item.Type.OneMoreTry -> onOneMoreTryConsumed()
+                        Item.Eraser -> onEraserConsumed()
+                        Item.Hint -> onHintConsumed()
+                        Item.OneMoreTry -> onOneMoreTryConsumed()
                     }
                 }
         }
     }
 
-    private fun isItemAvailable(type: Item.Type) = when(type) {
-        Item.Type.Eraser -> isEraserAvailable
-        Item.Type.Hint -> isHintAvailable
-        Item.Type.OneMoreTry -> isOneMoreTryAvailable
-        else -> throw IllegalArgumentException("$type")
+    private fun isItemAvailable(item: Item) = when(item) {
+        Item.Eraser -> isEraserAvailable
+        Item.Hint -> isHintAvailable
+        Item.OneMoreTry -> isOneMoreTryAvailable
+        else -> throw IllegalArgumentException("$item")
     }
 
     private fun onEraserConsumed() {

@@ -10,8 +10,8 @@ import javax.inject.Inject
 class ConsumeItemCountUseCase @Inject constructor(
     private val repository: ItemCountRepository,
     @IOCoroutineDispatcher coroutineDispatcher: CoroutineDispatcher
-) : CoroutineUseCase<Item.Type, Result<Item.Type>>(coroutineDispatcher) {
-    override suspend fun execute(parameter: Item.Type): Result<Item.Type> {
+) : CoroutineUseCase<Item, Result<Item>>(coroutineDispatcher) {
+    override suspend fun execute(parameter: Item): Result<Item> {
         return repository.consume(parameter)
     }
 }

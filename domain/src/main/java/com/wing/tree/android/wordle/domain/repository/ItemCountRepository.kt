@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface ItemCountRepository {
     fun get(): Flow<ItemCount>
-    suspend fun consume(type: Item.Type): Result<Item.Type>
+    suspend fun consume(type: Item): Result<Item>
 }

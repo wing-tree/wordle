@@ -50,7 +50,7 @@ fun AlphabetKey.toDomainModel(): Key.Alphabet {
 fun DomainPlayBoard.toDataModel(): PlayBoard {
     return PlayBoard.newBuilder()
         .setRound(round)
-        .setMaximumRound(maximumRound)
+        .setMaximumRound(lastRound)
         .addAllLine(lines.map { it.toDataModel() })
         .build()
 }
@@ -63,7 +63,7 @@ fun PlayBoard.toDomainModel(): DomainPlayBoard {
 
     return object : DomainPlayBoard {
         override val round: Int = playBoard.round
-        override val maximumRound: Int = playBoard.maximumRound
+        override val lastRound: Int = playBoard.maximumRound
         override val lines: List<DomainLine> = lines
     }
 }

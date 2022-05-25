@@ -9,7 +9,7 @@ interface Word : Iterable<Char> {
             private var index = 0
 
             override fun hasNext(): Boolean {
-                return index <= value.lastIndex
+                return index < value.length
             }
 
             override fun next(): Char {

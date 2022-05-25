@@ -1,6 +1,6 @@
 package com.wing.tree.android.wordle.presentation.delegate.play
 
-import com.wing.tree.android.wordle.domain.model.item.Item.Type
+import com.wing.tree.android.wordle.domain.model.item.Item
 import com.wing.tree.android.wordle.domain.model.item.ItemCount
 import com.wing.tree.android.wordle.domain.usecase.billing.ConsumeCreditsUseCase
 import com.wing.tree.android.wordle.domain.usecase.core.getOrDefault
@@ -25,22 +25,22 @@ class ItemConsumerImpl(
         })
     }
 
-    override suspend fun consume(type: Type): Result<Type> {
+    override suspend fun consume(item: Item): Result<Item> {
         val result = itemCount.first()
-        val itemCount = when(type) {
-            Type.Eraser -> result.eraser
-            Type.Hint -> result.hint
-            Type.OneMoreTry -> result.oneMoreTry
-            else -> throw IllegalArgumentException("$type")
+        val itemCount = when(item) {
+            Item.Eraser -> result.eraser
+            Item.Hint -> result.hint
+            Item.OneMoreTry -> result.oneMoreTry
+            else -> throw IllegalArgumentException("$item")
         }
 
         return if (itemCount > 0) {
-            consumeItemCountUseCase(type).getOrNull() ?: Result.failure(NullPointerException("$type"))
+            consumeItemCountUseCase(item).getOrNull() ?: Result.failure(NullPointerException("$item"))
         } else {
-            if (consumeCreditsUseCase(type.credits).getOrDefault(false)) {
-                Result.success(type)
+            if (consumeCreditsUseCase(item.credits).getOrDefault(false)) {
+                Result.success(item)
             } else {
-                Result.failure(NotEnoughCreditException("$type"))
+                Result.failure(NotEnoughCreditException("$item"))
             }
         }
     }
