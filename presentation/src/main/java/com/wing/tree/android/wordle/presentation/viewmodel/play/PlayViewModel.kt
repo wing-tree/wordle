@@ -215,9 +215,9 @@ class PlayViewModel @Inject constructor(
                             }
                         }
                     }
-                } else {
-                    commitCallback(result)
                 }
+
+                commitCallback(result)
             }
         }
     }
@@ -254,7 +254,6 @@ class PlayViewModel @Inject constructor(
 
     @DelicateCoroutinesApi
     private fun updateStatistics(result: Result) {
-        val round = playBoard.value?.round ?: 0
         val parameter = UpdateStatisticsUseCase.Parameter(result, round)
 
         GlobalScope.launch(ioDispatcher) {
@@ -311,7 +310,7 @@ class PlayViewModel @Inject constructor(
     }
 
     private fun onEraserConsumed() {
-        _keyboard.setValueAfter { erase(word.value) }
+        _keyboard.setValueAfter { erase(answer) }
     }
 
     private fun onHintConsumed() {
