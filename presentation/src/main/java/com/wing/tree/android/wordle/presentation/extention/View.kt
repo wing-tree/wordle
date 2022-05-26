@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewPropertyAnimator
 import android.view.animation.*
 import android.widget.TextView
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.android.wordle.presentation.R
@@ -16,13 +18,19 @@ fun View.fadeIn(
     duration: Long = Duration.Animation.FADE_IN,
     alphaFrom: Float = 0.0F,
     onAnimationEnd: (() -> Unit)? = null
-): ViewPropertyAnimator {
+): ViewPropertyAnimator? {
+    if (isVisible) {
+        onAnimationEnd?.invoke()
+
+        return null
+    }
+
     this.apply {
         alpha = alphaFrom
         visibility = View.VISIBLE
 
         return@fadeIn animate()
-            .alpha(1.0f)
+            .alpha(1.0F)
             .setDuration(duration)
             .setInterpolator(DecelerateInterpolator())
             .setListener(object : AnimatorListenerAdapter() {
@@ -37,7 +45,13 @@ fun View.fadeOut(
     duration: Long = Duration.Animation.FADE_OUT,
     invisible: Boolean = false,
     onAnimationEnd: (() -> Unit)? = null
-): ViewPropertyAnimator {
+): ViewPropertyAnimator? {
+    if (isVisible.not()) {
+        onAnimationEnd?.invoke()
+
+        return null
+    }
+
     this.apply {
         alpha = 1.0F
 

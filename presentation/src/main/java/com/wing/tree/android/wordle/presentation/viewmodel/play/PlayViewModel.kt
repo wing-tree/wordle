@@ -186,7 +186,6 @@ class PlayViewModel @Inject constructor(
         playBoard.value?.runsAnimation?.set(value)
     }
 
-    // 콜백 너무많다.. todo 콜백 좀 줄입시더.
     @DelicateCoroutinesApi
     fun submit(@MainThread commitCallback: (kotlin.Result<Line>) -> Unit) {
         val currentLine = playBoard.value?.currentLine ?: return

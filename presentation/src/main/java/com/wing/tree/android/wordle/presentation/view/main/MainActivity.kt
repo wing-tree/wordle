@@ -12,6 +12,8 @@ import com.google.android.gms.ads.*
 import com.wing.tree.android.wordle.presentation.BuildConfig
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.ActivityMainBinding
+import com.wing.tree.android.wordle.presentation.extention.fadeIn
+import com.wing.tree.android.wordle.presentation.extention.fadeOut
 import com.wing.tree.android.wordle.presentation.util.startActivity
 import com.wing.tree.android.wordle.presentation.view.base.BaseActivity
 import com.wing.tree.android.wordle.presentation.view.onboarding.OnBoardingActivity
@@ -40,8 +42,18 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private val onDestinationChangedListener by lazy {
         NavController.OnDestinationChangedListener { _, destination, _ ->
             when(destination.id) {
-                R.id.billingFragment -> viewBinding.linearLayoutCredits.isClickable = false
-                else -> viewBinding.linearLayoutCredits.isClickable = true
+                R.id.billingFragment -> {
+                    viewBinding.imageViewArrowBack.fadeIn()
+                    viewBinding.linearLayoutCredits.isClickable = false
+                }
+                R.id.mainFragment -> {
+                    viewBinding.imageViewArrowBack.fadeOut()
+                    viewBinding.linearLayoutCredits.isClickable = true
+                }
+                else -> {
+                    viewBinding.imageViewArrowBack.fadeIn()
+                    viewBinding.linearLayoutCredits.isClickable = true
+                }
             }
         }
     }
@@ -119,6 +131,10 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     override fun bind(viewBinding: ActivityMainBinding) {
         with(viewBinding) {
+            imageViewArrowBack.setOnClickListener {
+                onBackPressed()
+            }
+
             linearLayoutCredits.setOnClickListener {
                 lifecycleScope.launch {
                     delay(120L)
