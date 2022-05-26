@@ -9,7 +9,7 @@ import javax.inject.Inject
 class WordRepositoryImpl @Inject constructor(private val dataSource: WordDataSource): WordRepository {
     override suspend fun contains(letters: String): Boolean {
        return runCatching {
-            dataSource.get(letters).notNull
+            dataSource.get(letters).notNull()
         }.getOrDefault(false)
     }
 

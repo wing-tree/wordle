@@ -1,11 +1,24 @@
 package com.wing.tree.android.wordle.domain.util
 
 import java.lang.ref.WeakReference
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
-val Any?.isNull get() = this == null
-val Any?.notNull: Boolean get() = isNull.not()
+@OptIn(ExperimentalContracts::class)
+fun Any?.isNull(): Boolean {
+    contract { returns(true) implies (this@isNull == null) }
+
+    return this == null
+}
+
+@OptIn(ExperimentalContracts::class)
+fun Any?.notNull(): Boolean {
+    contract { returns(true) implies (this@notNull != null) }
+
+    return this != null
+}
 
 val Int.float get() = toFloat()
 
