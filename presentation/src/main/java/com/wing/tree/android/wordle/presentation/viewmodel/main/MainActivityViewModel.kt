@@ -21,7 +21,6 @@ import com.wing.tree.wordle.billing.skus.Skus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger

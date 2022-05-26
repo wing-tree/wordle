@@ -70,11 +70,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         navController?.addOnDestinationChangedListener(onDestinationChangedListener)
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.RESUMED) {
-                viewModel.credits.collectLatest {
-                    viewBinding.rollingTextViewCredits.setText("$it")
-                }
+        lifecycleScope.launchWhenResumed {
+            viewModel.credits.collectLatest {
+                viewBinding.rollingTextViewCredits.setText("$it")
             }
         }
 
