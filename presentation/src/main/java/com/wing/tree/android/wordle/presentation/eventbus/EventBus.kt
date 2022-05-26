@@ -1,6 +1,6 @@
 package com.wing.tree.android.wordle.presentation.eventbus
 
-import com.wing.tree.android.wordle.domain.util.notNull
+import com.wing.tree.android.wordle.domain.util.isNotNull
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -24,7 +24,7 @@ class EventBus {
         fun getInstance(): EventBus {
             val eventBus = INSTANCE
 
-            return if (eventBus.notNull()) {
+            return if (eventBus.isNotNull()) {
                 eventBus
             } else {
                 EventBus().also {
