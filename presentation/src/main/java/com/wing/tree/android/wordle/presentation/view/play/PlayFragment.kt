@@ -27,6 +27,7 @@ import com.wing.tree.wordle.core.util.half
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
@@ -132,8 +133,8 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             isAdsRemoved.set(it)
         }
 
-        lifecycleScope.launch {
-            viewModel.itemCount.collect {
+        lifecycleScope.launchWhenResumed {
+            viewModel.itemCount.collectLatest {
                 viewBinding.itemFloatingActionButtonEraser.count = it.eraser
                 viewBinding.itemFloatingActionButtonHint.count = it.hint
             }

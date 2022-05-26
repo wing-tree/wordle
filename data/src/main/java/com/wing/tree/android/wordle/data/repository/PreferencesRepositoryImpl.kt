@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import com.wing.tree.android.wordle.domain.repository.PreferencesRepository
+import com.wing.tree.wordle.core.exception.NotEnoughCreditException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
@@ -51,7 +52,7 @@ class PreferencesRepositoryImpl @Inject constructor(private val dataStore: DataS
                     val value = this?.minus(credits) ?: -1
 
                     if (value < 0) {
-                        throw IllegalArgumentException("$value")
+                        throw NotEnoughCreditException("$value")
                     } else {
                         it[Key.Credits] = value
                     }

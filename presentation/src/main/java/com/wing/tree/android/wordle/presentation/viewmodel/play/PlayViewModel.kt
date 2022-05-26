@@ -17,10 +17,13 @@ import com.wing.tree.android.wordle.domain.usecase.statistics.UpdateStatisticsUs
 import com.wing.tree.android.wordle.domain.usecase.word.ContainsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetWordUseCase
 import com.wing.tree.android.wordle.presentation.delegate.play.*
+import com.wing.tree.android.wordle.presentation.eventbus.Event
+import com.wing.tree.android.wordle.presentation.eventbus.EventBus
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toDomainModel
 import com.wing.tree.android.wordle.presentation.model.play.*
 import com.wing.tree.android.wordle.presentation.util.setValueAfter
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
+import com.wing.tree.wordle.core.exception.NotEnoughCreditException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
@@ -290,7 +293,17 @@ class PlayViewModel @Inject constructor(
 
         viewModelScope.launch {
             consume(item)
-                .onFailure { Timber.e(it) }
+                .onFailure { throwable ->
+                    when(throwable) {
+                        is NotEnoughCreditException -> {
+                            val event = Event.Exception.NotEnoughCredits
+
+                            EventBus.getInstance().produceEvent(event)
+                        }
+                    }
+
+                    Timber.e(throwable)
+                }
                 .onSuccess {
                     when(it) {
                         Item.Eraser -> onEraserConsumed()

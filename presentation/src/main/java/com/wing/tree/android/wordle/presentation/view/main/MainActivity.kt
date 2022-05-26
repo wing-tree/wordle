@@ -12,6 +12,8 @@ import com.google.android.gms.ads.*
 import com.wing.tree.android.wordle.presentation.BuildConfig
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.ActivityMainBinding
+import com.wing.tree.android.wordle.presentation.eventbus.Event
+import com.wing.tree.android.wordle.presentation.eventbus.EventBus
 import com.wing.tree.android.wordle.presentation.extention.fadeIn
 import com.wing.tree.android.wordle.presentation.extention.fadeOut
 import com.wing.tree.android.wordle.presentation.util.startActivity
@@ -73,6 +75,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
         lifecycleScope.launchWhenResumed {
             viewModel.credits.collectLatest {
                 viewBinding.rollingTextViewCredits.setText("$it")
+            }
+        }
+
+        lifecycleScope.launchWhenResumed {
+            EventBus.getInstance().subscribeEvent<Event.Exception.NotEnoughCredits> {
+                val directions = PlayFragmentDirections.actionPlayFragmentToBillingFragment()
+
+                navigate(directions)
             }
         }
 
