@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="50dp"
+    android:layout_height="52dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
@@ -16,11 +16,12 @@
         tools:src="@drawable/ic_round_search_24"
         tools:ignore="ContentDescription" />
 
-    <TextView
-        android:id="@+id/text_view_count"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
+    <com.yy.mobile.rollingtextview.RollingTextView
+        android:id="@+id/rolling_text_view_count"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_gravity="bottom|end"
+        android:layout_marginBottom="1dp"
         android:background="@drawable/background_count"
         android:elevation="6dp"
         android:gravity="center"
@@ -28,17 +29,24 @@
         android:textColor="@color/white"
         android:textSize="12dp"
         android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/text_view_hint"
         app:layout_constraintTop_toTopOf="@+id/text_view_hint"
-        tools:text="3" />
+        tools:text="3"
+        tools:visibility="visible"/>
 
     <LinearLayout
         android:id="@+id/linear_layout_credits"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
+        android:background="@drawable/rounded_corners_12"
         android:elevation="6dp"
         android:gravity="center"
+        android:paddingBottom="1dp"
+        android:paddingEnd="4dp"
+        android:paddingStart="4dp"
+        android:paddingTop="1dp"
         android:orientation="horizontal"
         android:visibility="gone"
         tools:ignore="UseCompoundDrawables"
@@ -47,12 +55,16 @@
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:src="@drawable/ic_coins_96px"/>
+            android:layout_marginTop="0.5dp"
+            android:src="@drawable/ic_coins_96px"
+            app:tint="@color/white"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/text_view_credits"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
             android:textSize="12dp"
             android:textStyle="bold"
             tools:text="120"/>
