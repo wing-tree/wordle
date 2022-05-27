@@ -2,6 +2,8 @@
   <dictionary name="seongjukim">
     <words>
       <w>constraintlayout</w>
+      <w>fileprovider</w>
+      <w>fileproviders</w>
       <w>playstate</w>
       <w>wordle</w>
     </words>
