@@ -19,6 +19,8 @@ import com.wing.tree.android.wordle.presentation.extention.shake
 import com.wing.tree.android.wordle.presentation.extention.smoothSnapToPosition
 import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.model.play.ViewState
+import com.wing.tree.android.wordle.presentation.util.captureScreen
+import com.wing.tree.android.wordle.presentation.util.sendPngImage
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityViewModel
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
@@ -76,6 +78,14 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
     override fun bind(viewBinding: FragmentPlayBinding) {
         with(viewBinding) {
+            buttonAsk.setOnClickListener {
+                requireActivity().captureScreen({
+                    requireActivity().sendPngImage(it)
+                }) {
+
+                }
+            }
+
             recyclerView.apply {
                 addItemDecoration(ItemDecoration())
                 recycledViewPool.setMaxRecycledViews(0, 0)

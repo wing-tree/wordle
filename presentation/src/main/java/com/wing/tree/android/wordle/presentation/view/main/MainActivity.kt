@@ -1,5 +1,6 @@
 package com.wing.tree.android.wordle.presentation.view.main
 
+import android.app.Activity
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.activity.viewModels
 import androidx.lifecycle.Lifecycle
@@ -30,6 +31,29 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.io.IOException
+
+import java.io.FileNotFoundException
+
+import android.graphics.Bitmap.CompressFormat
+
+import android.os.Environment
+
+import java.io.FileOutputStream
+
+import android.graphics.Bitmap
+import android.graphics.Rect
+import android.os.Handler
+import android.view.PixelCopy
+
+import android.view.View
+import androidx.annotation.RequiresApi
+import java.io.File
+import android.net.Uri
+
+
+
+
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>() {

@@ -29,6 +29,29 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/app_id" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.wing.tree.android.wordle.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths" />
+        </provider>
+
     </application>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.CHOOSER" />
+        </intent>
+
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="image/png" />
+        </intent>
+    </queries>
 
 </manifest>

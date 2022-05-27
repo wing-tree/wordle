@@ -5,6 +5,7 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.225" />
         <entry key="../../.gradle/caches/transforms-3/64bea319aab146c9868ba88c587dc0f2/transformed/jetified-circleindicator-2.1.6/res/drawable/white_radius.xml" value="0.36302083333333335" />
+        <entry key="app/src/main/res/xml/file_provider_paths.xml" value="0.17604166666666668" />
         <entry key="presentation/src/main/res/drawable/background_count.xml" value="0.3764102564102564" />
         <entry key="presentation/src/main/res/drawable/background_credits.xml" value="0.3764102564102564" />
         <entry key="presentation/src/main/res/drawable/background_image_button.xml" value="0.18020833333333333" />
@@ -67,6 +68,7 @@
         <entry key="presentation/src/main/res/layout/statistics_view.xml" value="0.4668769716088328" />
         <entry key="presentation/src/main/res/layout/stats_item.xml" value="0.3938622763520591" />
         <entry key="presentation/src/main/res/layout/switch_preference_item.xml" value="0.19895833333333332" />
+        <entry key="presentation/src/main/res/xml/file_provider_paths.xml" value="0.17604166666666668" />
       </map>
     </option>
   </component>
