@@ -43,19 +43,15 @@ class PlayBoard {
         }
     }
 
-    fun availableHints(answer: String): List<Letter> {
-        val distinct = filterIsState<In.Matched>().map { it.position }.distinct()
+    fun hints(answer: String): List<Letter> {
+        return MutableList(WORD_LENGTH) { Letter(it, answer[it]) }.apply {
+            val distinct = filterIsState<In.Matched>().distinct()
 
-        return mutableListOf<Letter>().apply {
-            answer.forEachIndexed { index, letter ->
-                if (index !in distinct) {
-                    add(Letter(index, letter))
-                }
-            }
+            removeAll(distinct)
         }
     }
 
-    fun isHintAvailable(answer: String) = availableHints(answer).count() > 1
+    fun isHintAvailable(answer: String) = hints(answer).count() > 1
 
     fun removeAt(attempt: Int, index: Int) {
         try {
@@ -103,12 +99,12 @@ class PlayBoard {
                     _round = playBoard.round
                     _lastRound = playBoard.lastRound
 
-                    if (lines.size < lastRound) {
-                        _lines.add(Line(lastRound.dec()))
-                    }
-
                     playBoard.lines.forEachIndexed { index, line ->
-                        _lines[index] = line.toPresentationModel()
+                        if (index < lines.size) {
+                            _lines[index] = line.toPresentationModel()
+                        } else {
+                            _lines.add(line.toPresentationModel())
+                        }
                     }
                 }
             } catch (indexOutOfBoundsException: IndexOutOfBoundsException) {

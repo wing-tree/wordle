@@ -242,7 +242,6 @@ class PlayViewModel @Inject constructor(
                 word = word
             )
 
-            _viewState
             playResult.value = lose
         }
     }
@@ -326,14 +325,13 @@ class PlayViewModel @Inject constructor(
     }
 
     private fun onHintConsumed() {
-        playBoard.value?.let { submitLetter(it.availableHints(answer).random()) }
+        playBoard.value?.let { submitLetter(it.hints(answer).random()) }
     }
 
     private fun onOneMoreTryConsumed() {
-        playResult.value = PlayResult.Undefined
-        _viewState.value = ViewState.Play
-
         _playBoard.setValueAfter { addRound() }
+        _viewState.value = ViewState.Play
+        playResult.value = PlayResult.Undefined
     }
 
     fun playAgain() {

@@ -243,13 +243,11 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         }
     }
 
-    private fun playAgain() {
-        with(viewBinding.recyclerView) {
-            fadeOut {
-                removeAllViews()
-                viewModel.playAgain()
-                fadeIn()
-            }
+    private fun playAgain() = with(viewBinding.recyclerView) {
+        fadeOut {
+            removeAllViews()
+            viewModel.playAgain()
+            fadeIn()
         }
     }
 }
