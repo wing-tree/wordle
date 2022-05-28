@@ -31,14 +31,14 @@ fun Keyboard.toDomainModel(): DomainKeyboard {
     }
 }
 
-fun Key.Alphabet.toDataModel(): AlphabetKey {
-    return AlphabetKey.newBuilder()
+fun Key.Alphabet.toDataModel(): Keyboard.Alphabet {
+    return Keyboard.Alphabet.newBuilder()
         .setLetter(letter)
         .setState(state)
         .build()
 }
 
-fun AlphabetKey.toDomainModel(): Key.Alphabet {
+fun Keyboard.Alphabet.toDomainModel(): Key.Alphabet {
     val alphabet = this
 
     return object : Key.Alphabet {
@@ -50,7 +50,7 @@ fun AlphabetKey.toDomainModel(): Key.Alphabet {
 fun DomainPlayBoard.toDataModel(): PlayBoard {
     return PlayBoard.newBuilder()
         .setRound(round)
-        .setMaximumRound(lastRound)
+        .setLastRound(lastRound)
         .addAllLine(lines.map { it.toDataModel() })
         .build()
 }
@@ -63,7 +63,7 @@ fun PlayBoard.toDomainModel(): DomainPlayBoard {
 
     return object : DomainPlayBoard {
         override val round: Int = playBoard.round
-        override val lastRound: Int = playBoard.maximumRound
+        override val lastRound: Int = playBoard.lastRound
         override val lines: List<DomainLine> = lines
     }
 }

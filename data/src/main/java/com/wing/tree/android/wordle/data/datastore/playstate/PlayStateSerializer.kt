@@ -18,17 +18,17 @@ object PlayStateSerializer : Serializer<PlayState> {
         .build()
 
     private val defaultKeyboard: Keyboard = Keyboard.newBuilder()
-        .addAllAlphabet(List(alphabet.size) { getDefaultAlphabetKey(alphabet[it]) })
+        .addAllAlphabet(List(alphabet.size) { getDefaultAlphabet(alphabet[it]) })
         .build()
 
-    private fun getDefaultAlphabetKey(letter: String): AlphabetKey = AlphabetKey.newBuilder()
+    private fun getDefaultAlphabet(letter: String): Keyboard.Alphabet = Keyboard.Alphabet.newBuilder()
         .setLetter(letter)
         .setState(Key.Alphabet.State.UNDEFINED)
         .build()
 
     private val defaultPlayBoard: PlayBoard = PlayBoard.newBuilder()
         .setRound(0)
-        .setMaximumRound(MAXIMUM_ROUND)
+        .setLastRound(MAXIMUM_ROUND)
         .addAllLine(List(MAXIMUM_ROUND) { getDefaultLine(it) })
         .build()
 
@@ -46,6 +46,7 @@ object PlayStateSerializer : Serializer<PlayState> {
         .setState(UNDEFINED)
         .build()
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun readFrom(input: InputStream): PlayState {
         try {
             return PlayState.parseFrom(input)
@@ -54,5 +55,6 @@ object PlayStateSerializer : Serializer<PlayState> {
         }
     }
 
+    @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun writeTo(t: PlayState, output: OutputStream) = t.writeTo(output)
 }

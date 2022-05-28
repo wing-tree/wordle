@@ -10,17 +10,17 @@ message PlayState {
 }
 
 message Keyboard {
-  repeated AlphabetKey alphabet = 1;
-}
+  repeated Alphabet alphabet = 1;
 
-message AlphabetKey {
-  string letter = 1;
-  int32 state = 2;
+  message Alphabet {
+    string letter = 1;
+    int32 state = 2;
+  }
 }
 
 message PlayBoard {
   int32 round = 1;
-  int32 maximum_round = 2;
+  int32 last_round = 2;
   repeated Line line = 3;
 }
 
