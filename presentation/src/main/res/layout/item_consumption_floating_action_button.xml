@@ -23,7 +23,7 @@
         android:layout_height="18dp"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="1dp"
-        android:background="@drawable/background_count"
+        android:background="@drawable/background_item_count"
         android:elevation="6dp"
         android:gravity="center"
         android:includeFontPadding="false"

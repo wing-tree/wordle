@@ -9,8 +9,8 @@ import com.wing.tree.wordle.billing.skus.Skus
 import timber.log.Timber
 
 object BillingDelegateImpl : BillingDelegate {
-    private val consumableSkusList = Skus.consumableList
-    private val skusList = Skus.list
+    private val consumableSkusList = Skus.consumable
+    private val skusList = Skus.all
 
     private val purchasesUpdatedListener by lazy {
         PurchasesUpdatedListener { billingResult, purchases ->

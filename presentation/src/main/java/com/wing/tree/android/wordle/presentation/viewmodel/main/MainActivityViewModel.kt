@@ -88,12 +88,15 @@ class MainActivityViewModel @Inject constructor(
                 GlobalScope.launch(ioDispatcher) {
                     val skus = purchase.skus
 
-                    when {
-                        Skus.CREDITS_240 in skus -> purchaseCreditsUseCase(240)
-                        Skus.CREDITS_720 in skus -> purchaseCreditsUseCase(720)
-                        Skus.CREDITS_2000 in skus -> purchaseCreditsUseCase(2000)
-                        Skus.CREDITS_6000 in skus -> purchaseCreditsUseCase(6000)
+                    val credits = when {
+                        Skus.CREDITS_240 in skus -> Skus.credits[Skus.CREDITS_240]
+                        Skus.CREDITS_720 in skus -> Skus.credits[Skus.CREDITS_720]
+                        Skus.CREDITS_2000 in skus -> Skus.credits[Skus.CREDITS_2000]
+                        Skus.CREDITS_6000 in skus -> Skus.credits[Skus.CREDITS_6000]
+                        else -> null
                     }
+
+                    credits?.let { purchaseCreditsUseCase(it) }
                 }
             }
 
