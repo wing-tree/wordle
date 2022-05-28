@@ -191,7 +191,7 @@ class PlayViewModel @Inject constructor(
     fun submit(@MainThread commitCallback: (kotlin.Result<Line>) -> Unit) {
         val currentLine = playBoard.value?.currentLine ?: return
 
-        if (currentLine.notBlankCount < WORD_LENGTH) {
+        if (currentLine.isNotFilled) {
             return
         }
 

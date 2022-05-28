@@ -37,7 +37,7 @@ class PlayBoard {
 
     fun add(letter: String) {
         with(currentLine) {
-            if (notBlankCount < WORD_LENGTH) {
+            if (isNotFilled) {
                 add(letter)
             }
         }

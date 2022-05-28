@@ -151,8 +151,16 @@ class KeyboardView : LinearLayout {
         isEnabled = false
     }
 
+    fun disableReturnKey() {
+        viewBinding.imageViewKeyboardReturn.isEnabled = false
+    }
+
     fun enable() {
         isEnabled = true
+    }
+
+    fun enableReturnKey() {
+        viewBinding.imageViewKeyboardReturn.isEnabled = true
     }
 
     fun submitKeyboard(keyboard: Keyboard, commitCallback: () -> Unit) {

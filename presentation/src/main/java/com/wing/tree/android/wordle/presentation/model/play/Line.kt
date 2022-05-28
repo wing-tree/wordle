@@ -4,11 +4,13 @@ import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toPresen
 import com.wing.tree.wordle.core.constant.BLANK
 import com.wing.tree.wordle.core.constant.EMPTY
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
+import com.wing.tree.wordle.core.util.isNotZero
+import com.wing.tree.wordle.core.util.isZero
 import com.wing.tree.android.wordle.domain.model.playstate.Line as DomainLine
 
 data class Line(val round: Int) : Iterable<Letter> {
     private val isNotEmpty: Boolean
-        get() = notBlankCount > 0
+        get() = currentLetters.count { it.isNotBlank } > 0
 
     private var _isSubmitted: Boolean = false
     val isSubmitted: Boolean get() = _isSubmitted
@@ -20,8 +22,8 @@ data class Line(val round: Int) : Iterable<Letter> {
     val previousLetters: Array<Letter> = Array(WORD_LENGTH) { Letter(position = it) }
     val undefinedLetters: List<Letter> get() = currentLetters.filterWithState<Letter.State.Undefined>()
 
-    val notBlankCount: Int
-        get() = currentLetters.count { it.isNotBlank }
+    val isFilled: Boolean get() = currentLetters.count { it.isBlank }.isZero
+    val isNotFilled: Boolean get() = isFilled.not()
 
     val proximity: Int get() = currentLetters.sumOf { it.state.priority }
 
@@ -39,7 +41,7 @@ data class Line(val round: Int) : Iterable<Letter> {
     }
 
     fun add(letter: String) {
-        if (notBlankCount < WORD_LENGTH) {
+        if (isNotFilled) {
             backup()
 
             val index = currentLetters.indexOfFirst { it.value.isBlank() }

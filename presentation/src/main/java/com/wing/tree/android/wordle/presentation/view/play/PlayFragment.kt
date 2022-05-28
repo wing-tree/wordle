@@ -141,12 +141,18 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         }
 
         viewModel.playBoard.observe(viewLifecycleOwner) {
+            if (it.currentLine.isFilled) {
+                viewBinding.keyboardView.enableReturnKey()
+            } else {
+                viewBinding.keyboardView.disableReturnKey()
+            }
+
             playBoardListAdapter.submitPlayBoard(it) {
                 it.runsAnimation.set(true)
 
                 if (it.isRoundAdded) {
                     lifecycleScope.launch {
-                        delay(240L)
+                        delay(Duration.SHORT)
                         viewBinding.recyclerView.smoothSnapToPosition(it.round)
                     }
                 }
