@@ -23,6 +23,7 @@
     <color name="orange_300">#FFB74D</color>
     <color name="orange_400">#FFA726</color>
     <color name="grey_200">#FFEEEEEE</color>
+    <color name="grey_700">#FF616161</color>
     <color name="grey_800">#FF424242</color>
     <color name="grey_900">#FF212121</color>
 
@@ -33,10 +34,15 @@
     <color name="button">@color/green_500</color>
     <color name="surface">@color/white</color>
 
-    <color name="undefined">@android:color/transparent</color>
-    <color name="not_in">@color/black</color>
-    <color name="mismatched">@color/yellow_500</color>
-    <color name="matched">@color/green_500</color>
+    <color name="key_undefined">@color/white</color>
+    <color name="key_not_in">@color/grey_700</color>
+    <color name="key_mismatched">@color/yellow_500</color>
+    <color name="key_matched">@color/green_500</color>
+
+    <color name="letter_undefined">@android:color/transparent</color>
+    <color name="letter_not_in">@color/grey_700</color>
+    <color name="letter_mismatched">@color/yellow_500</color>
+    <color name="letter_matched">@color/green_500</color>
 
     <color name="background_count">@color/pink_600</color>
     <color name="background_credits">#61000000</color>

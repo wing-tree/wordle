@@ -4,7 +4,9 @@
 
     <string name="an_error_occurred">an error occurred</string>
     <string name="answer">answer</string>
+    <string name="ask">ask</string>
     <string name="done">done</string>
+    <string name="enter">enter</string>
     <string name="eraser">eraser</string>
     <string name="examples">examples</string>
     <string name="hint">hint</string>

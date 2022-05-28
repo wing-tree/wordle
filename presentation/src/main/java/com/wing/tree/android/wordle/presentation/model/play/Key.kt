@@ -43,26 +43,26 @@ sealed class Key {
         }
 
         data class Undefined(
-            override val backgroundColorRes: Int = R.color.undefined,
+            override val backgroundColorRes: Int = R.color.key_undefined,
             override val priority: Int = Priority.UNDEFINED,
             override val textColorRes: Int = R.color.text
         ): State()
 
         data class NotIn(
-            override val backgroundColorRes: Int = R.color.not_in,
+            override val backgroundColorRes: Int = R.color.key_not_in,
             override val priority: Int = Priority.NOT_IN,
             override val textColorRes: Int = R.color.disabled
         ): State()
 
         sealed class In : State() {
             data class Mismatched(
-                override val backgroundColorRes: Int = R.color.mismatched,
+                override val backgroundColorRes: Int = R.color.key_mismatched,
                 override val priority: Int = Priority.MISMATCHED,
                 override val textColorRes: Int = R.color.black
             ) : In()
 
             data class Matched(
-                override val backgroundColorRes: Int = R.color.matched,
+                override val backgroundColorRes: Int = R.color.key_matched,
                 override val priority: Int = Priority.MATCHED,
                 override val textColorRes: Int = R.color.white
             ) : In()

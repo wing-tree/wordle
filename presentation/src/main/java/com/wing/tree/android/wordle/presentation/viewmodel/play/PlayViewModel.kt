@@ -97,7 +97,7 @@ class PlayViewModel @Inject constructor(
                         _playBoard.postValue(PlayBoard())
                     }
 
-                    if (word.isBlank()) {
+                    if (answer.isBlank()) {
                         word = loadAtRandom() ?: run {
                             Timber.e(NullPointerException())
                             Word.Sorry

@@ -84,12 +84,8 @@ class PlayBoard {
         ++_round
     }
 
-    private inline fun <reified R: State> List<Letter>.filterIsState(): List<Letter> {
-        return filter { it.state is R }
-    }
-
     private inline fun <reified R: State> filterIsState(): List<Letter> {
-        return letters.filterIsState<R>()
+        return letters.filter { it.state is R }
     }
 
     companion object {

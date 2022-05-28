@@ -6,6 +6,16 @@
 
     <color name="surface">@color/dark_charcoal</color>
 
+    <color name="key_undefined">@color/grey_800</color>
+    <color name="key_not_in">@color/dark_grey</color>
+    <color name="key_mismatched">@color/yellow_500</color>
+    <color name="key_matched">@color/green_500</color>
+
+    <color name="letter_undefined">@android:color/transparent</color>
+    <color name="letter_not_in">@color/dark_grey</color>
+    <color name="letter_mismatched">@color/yellow_500</color>
+    <color name="letter_matched">@color/green_500</color>
+
     <color name="background_credits">#61FFFFFF</color>
     <color name="icon">@color/white</color>
     <color name="text">@color/white</color>

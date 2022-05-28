@@ -4,8 +4,6 @@ interface Word : Iterable<Char> {
     val index: Int
     val value: String
 
-    fun isBlank() = value.isBlank()
-
     override fun iterator(): Iterator<Char> {
         return object : Iterator<Char> {
             private var index = 0

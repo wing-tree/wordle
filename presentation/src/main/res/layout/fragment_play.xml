@@ -19,14 +19,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/button_ask"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ask_to_friends"
-        app:layout_constraintBottom_toBottomOf="@+id/recycler_view"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout"
         android:layout_width="0dp"
@@ -73,10 +65,11 @@
             style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/submit"
+            android:text="@string/enter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:icon="@drawable/ic_round_keyboard_return_24" />
 
         <ImageView
             android:id="@+id/image_view_backspace"

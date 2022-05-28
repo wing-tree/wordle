@@ -1,22 +1,22 @@
 package com.wing.tree.android.wordle.presentation.view.main
 
-import android.app.Activity
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.activity.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.gms.ads.*
 import com.wing.tree.android.wordle.presentation.BuildConfig
 import com.wing.tree.android.wordle.presentation.R
+import com.wing.tree.android.wordle.presentation.constant.Duration
 import com.wing.tree.android.wordle.presentation.databinding.ActivityMainBinding
 import com.wing.tree.android.wordle.presentation.eventbus.Event
 import com.wing.tree.android.wordle.presentation.eventbus.EventBus
 import com.wing.tree.android.wordle.presentation.extention.fadeIn
 import com.wing.tree.android.wordle.presentation.extention.fadeOut
+import com.wing.tree.android.wordle.presentation.util.captureScreen
+import com.wing.tree.android.wordle.presentation.util.sendPngImage
 import com.wing.tree.android.wordle.presentation.util.startActivity
 import com.wing.tree.android.wordle.presentation.view.base.BaseActivity
 import com.wing.tree.android.wordle.presentation.view.onboarding.OnBoardingActivity
@@ -31,29 +31,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.io.IOException
-
-import java.io.FileNotFoundException
-
-import android.graphics.Bitmap.CompressFormat
-
-import android.os.Environment
-
-import java.io.FileOutputStream
-
-import android.graphics.Bitmap
-import android.graphics.Rect
-import android.os.Handler
-import android.view.PixelCopy
-
-import android.view.View
-import androidx.annotation.RequiresApi
-import java.io.File
-import android.net.Uri
-
-
-
-
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>() {
@@ -67,18 +44,28 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
     private val onDestinationChangedListener by lazy {
         NavController.OnDestinationChangedListener { _, destination, _ ->
-            when(destination.id) {
-                R.id.billingFragment -> {
-                    viewBinding.imageViewArrowBack.fadeIn()
-                    viewBinding.linearLayoutCredits.isClickable = false
-                }
-                R.id.mainFragment -> {
-                    viewBinding.imageViewArrowBack.fadeOut()
-                    viewBinding.linearLayoutCredits.isClickable = true
-                }
-                else -> {
-                    viewBinding.imageViewArrowBack.fadeIn()
-                    viewBinding.linearLayoutCredits.isClickable = true
+            with(viewBinding) {
+                when(destination.id) {
+                    R.id.billingFragment -> {
+                        buttonAsk.fadeOut()
+                        frameLayoutCredits.isClickable = false
+                        imageViewArrowBack.fadeIn()
+                    }
+                    R.id.mainFragment -> {
+                        buttonAsk.fadeOut()
+                        frameLayoutCredits.isClickable = true
+                        imageViewArrowBack.fadeOut()
+                    }
+                    R.id.playFragment -> {
+                        buttonAsk.fadeIn()
+                        frameLayoutCredits.isClickable = true
+                        imageViewArrowBack.fadeIn()
+                    }
+                    else -> {
+                        buttonAsk.fadeOut()
+                        frameLayoutCredits.isClickable = true
+                        imageViewArrowBack.fadeIn()
+                    }
                 }
             }
         }
@@ -167,9 +154,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 onBackPressed()
             }
 
-            linearLayoutCredits.setOnClickListener {
+            buttonAsk.setOnClickListener {
+                captureScreen({
+                    sendPngImage(it)
+                }) {
+                    Timber.e(it)
+                }
+            }
+
+            frameLayoutCredits.setOnClickListener {
                 lifecycleScope.launch {
-                    delay(120L)
+                    delay(Duration.SHORT)
                     viewModel.callOnCreditsClick()
                 }
             }
@@ -177,7 +172,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             with(rollingTextViewCredits) {
                 addCharOrder(CharOrder.Number)
 
-                animationDuration = 600L
+                animationDuration = Duration.LONG
                 animationInterpolator = AccelerateDecelerateInterpolator()
                 charStrategy = Strategy.NormalAnimation()
             }
