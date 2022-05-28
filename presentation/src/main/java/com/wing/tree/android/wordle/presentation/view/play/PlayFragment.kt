@@ -3,6 +3,7 @@ package com.wing.tree.android.wordle.presentation.view.play
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -11,12 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.wing.tree.android.wordle.domain.model.item.Item
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.play.PlayBoardListAdapter
+import com.wing.tree.android.wordle.presentation.constant.Duration
 import com.wing.tree.android.wordle.presentation.databinding.FragmentPlayBinding
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegate
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegateImpl
-import com.wing.tree.android.wordle.presentation.extention.scaleUpDown
-import com.wing.tree.android.wordle.presentation.extention.shake
-import com.wing.tree.android.wordle.presentation.extention.smoothSnapToPosition
+import com.wing.tree.android.wordle.presentation.extention.*
 import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.model.play.ViewState
 import com.wing.tree.android.wordle.presentation.util.captureScreen
@@ -211,33 +211,45 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         }
     }
 
-    override fun onNoThanksClick() {
+    override fun onNoThanksClick(dialogFragment: DialogFragment) {
         viewModel.lose()
+        dialogFragment.dismiss()
     }
 
-    override fun onOneMoreTryClick() {
+    override fun onOneMoreTryClick(dialogFragment: DialogFragment) {
         viewModel.consumeItem(Item.OneMoreTry)
+        dialogFragment.dismiss()
     }
 
-    override fun onPlayAgainClick() {
-        if (isAdsRemoved.get()) {
-            playAgain()
-        } else {
-            showInterstitialAd(
-                requireActivity(),
-                onAdFailedToShowFullScreenContent = {
-                    Timber.e("$it")
-                    playAgain()
-                },
-                onAdShowedFullScreenContent = {
-                    playAgain()
-                }
-            )
+    override fun onPlayAgainClick(dialogFragment: DialogFragment) {
+        lifecycleScope.launch(mainDispatcher) {
+            dialogFragment.dismiss()
+            delay(Duration.SHORT)
+
+            if (isAdsRemoved.get()) {
+                playAgain()
+            } else {
+                showInterstitialAd(
+                    requireActivity(),
+                    onAdFailedToShowFullScreenContent = {
+                        Timber.e("$it")
+                        playAgain()
+                    },
+                    onAdShowedFullScreenContent = {
+                        playAgain()
+                    }
+                )
+            }
         }
     }
 
     private fun playAgain() {
-        viewBinding.recyclerView.removeAllViewsInLayout()
-        viewModel.playAgain()
+        with(viewBinding.recyclerView) {
+            fadeOut {
+                removeAllViews()
+                viewModel.playAgain()
+                fadeIn()
+            }
+        }
     }
 }

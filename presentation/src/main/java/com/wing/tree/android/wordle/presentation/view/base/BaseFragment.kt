@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import kotlinx.coroutines.Dispatchers
 
 abstract class BaseFragment<VB: ViewBinding> : Fragment() {
     abstract fun inflate(inflater: LayoutInflater, container: ViewGroup?): VB
@@ -17,6 +18,8 @@ abstract class BaseFragment<VB: ViewBinding> : Fragment() {
     abstract fun bind(viewBinding: VB)
 
     protected lateinit var viewBinding: VB
+
+    protected val mainDispatcher = Dispatchers.Main
 
     @CallSuper
     override fun onCreateView(

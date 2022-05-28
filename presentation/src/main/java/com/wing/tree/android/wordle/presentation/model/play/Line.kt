@@ -56,9 +56,8 @@ data class Line(val round: Int) : Iterable<Letter> {
         if (isNotEmpty) {
             if (index in 0 until WORD_LENGTH) {
                 val letter = get(index)
-                val submitted = letter.isSubmitted
 
-                if (submitted.not()) {
+                if (letter.isSubmitted.not()) {
                     backup()
                     set(index, Letter(index, BLANK))
                 }

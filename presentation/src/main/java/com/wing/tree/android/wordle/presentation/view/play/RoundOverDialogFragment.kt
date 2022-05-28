@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import com.wing.tree.android.wordle.presentation.databinding.FragmentRoundOverDialogBinding
 import com.wing.tree.android.wordle.presentation.extention.gone
 import com.wing.tree.android.wordle.presentation.extention.visible
@@ -14,9 +15,9 @@ import com.wing.tree.android.wordle.presentation.view.base.BaseDialogFragment
 
 class RoundOverDialogFragment : BaseDialogFragment<FragmentRoundOverDialogBinding>() {
     interface OnClickListener {
-        fun onOneMoreTryClick()
-        fun onNoThanksClick()
-        fun onPlayAgainClick()
+        fun onOneMoreTryClick(dialogFragment: DialogFragment)
+        fun onNoThanksClick(dialogFragment: DialogFragment)
+        fun onPlayAgainClick(dialogFragment: DialogFragment)
     }
 
     private val roundAdded by lazy { arguments?.getBoolean(Key.ROUND_ADDED) ?: false }
@@ -35,6 +36,8 @@ class RoundOverDialogFragment : BaseDialogFragment<FragmentRoundOverDialogBindin
     }
 
     override fun bind(viewBinding: FragmentRoundOverDialogBinding) {
+        val dialogFragment = this
+
         with(viewBinding) {
             if (roundAdded) {
                 materialButtonAddRound.gone()
@@ -42,19 +45,16 @@ class RoundOverDialogFragment : BaseDialogFragment<FragmentRoundOverDialogBindin
                 materialButtonAddRound.visible()
 
                 materialButtonAddRound.setOnClickListener {
-                    onClickListener?.onOneMoreTryClick()
-                    dismiss()
+                    onClickListener?.onOneMoreTryClick(dialogFragment)
                 }
             }
 
             materialButtonTryAgain.setOnClickListener {
-                onClickListener?.onPlayAgainClick()
-                dismiss()
+                onClickListener?.onPlayAgainClick(dialogFragment)
             }
 
             materialButtonNoThanks.setOnClickListener {
-                onClickListener?.onNoThanksClick()
-                dismiss()
+                onClickListener?.onNoThanksClick(dialogFragment)
             }
         }
     }

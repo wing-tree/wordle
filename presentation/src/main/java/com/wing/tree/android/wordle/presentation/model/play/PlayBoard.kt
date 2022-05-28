@@ -98,17 +98,22 @@ class PlayBoard {
 
     companion object {
         fun from(playBoard: DomainPlayBoard): PlayBoard {
-            return PlayBoard().apply {
-                _round = playBoard.round
-                _lastRound = playBoard.lastRound
+            return try {
+                PlayBoard().apply {
+                    _round = playBoard.round
+                    _lastRound = playBoard.lastRound
 
-                if (lines.size < lastRound) {
-                    _lines.add(Line(lastRound.dec()))
-                }
+                    if (lines.size < lastRound) {
+                        _lines.add(Line(lastRound.dec()))
+                    }
 
-                playBoard.lines.forEachIndexed { index, line ->
-                    _lines[index] = line.toPresentationModel()
+                    playBoard.lines.forEachIndexed { index, line ->
+                        _lines[index] = line.toPresentationModel()
+                    }
                 }
+            } catch (indexOutOfBoundsException: IndexOutOfBoundsException) {
+                Timber.e(indexOutOfBoundsException)
+                PlayBoard()
             }
         }
     }
