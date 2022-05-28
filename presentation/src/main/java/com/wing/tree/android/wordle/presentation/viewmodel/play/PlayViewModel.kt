@@ -91,15 +91,13 @@ class PlayViewModel @Inject constructor(
                     cancel()
                 } else {
                     result.getOrNull()?.let { playState ->
-                        word = playState.word
-                        _playBoard.postValue(PlayBoard.from(playState.playBoard))
-                        _keyboard.postValue(Keyboard.from(playState.keyboard))
+                        postPlayState(playState)
                     } ?: run {
-                        _playBoard.postValue(PlayBoard())
                         _keyboard.postValue(Keyboard())
+                        _playBoard.postValue(PlayBoard())
                     }
 
-                    if (word.value.isBlank()) {
+                    if (word.isBlank()) {
                         word = loadAtRandom() ?: run {
                             Timber.e(NullPointerException())
                             Word.Sorry
@@ -244,6 +242,12 @@ class PlayViewModel @Inject constructor(
 
             playResult.value = lose
         }
+    }
+
+    private fun postPlayState(playState: PlayState) {
+        _keyboard.postValue(Keyboard.from(playState.keyboard))
+        _playBoard.postValue(PlayBoard.from(playState.playBoard))
+        word = playState.word
     }
 
     @DelicateCoroutinesApi
