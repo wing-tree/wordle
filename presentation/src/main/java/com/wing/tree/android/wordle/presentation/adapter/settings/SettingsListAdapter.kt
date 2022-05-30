@@ -6,59 +6,42 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-import com.wing.tree.android.wordle.presentation.databinding.PreferenceCategoryItemBinding
-import com.wing.tree.android.wordle.presentation.databinding.PreferenceItemBinding
-import com.wing.tree.android.wordle.presentation.databinding.SpaceItemBinding
 import com.wing.tree.android.wordle.presentation.databinding.SwitchPreferenceItemBinding
 import com.wing.tree.android.wordle.presentation.model.settings.Settings
 
-class SettingsListAdapter(val k: Int) : ListAdapter<Settings, SettingsListAdapter.ViewHolder<Settings>>(DiffCallback()) {
+class SettingsListAdapter : ListAdapter<Settings, SettingsListAdapter.ViewHolder<Settings>>(DiffCallback()) {
     sealed class ViewHolder<out T: Settings>(viewBinding: ViewBinding): RecyclerView.ViewHolder(viewBinding.root) {
         abstract fun bind(item: Settings)
     }
 
-    inner class PreferenceViewHolder(viewBinding: PreferenceItemBinding): SettingsListAdapter.ViewHolder<Settings.Preference>(viewBinding) {
-        override fun bind(item: Settings) {
-            if (item is Settings.Preference) {
-
-            }
-        }
-    }
-
-    inner class PreferenceCategoryViewHolder(viewBinding: PreferenceCategoryItemBinding): SettingsListAdapter.ViewHolder<Settings.PreferenceCategory>(viewBinding) {
-        override fun bind(item: Settings) {
-            if (item is Settings.PreferenceCategory) {
-
-            }
-        }
-    }
-
-    inner class SpaceViewHolder(viewBinding: SpaceItemBinding): SettingsListAdapter.ViewHolder<Settings.Space>(viewBinding) {
-        override fun bind(item: Settings) {
-            if (item is Settings.Space) {
-
-            }
-        }
-    }
-
-    inner class SwitchPreferenceViewHolder(viewBinding: SwitchPreferenceItemBinding): SettingsListAdapter.ViewHolder<Settings.SwitchPreference>(viewBinding) {
+    inner class SwitchPreferenceViewHolder(private val viewBinding: SwitchPreferenceItemBinding):
+        SettingsListAdapter.ViewHolder<Settings.SwitchPreference>(viewBinding) {
         override fun bind(item: Settings) {
             if (item is Settings.SwitchPreference) {
+                with(viewBinding) {
+                    textViewBody.text = item.body
+                    textViewSummary.text = item.summary
+                    switchCompat.isChecked = item.isChecked
 
+                    switchCompat.setOnCheckedChangeListener { buttonView, isChecked ->
+                        if (buttonView.isPressed) {
+                            item.onCheckedChange?.invoke(isChecked)
+                        }
+                    }
+                }
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder<Settings> {
-        return PreferenceViewHolder(PreferenceItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        val inflater = LayoutInflater.from(parent.context)
+        val viewBinding = SwitchPreferenceItemBinding.inflate(inflater, parent, false)
+
+        return SwitchPreferenceViewHolder(viewBinding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder<Settings>, position: Int) {
         holder.bind(getItem(position))
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return super.getItemViewType(position)
     }
 
     class DiffCallback: DiffUtil.ItemCallback<Settings>() {

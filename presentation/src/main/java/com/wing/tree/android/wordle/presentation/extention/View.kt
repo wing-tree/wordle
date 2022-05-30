@@ -14,6 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.constant.Duration
 
+fun fadeIn(vararg view: View) {
+    view.forEach {
+        it.fadeIn()
+    }
+}
+
 fun View.fadeIn(
     duration: Long = Duration.Animation.FADE_IN,
     alphaFrom: Float = 0.0F,
@@ -38,6 +44,12 @@ fun View.fadeIn(
                     onAnimationEnd?.invoke()
                 }
             }).withLayer()
+    }
+}
+
+fun fadeOut(vararg view: View) {
+    view.forEach {
+        it.fadeOut()
     }
 }
 

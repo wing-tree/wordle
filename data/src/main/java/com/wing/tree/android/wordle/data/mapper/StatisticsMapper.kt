@@ -2,8 +2,8 @@ package com.wing.tree.android.wordle.data.mapper
 
 import com.wing.tree.android.wordle.data.datastore.statistics.Statistics
 import com.wing.tree.android.wordle.data.mapper.GuessesMapper.toDomainModel
-import com.wing.tree.android.wordle.domain.model.Guesses
-import com.wing.tree.android.wordle.domain.model.Statistics as DomainStatistics
+import com.wing.tree.android.wordle.domain.model.staticstics.Guesses
+import com.wing.tree.android.wordle.domain.model.staticstics.Statistics as DomainStatistics
 
 internal object StatisticsMapper {
     fun Statistics.toDomainModel() = object : DomainStatistics {

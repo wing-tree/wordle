@@ -1,6 +1,6 @@
 package com.wing.tree.android.wordle.domain.usecase.statistics
 
-import com.wing.tree.android.wordle.domain.model.Statistics
+import com.wing.tree.android.wordle.domain.model.staticstics.Statistics
 import com.wing.tree.android.wordle.domain.repository.StatisticsRepository
 import com.wing.tree.android.wordle.domain.usecase.core.IOCoroutineDispatcher
 import com.wing.tree.android.wordle.domain.usecase.core.NoParameterFlowUseCase

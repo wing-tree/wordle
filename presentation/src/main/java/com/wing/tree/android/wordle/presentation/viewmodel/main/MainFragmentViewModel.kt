@@ -3,11 +3,8 @@ package com.wing.tree.android.wordle.presentation.viewmodel.main
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.asLiveData
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
-import com.wing.tree.android.wordle.domain.model.Statistics
-import com.wing.tree.android.wordle.domain.usecase.billing.GetCreditsUseCase
-import com.wing.tree.android.wordle.domain.usecase.core.Result
+import com.wing.tree.android.wordle.domain.model.staticstics.Statistics
 import com.wing.tree.android.wordle.domain.usecase.core.getOrDefault
 import com.wing.tree.android.wordle.domain.usecase.statistics.GetStatisticsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -7,12 +7,15 @@ import com.wing.tree.android.wordle.domain.model.Result
 import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.domain.model.item.Item
 import com.wing.tree.android.wordle.domain.model.playstate.PlayState
+import com.wing.tree.android.wordle.domain.model.settings.Settings
 import com.wing.tree.android.wordle.domain.usecase.billing.ConsumeCreditsUseCase
+import com.wing.tree.android.wordle.domain.usecase.core.getOrDefault
 import com.wing.tree.android.wordle.domain.usecase.core.getOrNull
 import com.wing.tree.android.wordle.domain.usecase.item.ConsumeItemCountUseCase
 import com.wing.tree.android.wordle.domain.usecase.item.GetItemCountUseCase
 import com.wing.tree.android.wordle.domain.usecase.playstate.GetPlayStateUseCase
 import com.wing.tree.android.wordle.domain.usecase.playstate.UpdatePlayStateUseCase
+import com.wing.tree.android.wordle.domain.usecase.settings.GetSettingsUseCase
 import com.wing.tree.android.wordle.domain.usecase.statistics.UpdateStatisticsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.ContainsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetWordUseCase
@@ -22,12 +25,13 @@ import com.wing.tree.android.wordle.presentation.eventbus.EventBus
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toDomainModel
 import com.wing.tree.android.wordle.presentation.model.play.*
 import com.wing.tree.android.wordle.presentation.util.setValueAfter
-import com.wing.tree.wordle.core.constant.WORD_LENGTH
 import com.wing.tree.wordle.core.exception.NotEnoughCreditException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import timber.log.Timber
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import com.wing.tree.android.wordle.domain.model.playstate.Keyboard as DomainKeyboard
 import com.wing.tree.android.wordle.domain.model.playstate.PlayBoard as DomainPlayBoard
@@ -35,6 +39,7 @@ import com.wing.tree.android.wordle.domain.model.playstate.PlayBoard as DomainPl
 @HiltViewModel
 class PlayViewModel @Inject constructor(
     private val containsUseCase: ContainsUseCase,
+    private val getSettingsUseCase: GetSettingsUseCase,
     private val updatePlayStateUseCase: UpdatePlayStateUseCase,
     private val updateStatisticsUseCase: UpdateStatisticsUseCase,
     consumeCreditsUseCase: ConsumeCreditsUseCase,
@@ -78,6 +83,11 @@ class PlayViewModel @Inject constructor(
     private val isHintAvailable: Boolean get() = playBoard.value?.isHintAvailable(answer) ?: false
     private val isOneMoreTryAvailable: Boolean get() = true
 
+    private val isHardMode = AtomicBoolean(false)
+    private val vibrates = AtomicBoolean(false)
+    private val _isHighContrastMode = MutableLiveData<Boolean>()
+    val isHighContrastMode: LiveData<Boolean> get() = _isHighContrastMode
+
     val round: Int get() = playBoard.value?.round ?: 0
 
     init {
@@ -108,6 +118,16 @@ class PlayViewModel @Inject constructor(
 
                     cancel()
                 }
+            }
+        }
+
+        viewModelScope.launch {
+            getSettingsUseCase().collectLatest { result ->
+                val settings = result.getOrDefault(Settings.Default)
+
+                isHardMode.set(settings.isHardMode)
+                vibrates.set(settings.vibrates)
+                _isHighContrastMode.value = settings.isHighContrastMode
             }
         }
 

@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.*
 import com.android.billingclient.api.Purchase
 import com.android.billingclient.api.SkuDetails
+import com.wing.tree.android.wordle.domain.model.settings.Settings
 import com.wing.tree.android.wordle.domain.usecase.billing.GetCreditsUseCase
 import com.wing.tree.android.wordle.domain.usecase.billing.IsRemoveAdsPurchasedUseCase
 import com.wing.tree.android.wordle.domain.usecase.billing.PurchaseCreditsUseCase
@@ -12,16 +13,19 @@ import com.wing.tree.android.wordle.domain.usecase.billing.PutRemoveAdsPurchased
 import com.wing.tree.android.wordle.domain.usecase.core.getOrDefault
 import com.wing.tree.android.wordle.domain.usecase.onboarding.IsFirstTimeUseCase
 import com.wing.tree.android.wordle.domain.usecase.onboarding.PutFirstTimeUseCase
-import com.wing.tree.android.wordle.presentation.util.SingleLiveEvent
+import com.wing.tree.android.wordle.domain.usecase.settings.GetSettingsUseCase
 import com.wing.tree.wordle.billing.callbacks.BillingClientStateCallbacks
 import com.wing.tree.wordle.billing.callbacks.PurchaseCallbacks
 import com.wing.tree.wordle.billing.delegate.BillingDelegate
 import com.wing.tree.wordle.billing.delegate.BillingDelegateImpl
 import com.wing.tree.wordle.billing.skus.Skus
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -33,6 +37,7 @@ class MainActivityViewModel @Inject constructor(
     private val putFirstTimeUseCase: PutFirstTimeUseCase,
     private val putRemoveAdsPurchasedUseCase: PutRemoveAdsPurchasedUseCase,
     getCreditsUseCase: GetCreditsUseCase,
+    getSettingsUseCase: GetSettingsUseCase,
     isRemoveAdsPurchasedUseCaseUseCase: IsRemoveAdsPurchasedUseCase,
     application: Application
 ) : AndroidViewModel(application), BillingDelegate by BillingDelegateImpl {
@@ -53,10 +58,11 @@ class MainActivityViewModel @Inject constructor(
         .map { it.getOrDefault(false) }
         .asLiveData(viewModelScope.coroutineContext)
 
-    private val _onCreditsClick = SingleLiveEvent<Unit>()
-    val onCreditsClick: LiveData<Unit> get() = _onCreditsClick
-
     val played = AtomicInteger(0)
+
+    val settings = getSettingsUseCase()
+        .map { it.getOrDefault(Settings.Default) }
+        .asLiveData(viewModelScope.coroutineContext)
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun initBilling(context: Context) {
@@ -104,10 +110,6 @@ class MainActivityViewModel @Inject constructor(
 
             }
         })
-    }
-
-    fun callOnCreditsClick() {
-        _onCreditsClick.call()
     }
 
     fun putNotFirstTime() {

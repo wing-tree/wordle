@@ -4,35 +4,21 @@ import android.graphics.drawable.Drawable
 
 sealed class Settings {
     abstract val id: Long
-    abstract val isClickable: Boolean
-
-    data class Preference(
-        override val id: Long,
-        override val isClickable: Boolean = true,
-        val body: String,
-        val drawable: Drawable?,
-        val onClick: (Preference) -> Unit,
-        val summary: String
-    ) : Settings()
-
-    data class PreferenceCategory(
-        override val id: Long,
-        override val isClickable: Boolean = true,
-        val category: String
-    ) : Settings()
-
-    data class Space(
-        override val id: Long,
-        override var isClickable: Boolean = false,
-    ) : Settings()
+    abstract val isCheckable: Boolean
 
     data class SwitchPreference(
         override val id: Long,
-        override val isClickable: Boolean = true,
+        override val isCheckable: Boolean = true,
         val body: String,
-        val drawable: Drawable?,
+        val drawable: Drawable? = null,
         val isChecked: Boolean,
-        val onCheckedChange: (isChecked: Boolean) -> Unit,
-        val summary: String
-    ) : Settings()
+        val summary: String? = null
+    ) : Settings() {
+        private var _onCheckedChange: ((isChecked: Boolean) -> Unit)? = null
+        val onCheckedChange: ((Boolean) -> Unit)? get() = _onCheckedChange
+
+        fun setOnCheckedChange(onCheckedChange: (isChecked: Boolean) -> Unit) {
+            this._onCheckedChange = onCheckedChange
+        }
+    }
 }

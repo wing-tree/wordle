@@ -1,4 +1,4 @@
-package com.wing.tree.android.wordle.domain.model
+package com.wing.tree.android.wordle.domain.model.staticstics
 
 interface Statistics {
     val maximumWinStreak: Int

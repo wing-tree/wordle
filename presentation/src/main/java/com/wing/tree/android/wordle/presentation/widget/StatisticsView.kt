@@ -10,8 +10,8 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
-import com.wing.tree.android.wordle.domain.model.Guesses
-import com.wing.tree.android.wordle.domain.model.Statistics
+import com.wing.tree.android.wordle.domain.model.staticstics.Guesses
+import com.wing.tree.android.wordle.domain.model.staticstics.Statistics
 import com.wing.tree.android.wordle.domain.util.float
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.StatisticsViewBinding

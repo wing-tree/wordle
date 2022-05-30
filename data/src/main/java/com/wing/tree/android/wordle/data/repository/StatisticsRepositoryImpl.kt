@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import kotlin.math.max
-import com.wing.tree.android.wordle.domain.model.Statistics as DomainStatistics
+import com.wing.tree.android.wordle.domain.model.staticstics.Statistics as DomainStatistics
 
 class StatisticsRepositoryImpl @Inject constructor(private val dataStore: DataStore<Statistics>) : StatisticsRepository {
     override fun get(): Flow<DomainStatistics> {

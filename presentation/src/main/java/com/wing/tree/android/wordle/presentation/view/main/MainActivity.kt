@@ -19,9 +19,11 @@ import com.wing.tree.android.wordle.presentation.util.captureScreen
 import com.wing.tree.android.wordle.presentation.util.sendPngImage
 import com.wing.tree.android.wordle.presentation.util.startActivity
 import com.wing.tree.android.wordle.presentation.view.base.BaseActivity
+import com.wing.tree.android.wordle.presentation.view.billing.BillingFragmentDirections
 import com.wing.tree.android.wordle.presentation.view.onboarding.OnBoardingActivity
 import com.wing.tree.android.wordle.presentation.view.play.PlayFragmentDirections
 import com.wing.tree.android.wordle.presentation.view.result.ResultFragmentDirections
+import com.wing.tree.android.wordle.presentation.view.settings.SettingsFragmentDirections
 import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityViewModel
 import com.yy.mobile.rollingtextview.CharOrder
 import com.yy.mobile.rollingtextview.strategy.Strategy
@@ -47,24 +49,28 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             with(viewBinding) {
                 when(destination.id) {
                     R.id.billingFragment -> {
-                        buttonAsk.fadeOut()
+                        fadeIn(imageViewArrowBack)
+                        fadeOut(buttonAsk, imageViewSettings)
                         frameLayoutCredits.isClickable = false
-                        imageViewArrowBack.fadeIn()
                     }
                     R.id.mainFragment -> {
-                        buttonAsk.fadeOut()
+                        fadeIn(imageViewSettings)
+                        fadeOut(buttonAsk, imageViewArrowBack)
                         frameLayoutCredits.isClickable = true
-                        imageViewArrowBack.fadeOut()
                     }
                     R.id.playFragment -> {
-                        buttonAsk.fadeIn()
+                        fadeIn(buttonAsk, imageViewArrowBack, imageViewSettings)
                         frameLayoutCredits.isClickable = true
-                        imageViewArrowBack.fadeIn()
+                    }
+                    R.id.settingsFragment -> {
+                        fadeIn(imageViewArrowBack)
+                        fadeOut(buttonAsk, imageViewSettings)
+                        frameLayoutCredits.isClickable = true
                     }
                     else -> {
-                        buttonAsk.fadeOut()
+                        fadeIn(imageViewArrowBack, imageViewSettings)
+                        fadeOut(buttonAsk)
                         frameLayoutCredits.isClickable = true
-                        imageViewArrowBack.fadeIn()
                     }
                 }
             }
@@ -135,23 +141,28 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 container.addView(adView)
             }
         }
-
-        viewModel.onCreditsClick.observe(this) {
-            val directions = when(navController?.currentDestination?.id) {
-                R.id.mainFragment -> MainFragmentDirections.actionMainFragmentToBillingFragment()
-                R.id.playFragment -> PlayFragmentDirections.actionPlayFragmentToBillingFragment()
-                R.id.resultFragment -> ResultFragmentDirections.actionResultFragmentToBillingFragment()
-                else -> null
-            }
-
-            directions?.let { navigate(it) }
-        }
     }
 
     override fun bind(viewBinding: ActivityMainBinding) {
         with(viewBinding) {
             imageViewArrowBack.setOnClickListener {
                 onBackPressed()
+            }
+
+            imageViewSettings.setOnClickListener {
+                lifecycleScope.launch {
+                    delay(Duration.SHORT)
+
+                    val directions = when(navController?.currentDestination?.id) {
+                        R.id.billingFragment -> BillingFragmentDirections.actionBillingFragmentToSettingsFragment()
+                        R.id.mainFragment -> MainFragmentDirections.actionMainFragmentToSettingsFragment()
+                        R.id.playFragment -> PlayFragmentDirections.actionPlayFragmentToSettingsFragment()
+                        R.id.resultFragment -> ResultFragmentDirections.actionResultFragmentToSettingsFragment()
+                        else -> null
+                    }
+
+                    directions?.let { navigate(it) }
+                }
             }
 
             buttonAsk.setOnClickListener {
@@ -165,7 +176,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
             frameLayoutCredits.setOnClickListener {
                 lifecycleScope.launch {
                     delay(Duration.SHORT)
-                    viewModel.callOnCreditsClick()
+
+                    val directions = when(navController?.currentDestination?.id) {
+                        R.id.mainFragment -> MainFragmentDirections.actionMainFragmentToBillingFragment()
+                        R.id.playFragment -> PlayFragmentDirections.actionPlayFragmentToBillingFragment()
+                        R.id.resultFragment -> ResultFragmentDirections.actionResultFragmentToBillingFragment()
+                        R.id.settingsFragment -> SettingsFragmentDirections.actionSettingsFragmentToBillingFragment()
+                        else -> null
+                    }
+
+                    directions?.let { navigate(it) }
                 }
             }
 

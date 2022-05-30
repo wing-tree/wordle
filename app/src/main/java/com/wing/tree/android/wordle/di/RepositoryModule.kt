@@ -25,6 +25,10 @@ internal abstract class RepositoryModule {
 
     @Binds
     @Singleton
+    abstract fun bindsSettingsRepository(repository: SettingsRepositoryImpl): SettingsRepository
+
+    @Binds
+    @Singleton
     abstract fun bindsStatisticsRepository(repository: StatisticsRepositoryImpl): StatisticsRepository
 
     @Binds

@@ -16,6 +16,9 @@ import com.wing.tree.android.wordle.data.datastore.preferences.PreferencesDataSt
 import com.wing.tree.android.wordle.data.datastore.playstate.PlayState
 import com.wing.tree.android.wordle.data.datastore.playstate.PlayStateDataStore
 import com.wing.tree.android.wordle.data.datastore.playstate.PlayStateSerializer
+import com.wing.tree.android.wordle.data.datastore.settings.Settings
+import com.wing.tree.android.wordle.data.datastore.settings.SettingsDataStore
+import com.wing.tree.android.wordle.data.datastore.settings.SettingsSerializer
 import com.wing.tree.android.wordle.data.datastore.statistics.Statistics
 import com.wing.tree.android.wordle.data.datastore.statistics.StatisticsDataStore
 import com.wing.tree.android.wordle.data.datastore.statistics.StatisticsSerializer
@@ -63,6 +66,17 @@ object DataStoreModule {
             ),
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
             produceFile = { context.preferencesDataStoreFile(PreferencesDataStore.FILE_NAME) }
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun providesSettingsDataStore(@ApplicationContext context: Context): DataStore<Settings> {
+        return DataStoreFactory.create(
+            serializer = SettingsSerializer,
+            produceFile = { context.dataStoreFile(SettingsDataStore.FILE_NAME) },
+            corruptionHandler = null,
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         )
     }
 

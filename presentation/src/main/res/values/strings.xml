@@ -9,6 +9,8 @@
     <string name="enter">enter</string>
     <string name="eraser">eraser</string>
     <string name="examples">examples</string>
+    <string name="hard_mode">Hard Mode</string>
+    <string name="high_contrast_mode">High Contrast Mode</string>
     <string name="hint">hint</string>
     <string name="how_to_play">how to play</string>
     <string name="maximum_win_streak">maximum\nwin streak</string>
@@ -19,6 +21,7 @@
     <string name="previous">previous</string>
     <string name="share_the_app">share the app</string>
     <string name="submit">submit</string>
+    <string name="vibrate">Vibrate</string>
     <string name="winning_streak">winning\nstreak</string>
     <string name="won">won</string>
 

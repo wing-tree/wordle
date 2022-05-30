@@ -1,4 +1,4 @@
-package com.wing.tree.android.wordle.domain.model
+package com.wing.tree.android.wordle.domain.model.staticstics
 
 interface Guesses {
     val one: Int
