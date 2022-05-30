@@ -53,6 +53,9 @@ class PlayBoard {
 
     fun isHintAvailable(answer: String) = hints(answer).count() > 1
 
+    fun matched() = filterIsState<In.Matched>().distinct()
+    fun mismatched() = filterIsState<In.Mismatched>().distinct()
+
     fun removeAt(attempt: Int, index: Int) {
         try {
             lines[attempt].removeAt(index)

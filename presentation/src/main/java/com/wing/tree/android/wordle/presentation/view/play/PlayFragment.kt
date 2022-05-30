@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wing.tree.android.wordle.domain.model.item.Item
+import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.play.PlayBoardListAdapter
 import com.wing.tree.android.wordle.presentation.constant.Duration
@@ -22,7 +23,10 @@ import com.wing.tree.android.wordle.presentation.model.play.ViewState
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityViewModel
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
+import com.wing.tree.wordle.core.constant.BLANK
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
+import com.wing.tree.wordle.core.exception.HardModeConditionNotMetException
+import com.wing.tree.wordle.core.exception.WordNotFoundException
 import com.wing.tree.wordle.core.util.half
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -112,7 +116,35 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
 
             buttonSubmit.setOnClickListener {
-                viewModel.submit { it.onFailure { currentItemView?.shake() } }
+                viewModel.submit {
+                    it.onFailure { throwable ->
+                        when(throwable) {
+                            is HardModeConditionNotMetException.Matched -> {
+                                val prefix = when(throwable.position) {
+                                    0 -> getString(R.string.first)
+                                    1 -> getString(R.string.second)
+                                    2 -> getString(R.string.third)
+                                    3 -> getString(R.string.fourth)
+                                    4 -> getString(R.string.fifth)
+                                    else -> BLANK
+                                }
+
+                                val letter = throwable.letter.first().titlecase()
+                                val text = "$prefix ${getString(R.string.hard_mode_000)} $letter"
+
+                                showMaterialCardViewToast(text)
+                            }
+                            is HardModeConditionNotMetException.Mismatched -> {
+                                val letter = throwable.letter.first().titlecase()
+                                val text = "${getString(R.string.hard_mode_001)} $letter"
+
+                                showMaterialCardViewToast(text)
+                            }
+                            is WordNotFoundException -> currentItemView?.shake()
+                        }
+
+                    }
+                }
             }
 
             imageViewBackspace.setOnClickListener {
@@ -244,6 +276,18 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             removeAllViews()
             viewModel.playAgain()
             fadeIn()
+        }
+    }
+
+    private fun showMaterialCardViewToast(text: String) {
+        with(viewBinding) {
+            textViewToast.text = text
+            materialCardViewToast.fadeIn(Duration.LONG) {
+                lifecycleScope.launch {
+                    delay(Duration.LONG)
+                    materialCardViewToast.fadeOut(Duration.MEDIUM)
+                }
+            }
         }
     }
 }

@@ -25,11 +25,11 @@ import com.wing.tree.android.wordle.presentation.eventbus.EventBus
 import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toDomainModel
 import com.wing.tree.android.wordle.presentation.model.play.*
 import com.wing.tree.android.wordle.presentation.util.setValueAfter
+import com.wing.tree.wordle.core.exception.HardModeConditionNotMetException
 import com.wing.tree.wordle.core.exception.NotEnoughCreditException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -215,6 +215,13 @@ class PlayViewModel @Inject constructor(
             return
         }
 
+        if (isHardMode.get()) {
+            checkHardModeCondition(currentLine.letters)?.let {
+                commitCallback(kotlin.Result.failure(it))
+                return
+            }
+        }
+
         viewModelScope.launch(ioDispatcher) {
             val result = submit(answer, currentLine)
 
@@ -309,6 +316,27 @@ class PlayViewModel @Inject constructor(
                 updatePlayStateUseCase(playState)
             }
         }
+    }
+
+    private fun checkHardModeCondition(letters: String): HardModeConditionNotMetException? {
+        val playBoard = playBoard.value ?: return null
+
+        val matched = playBoard.matched().sortedBy { it.position }
+        val mismatched = playBoard.mismatched().sortedBy { it.position }
+
+        matched.forEach {
+            if (it.value != "${letters[it.position]}") {
+                return HardModeConditionNotMetException.Matched(it.value, it.position)
+            }
+        }
+
+        mismatched.forEach {
+            if (it.value !in letters) {
+                return HardModeConditionNotMetException.Mismatched(it.value)
+            }
+        }
+
+        return null
     }
 
     fun consumeItem(item: Item) {

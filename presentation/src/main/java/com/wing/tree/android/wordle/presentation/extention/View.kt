@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewPropertyAnimator
 import android.view.animation.*
 import android.widget.TextView
-import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView

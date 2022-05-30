@@ -25,6 +25,15 @@
     <string name="winning_streak">winning\nstreak</string>
     <string name="won">won</string>
 
+    <string name="first">1st</string>
+    <string name="second">2nd</string>
+    <string name="third">3rh</string>
+    <string name="fourth">4th</string>
+    <string name="fifth">5th</string>
+
+    <string name="hard_mode_000"> letter must be </string>
+    <string name="hard_mode_001">Guess must contain </string>
+
     <string name="how_to_play_000">
         Guess the <b>WORDLE</b> in six tries.\n\n
         Each guess must be a valid five-letter word. Hit the enter button to submit.\n\n

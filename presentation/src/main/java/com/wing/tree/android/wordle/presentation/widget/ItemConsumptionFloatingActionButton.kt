@@ -7,8 +7,6 @@ import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.ItemConsumptionFloatingActionButtonBinding
 import com.wing.tree.android.wordle.presentation.extention.fadeIn
 import com.wing.tree.android.wordle.presentation.extention.fadeOut
-import com.wing.tree.android.wordle.presentation.extention.gone
-import com.wing.tree.android.wordle.presentation.extention.visible
 import com.wing.tree.wordle.core.util.isZero
 
 class ItemConsumptionFloatingActionButton : FrameLayout {
