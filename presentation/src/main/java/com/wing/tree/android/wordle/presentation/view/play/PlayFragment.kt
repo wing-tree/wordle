@@ -205,6 +205,10 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
         }
 
+        viewModel.vibrates.observe(viewLifecycleOwner) {
+            viewBinding.keyboardView.setVibrates(it)
+        }
+
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
             when(viewState) {
                 is ViewState.Error -> {

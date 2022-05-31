@@ -84,7 +84,10 @@ class PlayViewModel @Inject constructor(
     private val isOneMoreTryAvailable: Boolean get() = true
 
     private val isHardMode = AtomicBoolean(false)
-    private val vibrates = AtomicBoolean(false)
+
+    private val _vibrates = MutableLiveData<Boolean>()
+    val vibrates: LiveData<Boolean> get() = _vibrates
+
     private val _isHighContrastMode = MutableLiveData<Boolean>()
     val isHighContrastMode: LiveData<Boolean> get() = _isHighContrastMode
 
@@ -126,7 +129,7 @@ class PlayViewModel @Inject constructor(
                 val settings = result.getOrDefault(Settings.Default)
 
                 isHardMode.set(settings.isHardMode)
-                vibrates.set(settings.vibrates)
+                _vibrates.value = settings.vibrates
                 _isHighContrastMode.value = settings.isHighContrastMode
             }
         }

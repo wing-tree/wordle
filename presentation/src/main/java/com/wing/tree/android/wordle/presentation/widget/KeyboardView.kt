@@ -1,21 +1,28 @@
 package com.wing.tree.android.wordle.presentation.widget
 
 import android.content.Context
+import android.os.*
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View.OnClickListener
 import android.widget.LinearLayout
 import com.wing.tree.android.wordle.presentation.R
-import com.wing.tree.android.wordle.presentation.constant.Duration
 import com.wing.tree.android.wordle.presentation.databinding.KeyboardViewBinding
 import com.wing.tree.android.wordle.presentation.extention.scaleUpDown
 import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.model.play.Keyboard
+import com.wing.tree.android.wordle.presentation.util.Vibrator
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class KeyboardView : LinearLayout {
     private val viewBinding: KeyboardViewBinding = KeyboardViewBinding.bind(inflate(context, R.layout.keyboard_view, this))
 
     private var onKeyListener: OnKeyListener? = null
+    private var vibrates = false
+
+    @Inject lateinit var vibrator: Vibrator
 
     fun interface OnKeyListener {
         fun onKey(key: Key)
@@ -74,6 +81,10 @@ class KeyboardView : LinearLayout {
                 R.id.key_view_y -> Key.Alphabet("y")
                 R.id.key_view_z -> Key.Alphabet("z")
                 else -> throw IllegalArgumentException("${view.id}")
+            }
+
+            if (vibrates) {
+                vibrator.vibrate()
             }
 
             view?.scaleUpDown()
@@ -175,5 +186,9 @@ class KeyboardView : LinearLayout {
 
     fun setOnKeyListener(onKeyListener: OnKeyListener) {
         this.onKeyListener = onKeyListener
+    }
+
+    fun setVibrates(value: Boolean) {
+        vibrates = value
     }
 }
