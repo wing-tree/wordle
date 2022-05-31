@@ -16,6 +16,7 @@ import com.wing.tree.android.wordle.presentation.eventbus.EventBus
 import com.wing.tree.android.wordle.presentation.extention.fadeIn
 import com.wing.tree.android.wordle.presentation.extention.fadeOut
 import com.wing.tree.android.wordle.presentation.util.captureScreen
+import com.wing.tree.android.wordle.presentation.util.deleteCapturedScreen
 import com.wing.tree.android.wordle.presentation.util.sendPngImage
 import com.wing.tree.android.wordle.presentation.util.startActivity
 import com.wing.tree.android.wordle.presentation.view.base.BaseActivity
@@ -78,6 +79,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     override fun onDestroy() {
+        deleteCapturedScreen()
         navController?.removeOnDestinationChangedListener(onDestinationChangedListener)
         super.onDestroy()
     }

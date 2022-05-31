@@ -15,9 +15,17 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.wing.tree.android.wordle.presentation.R
+import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.util.concurrent.atomic.AtomicInteger
+
+internal const val FILE_PROVIDER = "fileprovider"
+
+object FileName {
+    const val CAPTURED_SCREEN = "captured_screen.png"
+}
 
 internal fun shareApp(context: Context) {
     val intent = Intent(Intent.ACTION_SEND)
@@ -45,8 +53,8 @@ inline fun <reified T: Activity> Fragment.startActivity() {
 }
 
 fun Activity.captureScreen(onCompressed: (Uri) -> Unit, onFailure: (Exception) -> Unit) {
-    val authority = "$packageName.fileprovider"
-    val file = File(filesDir, "screen.png")
+    val authority = "$packageName.$FILE_PROVIDER"
+    val file = File(filesDir, FileName.CAPTURED_SCREEN)
 
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
         pixelCopy ({ bitmap ->
@@ -120,4 +128,10 @@ fun Activity.sendPngImage(uri: Uri) {
     }
 
     startActivity(chooser)
+}
+
+fun Context.deleteCapturedScreen() =  try {
+    File(filesDir, FileName.CAPTURED_SCREEN).delete()
+} catch (ioException: IOException) {
+    Timber.e(ioException)
 }
