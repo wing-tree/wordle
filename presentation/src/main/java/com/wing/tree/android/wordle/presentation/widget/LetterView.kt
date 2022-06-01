@@ -14,7 +14,6 @@ import com.wing.tree.android.wordle.presentation.extention.textFadeIn
 import com.wing.tree.android.wordle.presentation.extention.textFadeOut
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.util.flip
-import java.util.concurrent.atomic.AtomicBoolean
 
 class LetterView : FrameLayout, Flippable<LetterView> {
     private val viewBinding: LetterViewBinding = LetterViewBinding.bind(inflate(context, R.layout.letter_view, this))
