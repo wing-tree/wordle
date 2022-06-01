@@ -23,6 +23,10 @@ class LineView : ConstraintLayout {
 
     var isHighContrastMode = false
         set(value) {
+            if (field == value) {
+                return
+            }
+
             field = value
             repeat(WORD_LENGTH) {
                 get(it).isHighContrastMode = field

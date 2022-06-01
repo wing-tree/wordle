@@ -51,12 +51,7 @@ class LetterView : FrameLayout, Flippable<LetterView> {
                 )
             }
 
-            if (frontFrame.background != background) {
-                println("zionzion1111")
-                frontFrame.background = background
-            } else {
-                println("zionzion2222")
-            }
+            frontFrame.background = background
         }
 
     constructor(context: Context) : super(context)

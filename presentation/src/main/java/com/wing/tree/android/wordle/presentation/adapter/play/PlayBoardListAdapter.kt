@@ -18,6 +18,10 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
 
     var isHighContrastMode = false
         set(value) {
+            if (field == value) {
+                return
+            }
+
             field = value
             notifyItemRangeChanged(0, itemCount)
         }
