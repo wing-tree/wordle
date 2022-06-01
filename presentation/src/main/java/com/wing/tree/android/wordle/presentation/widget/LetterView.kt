@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.TransitionDrawable
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.constant.Duration
@@ -13,10 +14,11 @@ import com.wing.tree.android.wordle.presentation.extention.textFadeIn
 import com.wing.tree.android.wordle.presentation.extention.textFadeOut
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.util.flip
+import java.util.concurrent.atomic.AtomicBoolean
 
 class LetterView : FrameLayout, Flippable<LetterView> {
     private val viewBinding: LetterViewBinding = LetterViewBinding.bind(inflate(context, R.layout.letter_view, this))
-    private val isFlipped: Boolean get() = viewBinding.textViewBack.isVisible
+    private val isFlipped: Boolean get() = viewBinding.frameLayoutBack.isVisible
 
     override var isFlippable = true
     override var isAnimating = false
@@ -25,6 +27,38 @@ class LetterView : FrameLayout, Flippable<LetterView> {
     private var backText = viewBinding.textViewBack
     private var frontFrame = viewBinding.frameLayoutFront
     private var frontText = viewBinding.textViewFront
+
+    var isHighContrastMode = false
+        set(value) {
+            if (field == value) {
+                return
+            }
+
+            field = value
+
+            if (isFlipped) {
+                return
+            }
+
+            val background = if (field) {
+                AppCompatResources.getDrawable(
+                    context,
+                    R.drawable.transition_letter_view_high_contrast
+                )
+            } else {
+                AppCompatResources.getDrawable(
+                    context,
+                    R.drawable.transition_letter_view
+                )
+            }
+
+            if (frontFrame.background != background) {
+                println("zionzion1111")
+                frontFrame.background = background
+            } else {
+                println("zionzion2222")
+            }
+        }
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)

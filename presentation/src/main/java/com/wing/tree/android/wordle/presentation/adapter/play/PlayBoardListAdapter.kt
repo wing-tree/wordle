@@ -16,6 +16,12 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
     private var round = 0
     private var runsAnimation = false
 
+    var isHighContrastMode = false
+        set(value) {
+            field = value
+            notifyItemRangeChanged(0, itemCount)
+        }
+
     interface Callbacks {
         fun beforeAnimationStart()
         fun onLetterClick(adapterPosition: Int, index: Int)
@@ -44,11 +50,12 @@ class PlayBoardListAdapter(private val callbacks: Callbacks) : ListAdapter<Adapt
                             }
                         }
                     } else {
+                        isHighContrastMode = this@PlayBoardListAdapter.isHighContrastMode
                         requestFocus(item.isFocused, item.currentLetters)
 
                         setOnLetterClickListener { letterView, index ->
                             letterView.scaleUpDown()
-                            callbacks.onLetterClick(adapterPosition, index)
+                            callbacks.onLetterClick(absoluteAdapterPosition, index)
                         }
 
                         item.currentLetters.forEachIndexed { index, currentLetter ->

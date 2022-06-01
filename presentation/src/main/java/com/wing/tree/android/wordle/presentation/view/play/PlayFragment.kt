@@ -172,6 +172,10 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
         }
 
+        viewModel.isHighContrastMode.observe(viewLifecycleOwner) {
+            playBoardListAdapter.isHighContrastMode = it
+        }
+
         viewModel.playBoard.observe(viewLifecycleOwner) {
             if (it.currentLine.isFilled) {
                 viewBinding.keyboardView.enableReturnKey()

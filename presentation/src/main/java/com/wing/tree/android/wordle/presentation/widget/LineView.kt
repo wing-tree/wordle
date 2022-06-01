@@ -21,6 +21,14 @@ class LineView : ConstraintLayout {
     private var isFocused = AtomicBoolean(false)
     private var onLetterClickListener: OnLetterClickListener? = null
 
+    var isHighContrastMode = false
+        set(value) {
+            field = value
+            repeat(WORD_LENGTH) {
+                get(it).isHighContrastMode = field
+            }
+        }
+
     fun requestFocus(isFocused: Boolean, letters: Array<Letter>) {
         if (this.isFocused.compareAndSet(isFocused.not(), isFocused)) {
             letters.forEach {

@@ -20,5 +20,7 @@
     <color name="icon">@color/white</color>
     <color name="text">@color/white</color>
 
+    <color name="high_contrast">@color/white</color>
+
     <color name="ripple_material">@color/ripple_material_dark</color>
 </resources>

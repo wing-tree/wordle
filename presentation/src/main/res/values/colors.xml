@@ -23,6 +23,7 @@
     <color name="orange_300">#FFB74D</color>
     <color name="orange_400">#FFA726</color>
     <color name="grey_200">#FFEEEEEE</color>
+    <color name="grey_500">#FF9E9E9E</color>
     <color name="grey_700">#FF616161</color>
     <color name="grey_800">#FF424242</color>
     <color name="grey_900">#FF212121</color>
@@ -48,6 +49,8 @@
     <color name="icon">@color/dark_grey</color>
     <color name="letter_view_focused">@color/pink_200</color>
     <color name="text">@color/dark_grey</color>
+
+    <color name="high_contrast">@color/grey_500</color>
 
     <color name="ripple_material">@color/ripple_material_light</color>
 </resources>
