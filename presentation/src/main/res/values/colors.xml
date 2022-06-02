@@ -47,6 +47,7 @@
 
     <color name="background_credits">#61000000</color>
     <color name="icon">@color/dark_grey</color>
+    <color name="letter_view_high_contrast_focused">@color/pink_500</color>
     <color name="letter_view_focused">@color/pink_200</color>
     <color name="text">@color/dark_grey</color>
 
