@@ -1,5 +1,6 @@
 package com.wing.tree.android.wordle.presentation.view.play
 
+import android.os.VibrationEffect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDeleg
 import com.wing.tree.android.wordle.presentation.extention.*
 import com.wing.tree.android.wordle.presentation.model.play.Key
 import com.wing.tree.android.wordle.presentation.model.play.ViewState
+import com.wing.tree.android.wordle.presentation.util.Vibrator
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityViewModel
 import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
@@ -35,6 +37,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 
 @DelicateCoroutinesApi
 @AndroidEntryPoint
@@ -68,6 +71,9 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         get() = viewBinding.recyclerView.findViewHolderForAdapterPosition(viewModel.round)?.itemView
 
     private val isAdsRemoved = AtomicBoolean(false)
+
+    @Inject
+    lateinit var vibrator: Vibrator
 
     override fun onPause() {
         viewModel.updatePlayState()
@@ -140,9 +146,12 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
                                 showMaterialCardViewToast(text)
                             }
-                            is WordNotFoundException -> currentItemView?.shake()
+                            is WordNotFoundException -> {
+                                showMaterialCardViewToast(getString(R.string.word_not_found))
+                                vibrator.vibrate(40L, VibrationEffect.DEFAULT_AMPLITUDE)
+                                currentItemView?.shake()
+                            }
                         }
-
                     }
                 }
             }

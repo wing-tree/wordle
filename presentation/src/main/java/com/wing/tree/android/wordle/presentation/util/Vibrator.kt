@@ -7,9 +7,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class Vibrator @Inject constructor(@ApplicationContext context: Context) {
-    var milliseconds = 20L
-    var amplitude = 40
-
     private val vibrator by lazy {
         @Suppress("DEPRECATION")
         context.getSystemService(Context.VIBRATOR_SERVICE) as? Vibrator
@@ -23,15 +20,13 @@ class Vibrator @Inject constructor(@ApplicationContext context: Context) {
         }
     }
 
-    private val vibrationEffect by lazy {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    fun vibrate(milliseconds: Long = 20L, amplitude: Int = 40) {
+        val vibrationEffect = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             VibrationEffect.createOneShot(milliseconds, amplitude)
         } else {
             null
         }
-    }
 
-    fun vibrate() {
         when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
                 val combinedVibration = vibrationEffect?.let {
