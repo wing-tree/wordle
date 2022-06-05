@@ -21,11 +21,15 @@
     <string name="previous">previous</string>
     <string name="share_the_app">share the app</string>
     <string name="submit">submit</string>
+    <string name="thank_you_for_your_valuable_review">Thank you for your valuable review</string>
+    <string name="version">Version</string>
     <string name="vibrate">Vibrate</string>
     <string name="winning_streak">winning\nstreak</string>
     <string name="won">won</string>
     <string name="word_not_found">Word not found</string>
+    <string name="write_review">Write review</string>
 
+    <!-- TODO string array 로 정리 -->
     <string name="first">1st</string>
     <string name="second">2nd</string>
     <string name="third">3rh</string>

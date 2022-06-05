@@ -16,9 +16,12 @@
     <string name="previous">이전</string>
     <string name="share_the_app">앱 공유하기</string>
     <string name="submit">submit</string>
+    <string name="thank_you_for_your_valuable_review">소중한 리뷰 감사합니다</string>
+    <string name="version">버전</string>
     <string name="winning_streak">winning\nstreak</string>
     <string name="won">won</string>
     <string name="word_not_found">단어를 찾을 수 없습니다</string>
+    <string name="write_review">리뷰 쓰기</string>
 
     <string name="how_to_play_000">
         6번의 시도로 <b>WORDLE</b>을 맞춰보세요.\n\n
