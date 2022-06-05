@@ -47,4 +47,6 @@
     <string name="how_to_play_001">The letter <b>W</b> is in the word and in the correct spot.</string>
     <string name="how_to_play_002">The letter <b>I</b> is in the word but in the wrong spot.</string>
     <string name="how_to_play_003">The letter <b>U</b> is not in the word in any spot.</string>
+
+    <string name="review_000">Thank you for your valuable review</string>
 </resources>

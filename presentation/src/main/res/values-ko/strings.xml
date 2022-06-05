@@ -31,4 +31,6 @@
     <string name="how_to_play_001">문자 <b>W</b>는 단어와 정확한 위치에 있습니다.</string>
     <string name="how_to_play_002">문자 <b>I</b>가 단어에 있지만 잘못된 위치에 있습니다.</string>
     <string name="how_to_play_003">문자 <b>U</b>는 단어의 어느 부분에도 없습니다.</string>
+
+    <string name="review_000">소중한 리뷰 감사합니다</string>
 </resources>

@@ -11,6 +11,7 @@ import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.adapter.settings.SettingsListAdapter
 import com.wing.tree.android.wordle.presentation.databinding.FragmentSettingsBinding
 import com.wing.tree.android.wordle.presentation.model.settings.Settings
+import com.wing.tree.android.wordle.presentation.util.Review
 import com.wing.tree.android.wordle.presentation.util.shareApp
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.settings.SettingsViewModel
@@ -59,7 +60,9 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                     drawable = getDrawable(R.drawable.ic_round_rate_review_24),
                     isClickable = true
                 ).apply {
-                    setOnClick {  }
+                    setOnClick {
+                        Review.launchReviewFlow(requireActivity())
+                    }
                 },
                 Settings.Preference(
                     id = 5L,
