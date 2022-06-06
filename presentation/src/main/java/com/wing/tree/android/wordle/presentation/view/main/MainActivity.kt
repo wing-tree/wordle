@@ -2,7 +2,9 @@ package com.wing.tree.android.wordle.presentation.view.main
 
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.activity.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
@@ -91,17 +93,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
 
         navController?.addOnDestinationChangedListener(onDestinationChangedListener)
 
-        lifecycleScope.launchWhenResumed {
-            viewModel.credits.collectLatest {
-                viewBinding.rollingTextViewCredits.setText("$it")
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.credits.collectLatest {
+                    viewBinding.rollingTextViewCredits.setText("$it")
+                }
             }
         }
 
-        lifecycleScope.launchWhenResumed {
-            EventBus.getInstance().subscribeEvent<Event.Exception.NotEnoughCredits> {
-                val directions = PlayFragmentDirections.actionPlayFragmentToBillingFragment()
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                EventBus.getInstance().subscribeEvent<Event.Exception.NotEnoughCredits> {
+                    val directions = PlayFragmentDirections.actionPlayFragmentToBillingFragment()
 
-                navigate(directions)
+                    navigate(directions)
+                }
             }
         }
 

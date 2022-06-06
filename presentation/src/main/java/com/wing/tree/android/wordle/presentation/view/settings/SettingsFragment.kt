@@ -6,7 +6,9 @@ import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.adapter.settings.SettingsListAdapter
@@ -19,6 +21,7 @@ import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityView
 import com.wing.tree.android.wordle.presentation.viewmodel.settings.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
@@ -31,60 +34,62 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
     }
 
     override fun initData() {
-        lifecycleScope.launchWhenResumed {
-            activityViewModel.settings.collectLatest { settings ->
-                val list = listOf(
-                    Settings.SwitchPreference(
-                        id = 0L,
-                        primaryText = getString(R.string.hard_mode),
-                        isChecked = settings.isHardMode
-                    ).apply {
-                        setOnCheckedChange { viewModel.updateHardMode(it) }
-                    },
-                    Settings.SwitchPreference(
-                        id = 1L,
-                        primaryText = getString(R.string.vibrate),
-                        isChecked = settings.vibrates
-                    ).apply {
-                        setOnCheckedChange { viewModel.updateVibrates(it) }
-                    },
-                    Settings.SwitchPreference(
-                        id = 2L,
-                        primaryText = getString(R.string.high_contrast_mode),
-                        isChecked = settings.isHighContrastMode
-                    ).apply {
-                        setOnCheckedChange { viewModel.updateHighContrastMode(it) }
-                    },
-                    Settings.Divider(id = 3L),
-                    Settings.Preference(
-                        id = 4L,
-                        primaryText = getString(R.string.write_review),
-                        drawable = getDrawable(R.drawable.ic_round_rate_review_24),
-                        isClickable = true
-                    ).apply {
-                        setOnClick {
-                            Review.launchReviewFlow(requireActivity())
-                        }
-                    },
-                    Settings.Preference(
-                        id = 5L,
-                        primaryText = getString(R.string.share_the_app),
-                        drawable = getDrawable(R.drawable.ic_round_share_24),
-                        isClickable = true
-                    ).apply {
-                        setOnClick {
-                            shareApp(requireContext())
-                        }
-                    },
-                    Settings.Preference(
-                        id = 6L,
-                        primaryText = getString(R.string.version),
-                        drawable = getDrawable(R.drawable.ic_round_info_24),
-                        isClickable = false
-                    ),
-                )
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                activityViewModel.settings.collectLatest { settings ->
+                    val list = listOf(
+                        Settings.SwitchPreference(
+                            id = 0L,
+                            primaryText = getString(R.string.hard_mode),
+                            isChecked = settings.isHardMode
+                        ).apply {
+                            setOnCheckedChange { viewModel.updateHardMode(it) }
+                        },
+                        Settings.SwitchPreference(
+                            id = 1L,
+                            primaryText = getString(R.string.vibrate),
+                            isChecked = settings.vibrates
+                        ).apply {
+                            setOnCheckedChange { viewModel.updateVibrates(it) }
+                        },
+                        Settings.SwitchPreference(
+                            id = 2L,
+                            primaryText = getString(R.string.high_contrast_mode),
+                            isChecked = settings.isHighContrastMode
+                        ).apply {
+                            setOnCheckedChange { viewModel.updateHighContrastMode(it) }
+                        },
+                        Settings.Divider(id = 3L),
+                        Settings.Preference(
+                            id = 4L,
+                            primaryText = getString(R.string.write_review),
+                            drawable = getDrawable(R.drawable.ic_round_rate_review_24),
+                            isClickable = true
+                        ).apply {
+                            setOnClick {
+                                Review.launchReviewFlow(requireActivity())
+                            }
+                        },
+                        Settings.Preference(
+                            id = 5L,
+                            primaryText = getString(R.string.share_the_app),
+                            drawable = getDrawable(R.drawable.ic_round_share_24),
+                            isClickable = true
+                        ).apply {
+                            setOnClick {
+                                shareApp(requireContext())
+                            }
+                        },
+                        Settings.Preference(
+                            id = 6L,
+                            primaryText = getString(R.string.version),
+                            drawable = getDrawable(R.drawable.ic_round_info_24),
+                            isClickable = false
+                        ),
+                    )
 
-                settingsListAdapter.submitList(list)
+                    settingsListAdapter.submitList(list)
+                }
             }
         }
     }

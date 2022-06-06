@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wing.tree.android.wordle.domain.model.item.Item
-import com.wing.tree.android.wordle.domain.model.settings.Settings
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.play.PlayBoardListAdapter
@@ -175,19 +176,23 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             isAdsRemoved.set(it)
         }
 
-        lifecycleScope.launchWhenResumed {
-            viewModel.itemCount.collectLatest {
-                viewBinding.itemFloatingActionButtonEraser.count = it.eraser
-                viewBinding.itemFloatingActionButtonHint.count = it.hint
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.itemCount.collectLatest {
+                    viewBinding.itemFloatingActionButtonEraser.count = it.eraser
+                    viewBinding.itemFloatingActionButtonHint.count = it.hint
+                }
             }
         }
 
-        lifecycleScope.launchWhenResumed {
-            activityViewModel.settings.collectLatest { settings ->
+        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                activityViewModel.settings.collectLatest { settings ->
 
-                playBoardListAdapter.isHighContrastMode = settings.isHighContrastMode
-                viewBinding.keyboardView.setVibrates(settings.vibrates)
-                viewModel.setHardMode(settings.isHardMode)
+                    playBoardListAdapter.isHighContrastMode = settings.isHighContrastMode
+                    viewBinding.keyboardView.setVibrates(settings.vibrates)
+                    viewModel.setHardMode(settings.isHardMode)
+                }
             }
         }
 
