@@ -135,3 +135,11 @@ fun Context.deleteCapturedScreen() =  try {
 } catch (ioException: IOException) {
     Timber.e(ioException)
 }
+
+val Context.versionName: String?
+    get() = try {
+        packageManager.getPackageInfo(packageName, 0).versionName
+    } catch (nameNotFoundException: PackageManager.NameNotFoundException) {
+        Timber.e(nameNotFoundException)
+        null
+    }

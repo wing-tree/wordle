@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.adapter.settings.SettingsListAdapter
@@ -15,7 +14,6 @@ import com.wing.tree.android.wordle.presentation.util.Review
 import com.wing.tree.android.wordle.presentation.util.shareApp
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.settings.SettingsViewModel
-import com.wing.tree.wordle.core.constant.BLANK
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -34,21 +32,21 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
             val list = listOf(
                 Settings.SwitchPreference(
                     id = 0L,
-                    body = getString(R.string.hard_mode),
+                    primaryText = getString(R.string.hard_mode),
                     isChecked = settings.isHardMode
                 ).apply {
                     setOnCheckedChange { viewModel.updateHardMode(it) }
                 },
                 Settings.SwitchPreference(
                     id = 1L,
-                    body = getString(R.string.vibrate),
+                    primaryText = getString(R.string.vibrate),
                     isChecked = settings.vibrates
                 ).apply {
                     setOnCheckedChange { viewModel.updateVibrates(it) }
                 },
                 Settings.SwitchPreference(
                     id = 2L,
-                    body = getString(R.string.high_contrast_mode),
+                    primaryText = getString(R.string.high_contrast_mode),
                     isChecked = settings.isHighContrastMode
                 ).apply {
                     setOnCheckedChange { viewModel.updateHighContrastMode(it) }
@@ -56,7 +54,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                 Settings.Divider(id = 3L),
                 Settings.Preference(
                     id = 4L,
-                    body = getString(R.string.write_review),
+                    primaryText = getString(R.string.write_review),
                     drawable = getDrawable(R.drawable.ic_round_rate_review_24),
                     isClickable = true
                 ).apply {
@@ -66,7 +64,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                 },
                 Settings.Preference(
                     id = 5L,
-                    body = getString(R.string.share_the_app),
+                    primaryText = getString(R.string.share_the_app),
                     drawable = getDrawable(R.drawable.ic_round_share_24),
                     isClickable = true
                 ).apply {
@@ -76,7 +74,7 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                 },
                 Settings.Preference(
                     id = 6L,
-                    body = getString(R.string.version),
+                    primaryText = getString(R.string.version),
                     drawable = getDrawable(R.drawable.ic_round_info_24),
                     isClickable = false
                 ),

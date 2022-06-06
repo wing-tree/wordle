@@ -8,11 +8,11 @@
     android:paddingStart="16dp" >
 
     <TextView
-        android:id="@+id/text_view_body"
+        android:id="@+id/text_view_primary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="bottom"
-        app:layout_constraintBottom_toTopOf="@+id/text_view_summary"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_secondary"
         app:layout_constraintEnd_toStartOf="@+id/switch_compat"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,14 +20,14 @@
         tools:text="Hard Mode" />
 
     <TextView
-        android:id="@+id/text_view_summary"
+        android:id="@+id/text_view_secondary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/switch_compat"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_body"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_primary"
         tools:text="Any revealed hints must be used in ..." />
 
     <androidx.appcompat.widget.SwitchCompat

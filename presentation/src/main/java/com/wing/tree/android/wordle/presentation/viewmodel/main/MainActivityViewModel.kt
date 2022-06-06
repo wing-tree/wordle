@@ -20,12 +20,9 @@ import com.wing.tree.wordle.billing.delegate.BillingDelegate
 import com.wing.tree.wordle.billing.delegate.BillingDelegateImpl
 import com.wing.tree.wordle.billing.skus.Skus
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -42,6 +39,7 @@ class MainActivityViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application), BillingDelegate by BillingDelegateImpl {
     init {
+        runBlocking {  }
         initBilling(application.applicationContext)
     }
 

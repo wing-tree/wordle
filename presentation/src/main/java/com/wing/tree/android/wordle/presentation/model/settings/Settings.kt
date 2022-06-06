@@ -7,10 +7,10 @@ sealed class Settings {
 
     data class Preference(
         override val id: Long,
-        val body: String,
         val drawable: Drawable?,
         val isClickable: Boolean = true,
-        val summary: String? = null
+        val primaryText: String,
+        val secondaryText: String? = null
     ) : Settings() {
         private var _onClick: ((Preference) -> Unit)? = null
         val onClick: ((Preference) -> Unit)? get() = _onClick
@@ -22,11 +22,11 @@ sealed class Settings {
 
     data class SwitchPreference(
         override val id: Long,
-        val body: String,
         val drawable: Drawable? = null,
         val isChecked: Boolean,
         val isCheckable: Boolean = true,
-        val summary: String? = null
+        val primaryText: String,
+        val secondaryText: String? = null
     ) : Settings() {
         private var _onCheckedChange: ((isChecked: Boolean) -> Unit)? = null
         val onCheckedChange: ((Boolean) -> Unit)? get() = _onCheckedChange

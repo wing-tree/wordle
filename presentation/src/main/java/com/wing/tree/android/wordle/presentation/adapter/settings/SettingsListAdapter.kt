@@ -27,17 +27,17 @@ class SettingsListAdapter : ListAdapter<Settings, SettingsListAdapter.ViewHolder
         override fun bind(item: Settings) {
             if (item is Settings.Preference) {
                 with(viewBinding) {
-                    textViewBody.text = item.body
+                    textViewPrimary.text = item.primaryText
 
                     item.drawable?.let {
                         imageView.visible()
                         imageView.setImageDrawable(it)
                     } ?: imageView.gone()
 
-                    item.summary?.let {
-                        textViewSummary.visible()
-                        textViewSummary.text = it
-                    } ?: textViewSummary.gone()
+                    item.secondaryText?.let {
+                        textViewSecondary.visible()
+                        textViewSecondary.text = it
+                    } ?: textViewSecondary.gone()
 
 
                     if (item.isClickable) {
@@ -57,12 +57,12 @@ class SettingsListAdapter : ListAdapter<Settings, SettingsListAdapter.ViewHolder
         override fun bind(item: Settings) {
             if (item is Settings.SwitchPreference) {
                 with(viewBinding) {
-                    textViewBody.text = item.body
+                    textViewPrimary.text = item.primaryText
 
-                    item.summary?.let {
-                        textViewSummary.visible()
-                        textViewSummary.text = it
-                    } ?: textViewSummary.gone()
+                    item.secondaryText?.let {
+                        textViewSecondary.visible()
+                        textViewSecondary.text = it
+                    } ?: textViewSecondary.gone()
 
                     switchCompat.isChecked = item.isChecked
 
