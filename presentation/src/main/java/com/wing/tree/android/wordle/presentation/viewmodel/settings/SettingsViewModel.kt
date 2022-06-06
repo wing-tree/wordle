@@ -9,20 +9,17 @@ import com.wing.tree.android.wordle.domain.usecase.core.getOrDefault
 import com.wing.tree.android.wordle.domain.usecase.settings.GetSettingsUseCase
 import com.wing.tree.android.wordle.domain.usecase.settings.UpdateSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    getSettingsUseCase: GetSettingsUseCase,
     private val updateSettingsUseCase: UpdateSettingsUseCase,
     application: Application
 ) : AndroidViewModel(application) {
-    val settings = getSettingsUseCase()
-        .map { it.getOrDefault(Settings.Default) }
-        .asLiveData(viewModelScope.coroutineContext)
-
     fun updateHardMode(value: Boolean) {
         viewModelScope.launch {
             val parameter = UpdateSettingsUseCase.Parameter(

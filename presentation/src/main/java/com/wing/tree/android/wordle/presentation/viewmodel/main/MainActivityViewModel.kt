@@ -22,7 +22,9 @@ import com.wing.tree.wordle.billing.skus.Skus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -60,7 +62,11 @@ class MainActivityViewModel @Inject constructor(
 
     val settings = getSettingsUseCase()
         .map { it.getOrDefault(Settings.Default) }
-        .asLiveData(viewModelScope.coroutineContext)
+        .shareIn(
+            scope = viewModelScope,
+            replay = 1,
+            started = SharingStarted.WhileSubscribed()
+        )
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun initBilling(context: Context) {

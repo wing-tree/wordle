@@ -7,15 +7,12 @@ import com.wing.tree.android.wordle.domain.model.Result
 import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.domain.model.item.Item
 import com.wing.tree.android.wordle.domain.model.playstate.PlayState
-import com.wing.tree.android.wordle.domain.model.settings.Settings
 import com.wing.tree.android.wordle.domain.usecase.billing.ConsumeCreditsUseCase
-import com.wing.tree.android.wordle.domain.usecase.core.getOrDefault
 import com.wing.tree.android.wordle.domain.usecase.core.getOrNull
 import com.wing.tree.android.wordle.domain.usecase.item.ConsumeItemCountUseCase
 import com.wing.tree.android.wordle.domain.usecase.item.GetItemCountUseCase
 import com.wing.tree.android.wordle.domain.usecase.playstate.GetPlayStateUseCase
 import com.wing.tree.android.wordle.domain.usecase.playstate.UpdatePlayStateUseCase
-import com.wing.tree.android.wordle.domain.usecase.settings.GetSettingsUseCase
 import com.wing.tree.android.wordle.domain.usecase.statistics.UpdateStatisticsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.ContainsUseCase
 import com.wing.tree.android.wordle.domain.usecase.word.GetWordUseCase
@@ -39,7 +36,6 @@ import com.wing.tree.android.wordle.domain.model.playstate.PlayBoard as DomainPl
 @HiltViewModel
 class PlayViewModel @Inject constructor(
     private val containsUseCase: ContainsUseCase,
-    private val getSettingsUseCase: GetSettingsUseCase,
     private val updatePlayStateUseCase: UpdatePlayStateUseCase,
     private val updateStatisticsUseCase: UpdateStatisticsUseCase,
     consumeCreditsUseCase: ConsumeCreditsUseCase,
@@ -85,12 +81,6 @@ class PlayViewModel @Inject constructor(
 
     private val isHardMode = AtomicBoolean(false)
 
-    private val _vibrates = MutableLiveData<Boolean>()
-    val vibrates: LiveData<Boolean> get() = _vibrates
-
-    private val _isHighContrastMode = MutableLiveData<Boolean>()
-    val isHighContrastMode: LiveData<Boolean> get() = _isHighContrastMode
-
     val round: Int get() = playBoard.value?.round ?: 0
 
     init {
@@ -121,16 +111,6 @@ class PlayViewModel @Inject constructor(
 
                     cancel()
                 }
-            }
-        }
-
-        viewModelScope.launch {
-            getSettingsUseCase().collectLatest { result ->
-                val settings = result.getOrDefault(Settings.Default)
-
-                isHardMode.set(settings.isHardMode)
-                _vibrates.value = settings.vibrates
-                _isHighContrastMode.value = settings.isHighContrastMode
             }
         }
 
@@ -203,6 +183,10 @@ class PlayViewModel @Inject constructor(
 
     fun setAnimating(value: Boolean) {
         isAnimating.value = value
+    }
+
+    fun setHardMode(value: Boolean) {
+        isHardMode.set(value)
     }
 
     fun setRunsAnimation(value: Boolean) {

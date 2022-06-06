@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wing.tree.android.wordle.domain.model.item.Item
+import com.wing.tree.android.wordle.domain.model.settings.Settings
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.adapter.play.ItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.play.PlayBoardListAdapter
@@ -181,8 +182,13 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
         }
 
-        viewModel.isHighContrastMode.observe(viewLifecycleOwner) {
-            playBoardListAdapter.isHighContrastMode = it
+        lifecycleScope.launchWhenResumed {
+            activityViewModel.settings.collectLatest { settings ->
+
+                playBoardListAdapter.isHighContrastMode = settings.isHighContrastMode
+                viewBinding.keyboardView.setVibrates(settings.vibrates)
+                viewModel.setHardMode(settings.isHardMode)
+            }
         }
 
         viewModel.playBoard.observe(viewLifecycleOwner) {
@@ -216,10 +222,6 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             viewBinding.keyboardView.submitKeyboard(it) {
                 it.runsAnimation.set(true)
             }
-        }
-
-        viewModel.vibrates.observe(viewLifecycleOwner) {
-            viewBinding.keyboardView.setVibrates(it)
         }
 
         viewModel.viewState.observe(viewLifecycleOwner) { viewState ->
