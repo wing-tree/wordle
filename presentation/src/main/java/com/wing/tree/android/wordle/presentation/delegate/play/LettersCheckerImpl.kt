@@ -16,9 +16,9 @@ class LettersCheckerImpl(private val containsUseCase: ContainsUseCase) : Letters
         return if (containsUseCase(line.letters).getOrDefault(false)) {
             this.answer = answer
 
-            processMatchingLetters(line)
-            processMismatchingLetters(line)
-            processNotInLetters(line)
+            checkMatchingLetters(line)
+            checkMismatchingLetters(line)
+            checkNotInLetters(line)
 
             Result.success(line)
         } else {
@@ -26,16 +26,17 @@ class LettersCheckerImpl(private val containsUseCase: ContainsUseCase) : Letters
         }
     }
 
-    private fun processMatchingLetters(line: Line) {
-        this.answer.forEachIndexed { index, letter ->
+    private fun checkMatchingLetters(line: Line) {
+        answer.forEachIndexed { index, letter ->
             if (line[index].value == "$letter") {
-                this.answer = this.answer.replaceFirst("$letter", BLANK)
+                answer = answer.replaceFirst("$letter", BLANK)
+
                 line[index].updateState(In.Matched())
             }
         }
     }
 
-    private fun processMismatchingLetters(line: Line) {
+    private fun checkMismatchingLetters(line: Line) {
         line.undefinedLetters.forEach { letter ->
             if (letter.value in answer) {
                 answer = answer.replaceFirst(letter.value, BLANK)
@@ -45,7 +46,7 @@ class LettersCheckerImpl(private val containsUseCase: ContainsUseCase) : Letters
         }
     }
 
-    private fun processNotInLetters(line: Line) {
+    private fun checkNotInLetters(line: Line) {
         line.undefinedLetters.forEach {
             it.updateState(NotIn())
         }
