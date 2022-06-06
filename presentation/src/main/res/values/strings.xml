@@ -29,12 +29,14 @@
     <string name="word_not_found">Word not found</string>
     <string name="write_review">Write review</string>
 
-    <!-- TODO string array 로 정리 -->
-    <string name="first">1st</string>
-    <string name="second">2nd</string>
-    <string name="third">3rh</string>
-    <string name="fourth">4th</string>
-    <string name="fifth">5th</string>
+    <string-array name="ordinal_numbers">
+        <item>1st</item>
+        <item>2nd</item>
+        <item>3rh</item>
+        <item>4th</item>
+        <item>5th</item>
+        <item>6th+</item>
+    </string-array>
 
     <string name="hard_mode_000"> letter must be </string>
     <string name="hard_mode_001">Guess must contain </string>
