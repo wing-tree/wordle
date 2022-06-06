@@ -17,10 +17,13 @@ import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.StatisticsViewBinding
 import com.wing.tree.wordle.core.constant.BLANK
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
+import com.wing.tree.wordle.core.util.int
+import timber.log.Timber
 import java.util.*
 
 class StatisticsView : ConstraintLayout {
     private val viewBinding = StatisticsViewBinding.bind(inflate(context, R.layout.statistics_view, this))
+    private val ordinalNumbers by lazy { context.resources.getStringArray(R.array.ordinal_numbers) }
 
     var statistics: Statistics? = null
         set(value) {
@@ -66,16 +69,15 @@ class StatisticsView : ConstraintLayout {
         }
 
         barDataSet = BarDataSet(barEntries, BLANK)
-
         barDataSet.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                return "${value.toInt()}"
+                return "${value.int}"
             }
         }
 
         barDataSet.color = color
         barDataSet.valueTextColor = textColor
-        barDataSet.valueTextSize = 16.0F
+        barDataSet.valueTextSize = 14.0F
 
         with(horizontalBarChart) {
             data = BarData(barDataSet)
@@ -83,26 +85,45 @@ class StatisticsView : ConstraintLayout {
             legend.isEnabled = false
 
             setDrawGridBackground(false)
+            setFitBars(true)
             setPinchZoom(false)
             setScaleEnabled(false)
             setTouchEnabled(false)
 
+            axisLeft.axisMinimum = 0.0F
             axisLeft.setDrawAxisLine(false)
             axisLeft.setDrawGridLines(false)
             axisLeft.setDrawLabels(false)
 
+            axisRight.axisMinimum = 0.0F
             axisRight.setDrawAxisLine(false)
             axisRight.setDrawGridLines(false)
             axisRight.setDrawLabels(false)
 
             data.barWidth = 0.25F
 
-            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            extraLeftOffset = 24F
+            extraRightOffset = 24F
+
             xAxis.setDrawAxisLine(false)
             xAxis.setDrawGridLines(false)
             xAxis.setDrawLabels(true)
+            xAxis.labelRotationAngle = -12.0F
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.textColor = textColor
-            xAxis.textSize = 20.0F
+            xAxis.textSize = 16.0F
+            xAxis.xOffset = 12F
+
+            xAxis.valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return try {
+                        ordinalNumbers[value.int.dec()]
+                    } catch (arrayIndexOutOfBoundsException: ArrayIndexOutOfBoundsException) {
+                        Timber.e(arrayIndexOutOfBoundsException)
+                        BLANK
+                    }
+                }
+            }
 
             invalidate()
         }

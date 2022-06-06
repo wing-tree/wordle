@@ -73,6 +73,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         get() = viewBinding.recyclerView.findViewHolderForAdapterPosition(viewModel.round)?.itemView
 
     private val isAdsRemoved = AtomicBoolean(false)
+    private val ordinalNumbers by lazy { resources.getStringArray(R.array.ordinal_numbers) }
 
     @Inject
     lateinit var vibrator: Vibrator
@@ -128,13 +129,11 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
                     it.onFailure { throwable ->
                         when(throwable) {
                             is HardModeConditionNotMetException.Matched -> {
-                                val prefix = when(throwable.position) {
-                                    0 -> getString(R.string.first)
-                                    1 -> getString(R.string.second)
-                                    2 -> getString(R.string.third)
-                                    3 -> getString(R.string.fourth)
-                                    4 -> getString(R.string.fifth)
-                                    else -> BLANK
+                                val prefix = try {
+                                    ordinalNumbers[throwable.position]
+                                } catch (arrayIndexOutOfBoundsException: ArrayIndexOutOfBoundsException) {
+                                    Timber.e(arrayIndexOutOfBoundsException)
+                                    BLANK
                                 }
 
                                 val letter = throwable.letter.first().titlecase()
