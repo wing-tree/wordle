@@ -4,13 +4,11 @@ import com.wing.tree.android.wordle.presentation.mapper.PlayStateMapper.toPresen
 import com.wing.tree.wordle.core.constant.BLANK
 import com.wing.tree.wordle.core.constant.EMPTY
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
-import com.wing.tree.wordle.core.util.isNotZero
-import com.wing.tree.wordle.core.util.isZero
 import com.wing.tree.android.wordle.domain.model.playstate.Line as DomainLine
 
 data class Line(val round: Int) : Iterable<Letter> {
     private val isNotEmpty: Boolean
-        get() = currentLetters.count { it.isNotBlank } > 0
+        get() = currentLetters.any { it.isNotBlank }
 
     private var _isSubmitted: Boolean = false
     val isSubmitted: Boolean get() = _isSubmitted
@@ -22,7 +20,7 @@ data class Line(val round: Int) : Iterable<Letter> {
     val previousLetters: Array<Letter> = Array(WORD_LENGTH) { Letter(position = it) }
     val undefinedLetters: List<Letter> get() = currentLetters.filterWithState<Letter.State.Undefined>()
 
-    val isFilled: Boolean get() = currentLetters.count { it.isBlank }.isZero
+    val isFilled: Boolean get() = currentLetters.all { it.isNotBlank }
     val isNotFilled: Boolean get() = isFilled.not()
 
     val proximity: Int get() = currentLetters.sumOf { it.state.priority }
@@ -93,10 +91,6 @@ data class Line(val round: Int) : Iterable<Letter> {
     fun submitLetter(letter: Letter) {
         backup()
         set(letter.position, letter.apply { submit() })
-    }
-
-    inline fun <reified R: Letter.State> filterWithState(): List<Letter> {
-        return currentLetters.filterWithState<R>()
     }
 
     inline fun <reified R: Letter.State> Array<Letter>.filterWithState(): List<Letter> {
