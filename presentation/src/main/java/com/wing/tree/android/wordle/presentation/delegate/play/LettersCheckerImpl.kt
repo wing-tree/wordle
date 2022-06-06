@@ -27,9 +27,11 @@ class LettersCheckerImpl(private val containsUseCase: ContainsUseCase) : Letters
     }
 
     private fun checkMatchingLetters(line: Line) {
-        answer.forEachIndexed { index, letter ->
-            if (line[index].value == "$letter") {
-                answer = answer.replaceFirst("$letter", BLANK)
+        val zip = answer zip line.letters
+
+        zip.forEachIndexed { index, (a, b) ->
+            if (a == b) {
+                answer = answer.replaceFirst("$a", BLANK)
 
                 line[index].updateState(In.Matched())
             }
