@@ -46,103 +46,14 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/winning_streak" />
 
-        <!--        <TextView-->
-        <!--            android:id="@+id/text_view_played_value"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginStart="24dp"-->
-        <!--            app:layout_constraintEnd_toStartOf="@+id/text_view_won_value"-->
-        <!--            app:layout_constraintHorizontal_bias="0.5"-->
-        <!--            app:layout_constraintHorizontal_chainStyle="spread_inside"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent"-->
-        <!--            tools:text="10" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/text_view_played_label"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="@string/played"-->
-        <!--            android:textAllCaps="true"-->
-        <!--            android:textSize="12dp"-->
-        <!--            app:layout_constraintEnd_toEndOf="@+id/text_view_played_value"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/text_view_played_value" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/text_view_won_value"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            app:layout_constraintEnd_toStartOf="@+id/text_view_winning_streak_value"-->
-        <!--            app:layout_constraintHorizontal_bias="0.5"-->
-        <!--            app:layout_constraintStart_toEndOf="@+id/text_view_played_value"-->
-        <!--            app:layout_constraintTop_toTopOf="parent"-->
-        <!--            tools:text="8" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/text_view_won_label"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:text="@string/won"-->
-        <!--            android:textAllCaps="true"-->
-        <!--            android:textSize="12dp"-->
-        <!--            app:layout_constraintEnd_toEndOf="@+id/text_view_won_value"-->
-        <!--            app:layout_constraintStart_toStartOf="@+id/text_view_won_value"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/text_view_won_value" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/text_view_winning_streak_value"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            app:layout_constraintEnd_toStartOf="@+id/text_view_maximum_win_streak_value"-->
-        <!--            app:layout_constraintHorizontal_bias="0.5"-->
-        <!--            app:layout_constraintStart_toEndOf="@+id/text_view_won_value"-->
-        <!--            tools:layout_editor_absoluteY="0dp"-->
-        <!--            tools:text="7" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/text_view_winning_streak_label"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:gravity="center"-->
-        <!--            android:text="@string/winning_streak"-->
-        <!--            android:textAllCaps="true"-->
-        <!--            android:textSize="12dp"-->
-        <!--            app:layout_constraintEnd_toEndOf="@+id/text_view_winning_streak_value"-->
-        <!--            app:layout_constraintStart_toStartOf="@+id/text_view_winning_streak_value"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/text_view_winning_streak_value" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/text_view_maximum_win_streak_value"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginEnd="24dp"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintHorizontal_bias="0.5"-->
-        <!--            app:layout_constraintStart_toEndOf="@+id/text_view_winning_streak_value"-->
-        <!--            app:layout_constraintTop_toTopOf="parent"-->
-        <!--            tools:text="10"/>-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/text_view_maximum_win_streak_label"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:gravity="center"-->
-        <!--            android:text="@string/maximum_win_streak"-->
-        <!--            android:textAllCaps="true"-->
-        <!--            android:textSize="12dp"-->
-        <!--            app:layout_constraintEnd_toEndOf="@+id/text_view_maximum_win_streak_value"-->
-        <!--            app:layout_constraintStart_toStartOf="@+id/text_view_maximum_win_streak_value"-->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/text_view_maximum_win_streak_value" />-->
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.github.mikephil.charting.charts.HorizontalBarChart
         android:id="@+id/horizontal_bar_chart"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="240dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginStart="12dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

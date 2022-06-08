@@ -9,21 +9,20 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.wing.tree.android.wordle.domain.model.staticstics.Guesses
 import com.wing.tree.android.wordle.domain.model.staticstics.Statistics
 import com.wing.tree.android.wordle.domain.util.float
+import com.wing.tree.android.wordle.domain.util.isNotNull
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.StatisticsViewBinding
 import com.wing.tree.wordle.core.constant.BLANK
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
 import com.wing.tree.wordle.core.util.int
-import timber.log.Timber
-import java.util.*
 
 class StatisticsView : ConstraintLayout {
     private val viewBinding = StatisticsViewBinding.bind(inflate(context, R.layout.statistics_view, this))
-    private val ordinalNumbers by lazy { context.resources.getStringArray(R.array.ordinal_numbers) }
 
     var statistics: Statistics? = null
         set(value) {
@@ -80,10 +79,6 @@ class StatisticsView : ConstraintLayout {
         barDataSet.valueTextSize = 14.0F
 
         with(horizontalBarChart) {
-            data = BarData(barDataSet)
-            description.isEnabled = false
-            legend.isEnabled = false
-
             setDrawGridBackground(false)
             setFitBars(true)
             setPinchZoom(false)
@@ -100,30 +95,30 @@ class StatisticsView : ConstraintLayout {
             axisRight.setDrawGridLines(false)
             axisRight.setDrawLabels(false)
 
-            data.barWidth = 0.25F
-
-            extraLeftOffset = 24F
-            extraRightOffset = 24F
-
             xAxis.setDrawAxisLine(false)
             xAxis.setDrawGridLines(false)
             xAxis.setDrawLabels(true)
-            xAxis.labelRotationAngle = -12.0F
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.textColor = textColor
             xAxis.textSize = 16.0F
-            xAxis.xOffset = 12F
+            xAxis.xOffset = 12.0F
 
             xAxis.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return try {
-                        ordinalNumbers[value.int.dec()]
-                    } catch (arrayIndexOutOfBoundsException: ArrayIndexOutOfBoundsException) {
-                        Timber.e(arrayIndexOutOfBoundsException)
-                        BLANK
+                    val int = value.int
+
+                    return if (int > MAXIMUM_ROUND.dec()) {
+                        "+$int"
+                    } else {
+                        "$int"
                     }
                 }
             }
+
+            data = BarData(barDataSet)
+            data.barWidth = 0.25F
+            description.isEnabled = false
+            legend.isEnabled = false
 
             invalidate()
         }
