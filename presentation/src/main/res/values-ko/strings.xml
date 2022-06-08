@@ -5,8 +5,6 @@
     <string name="an_error_occurred">오류가 발생했습니다</string>
     <string name="answer">정답</string>
     <string name="done">완료</string>
-    <string name="eraser">지우개</string>
-    <string name="hint">힌트</string>
     <string name="how_to_play">플레이 방법</string>
     <string name="maximum_win_streak">maximum\nwin streak</string>
     <string name="next">다음</string>
