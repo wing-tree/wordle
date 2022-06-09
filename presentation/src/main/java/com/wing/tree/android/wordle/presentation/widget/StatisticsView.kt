@@ -9,12 +9,10 @@ import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.formatter.DefaultAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.wing.tree.android.wordle.domain.model.staticstics.Guesses
 import com.wing.tree.android.wordle.domain.model.staticstics.Statistics
 import com.wing.tree.android.wordle.domain.util.float
-import com.wing.tree.android.wordle.domain.util.isNotNull
 import com.wing.tree.android.wordle.presentation.R
 import com.wing.tree.android.wordle.presentation.databinding.StatisticsViewBinding
 import com.wing.tree.wordle.core.constant.BLANK
