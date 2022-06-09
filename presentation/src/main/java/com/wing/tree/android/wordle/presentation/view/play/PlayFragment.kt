@@ -74,6 +74,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
     private val isAdsRemoved = AtomicBoolean(false)
     private val ordinalNumbers by lazy { resources.getStringArray(R.array.ordinal_numbers) }
+    private val vibrates = AtomicBoolean(true)
 
     @Inject
     lateinit var vibrator: Vibrator
@@ -147,12 +148,14 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
                                 showMaterialCardViewToast(text)
                             }
-                            is WordNotFoundException -> {
-                                showMaterialCardViewToast(getString(R.string.word_not_found))
-                                vibrator.vibrate(40L, VibrationEffect.DEFAULT_AMPLITUDE)
-                                currentItemView?.shake()
-                            }
+                            is WordNotFoundException -> showMaterialCardViewToast(getString(R.string.word_not_found))
                         }
+
+                        if (vibrates.get()) {
+                            vibrator.vibrate(40L, VibrationEffect.DEFAULT_AMPLITUDE)
+                        }
+
+                        currentItemView?.shake()
                     }
                 }
             }
@@ -187,6 +190,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         viewLifecycleOwner.lifecycleScope.launchWhenResumed {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 activityViewModel.settings.collectLatest { settings ->
+                    vibrates.set(settings.vibrates)
 
                     playBoardListAdapter.isHighContrastMode = settings.isHighContrastMode
                     viewBinding.keyboardView.setVibrates(settings.vibrates)
