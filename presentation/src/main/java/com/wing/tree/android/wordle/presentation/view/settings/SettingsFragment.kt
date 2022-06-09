@@ -16,6 +16,7 @@ import com.wing.tree.android.wordle.presentation.databinding.FragmentSettingsBin
 import com.wing.tree.android.wordle.presentation.model.settings.Settings
 import com.wing.tree.android.wordle.presentation.util.Review
 import com.wing.tree.android.wordle.presentation.util.shareApp
+import com.wing.tree.android.wordle.presentation.util.versionName
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityViewModel
 import com.wing.tree.android.wordle.presentation.viewmodel.settings.SettingsViewModel
@@ -40,31 +41,33 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                     val list = listOf(
                         Settings.SwitchPreference(
                             id = 0L,
+                            isChecked = settings.isHardMode,
                             primaryText = getString(R.string.hard_mode),
-                            isChecked = settings.isHardMode
+                            secondaryText = getString(R.string.hard_mode_description)
                         ).apply {
                             setOnCheckedChange { viewModel.updateHardMode(it) }
                         },
                         Settings.SwitchPreference(
                             id = 1L,
+                            isChecked = settings.vibrates,
                             primaryText = getString(R.string.vibrate),
-                            isChecked = settings.vibrates
                         ).apply {
                             setOnCheckedChange { viewModel.updateVibrates(it) }
                         },
                         Settings.SwitchPreference(
                             id = 2L,
+                            isChecked = settings.isHighContrastMode,
                             primaryText = getString(R.string.high_contrast_mode),
-                            isChecked = settings.isHighContrastMode
+                            secondaryText = getString(R.string.high_contrast_mode_description)
                         ).apply {
                             setOnCheckedChange { viewModel.updateHighContrastMode(it) }
                         },
                         Settings.Divider(id = 3L),
                         Settings.Preference(
                             id = 4L,
-                            primaryText = getString(R.string.write_review),
                             drawable = getDrawable(R.drawable.ic_round_rate_review_24),
-                            isClickable = true
+                            isClickable = true,
+                            primaryText = getString(R.string.write_review),
                         ).apply {
                             setOnClick {
                                 Review.launchReviewFlow(requireActivity())
@@ -72,9 +75,9 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                         },
                         Settings.Preference(
                             id = 5L,
-                            primaryText = getString(R.string.share_the_app),
                             drawable = getDrawable(R.drawable.ic_round_share_24),
-                            isClickable = true
+                            isClickable = true,
+                            primaryText = getString(R.string.share_the_app),
                         ).apply {
                             setOnClick {
                                 shareApp(requireContext())
@@ -82,9 +85,10 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                         },
                         Settings.Preference(
                             id = 6L,
-                            primaryText = getString(R.string.version),
                             drawable = getDrawable(R.drawable.ic_round_info_24),
-                            isClickable = false
+                            isClickable = false,
+                            primaryText = getString(R.string.version),
+                            secondaryText = requireContext().versionName
                         ),
                     )
 

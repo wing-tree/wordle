@@ -98,8 +98,8 @@ class StatisticsView : ConstraintLayout {
             xAxis.setDrawLabels(true)
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.textColor = textColor
-            xAxis.textSize = 16.0F
-            xAxis.xOffset = 12.0F
+            xAxis.textSize = 18.0F
+            xAxis.xOffset = 6.0F
 
             xAxis.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
