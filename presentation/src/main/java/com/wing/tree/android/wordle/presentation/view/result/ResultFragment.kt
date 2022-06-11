@@ -11,6 +11,7 @@ import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDeleg
 import com.wing.tree.android.wordle.presentation.extention.visible
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.PlayResult
+import com.wing.tree.android.wordle.presentation.util.increment
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
 import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityViewModel
 import com.wing.tree.android.wordle.presentation.viewmodel.result.ResultViewModel
@@ -75,10 +76,12 @@ class ResultFragment : BaseFragment<FragmentResultBinding>(), InterstitialAdDele
             materialButtonNextWord.setOnClickListener {
                 val directions = ResultFragmentDirections.actionResultFragmentToPlayFragment()
 
-                if (activityViewModel.played.getAndIncrement().mod(INTERSTITIAL_AD_CYCLE).isZero) {
+                if (activityViewModel.played.get() > INTERSTITIAL_AD_CYCLE.dec()) {
                     if (isAdsRemoved.get()) {
+                        activityViewModel.played.increment()
                         navigate(directions)
                     } else {
+                        activityViewModel.played.set(0)
                         loadInterstitialAd(
                             requireContext(),
                             onAdFailedToLoad = {
