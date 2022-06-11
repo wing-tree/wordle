@@ -7,7 +7,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
         app:layout_constraintBottom_toTopOf="@+id/horizontal_bar_chart">
 
         <include
@@ -52,7 +51,7 @@
     <com.github.mikephil.charting.charts.HorizontalBarChart
         android:id="@+id/horizontal_bar_chart"
         android:layout_width="0dp"
-        android:layout_height="256dp"
+        android:layout_height="240dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

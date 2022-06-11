@@ -129,7 +129,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 container.removeAllViews()
             } else {
                 val adView = AdView(this).apply {
-                    adSize = AdSize.BANNER
+                    setAdSize(AdSize.BANNER)
+
                     adUnitId = if (BuildConfig.DEBUG) {
                         getString(R.string.sample_banner_ad_unit_id)
                     } else {
