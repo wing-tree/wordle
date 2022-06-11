@@ -1,9 +1,11 @@
 package com.wing.tree.android.wordle.presentation.widget
 
 import android.content.Context
+import android.graphics.Typeface
 import android.util.AttributeSet
 import androidx.annotation.StringRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -56,6 +58,7 @@ class StatisticsView : ConstraintLayout {
         val barEntries = ArrayList<BarEntry>()
         val color = context.getColor(R.color.letter_matched)
         val textColor = context.getColor(R.color.text)
+        val typeface = ResourcesCompat.getFont(context, R.font.font_family_maplestory)
 
         repeat(MAXIMUM_ROUND) {
             val index = it.inc()
@@ -75,6 +78,7 @@ class StatisticsView : ConstraintLayout {
         barDataSet.color = color
         barDataSet.valueTextColor = textColor
         barDataSet.valueTextSize = 14.0F
+        barDataSet.valueTypeface = typeface
 
         with(horizontalBarChart) {
             setDrawGridBackground(false)
@@ -99,7 +103,8 @@ class StatisticsView : ConstraintLayout {
             xAxis.position = XAxis.XAxisPosition.BOTTOM
             xAxis.textColor = textColor
             xAxis.textSize = 18.0F
-            xAxis.xOffset = 6.0F
+            xAxis.typeface = typeface
+            xAxis.xOffset = 12.0F
 
             xAxis.valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {

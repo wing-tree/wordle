@@ -18,8 +18,8 @@
     <color name="pink_500">#E91E63</color>
     <color name="purple_300">#BA68C8</color>
     <color name="purple_400">#AB47BC</color>
-    <color name="cyan_100">#B2EBF2</color>
     <color name="cyan_200">#80DEEA</color>
+    <color name="cyan_300">#4DD0E1</color>
     <color name="green_100">#C8E6C9</color>
     <color name="green_200">#A5D6A7</color>
     <color name="green_500">#4CAF50</color>
@@ -54,8 +54,8 @@
     <color name="button">@color/green_500</color>
     <color name="divider">#E0E0E0</color> <!-- #1F000000 -->
     <color name="icon">@color/dark_grey</color>
-    <color name="letter_view_high_contrast_focused">@color/cyan_200</color>
-    <color name="letter_view_focused">@color/cyan_100</color>
+    <color name="letter_view_high_contrast_focused">@color/cyan_300</color>
+    <color name="letter_view_focused">@color/cyan_200</color>
     <color name="text">@color/dark_grey</color>
 
     <color name="high_contrast">@color/grey_500</color>
