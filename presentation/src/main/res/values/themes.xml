@@ -54,7 +54,7 @@
 
     <style name="ButtonStyle" parent="@style/Widget.Material3.Button.TextButton.Icon">
         <item name="android:backgroundTint">@color/button</item>
-        <item name="android:fontFamily">@font/happiness_sans_title</item>
+        <item name="android:fontFamily">@font/font_family_maplestory</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/white</item>
@@ -62,7 +62,7 @@
     </style>
 
     <style name="TextViewStyle" parent="@android:style/Widget.DeviceDefault.TextView">
-        <item name="android:fontFamily">@font/font_family_happiness_sans</item>
+        <item name="android:fontFamily">@font/font_family_maplestory</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:textColor">@color/text</item>
     </style>
