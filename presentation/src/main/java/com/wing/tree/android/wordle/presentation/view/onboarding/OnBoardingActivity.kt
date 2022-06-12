@@ -46,10 +46,6 @@ class OnBoardingActivity : BaseActivity<ActivityOnBoardingBinding>() {
 
     override fun bind(viewBinding: ActivityOnBoardingBinding) {
         with(viewBinding) {
-            imageViewClose.setOnClickListener {
-                finish()
-            }
-
             viewPager2.apply {
                 adapter = onBoardingFragmentStateAdapter
                 registerOnPageChangeCallback(onPageChangeCallback)
