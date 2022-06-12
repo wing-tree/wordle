@@ -13,11 +13,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/text_view_answer"
+    <Button
+        android:id="@+id/button_answer"
+        style="@style/ButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
+        android:layout_marginTop="24dp"
         android:text="@string/answer"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,16 +30,19 @@
         android:id="@+id/statistics_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintBottom_toTopOf="@+id/material_button_next_word"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_answer" />
+        app:layout_constraintTop_toBottomOf="@+id/button_answer" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/material_button_next_word"
+        style="@style/ButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/next_word"
+        app:icon="@drawable/ic_round_play_arrow_24"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

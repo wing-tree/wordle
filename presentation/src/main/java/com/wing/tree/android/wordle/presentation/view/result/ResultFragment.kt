@@ -8,6 +8,7 @@ import androidx.navigation.fragment.navArgs
 import com.wing.tree.android.wordle.presentation.databinding.FragmentResultBinding
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegate
 import com.wing.tree.android.wordle.presentation.delegate.ad.InterstitialAdDelegateImpl
+import com.wing.tree.android.wordle.presentation.extention.fadeOut
 import com.wing.tree.android.wordle.presentation.extention.visible
 import com.wing.tree.android.wordle.presentation.model.play.Letter
 import com.wing.tree.android.wordle.presentation.model.play.PlayResult
@@ -17,7 +18,6 @@ import com.wing.tree.android.wordle.presentation.viewmodel.main.MainActivityView
 import com.wing.tree.android.wordle.presentation.viewmodel.result.ResultViewModel
 import com.wing.tree.android.wordle.presentation.widget.LetterView
 import com.wing.tree.wordle.core.constant.WORD_LENGTH
-import com.wing.tree.wordle.core.util.isZero
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
 import timber.log.Timber
@@ -105,8 +105,8 @@ class ResultFragment : BaseFragment<FragmentResultBinding>(), InterstitialAdDele
             }
 
             if (playResult is PlayResult.Lose) {
-                textViewAnswer.visible()
-                textViewAnswer.setOnClickListener {
+                buttonAnswer.visible()
+                buttonAnswer.setOnClickListener {
                     if (isAdsRemoved.get()) {
                         showAnswer(playResult)
                     } else {
@@ -139,7 +139,9 @@ class ResultFragment : BaseFragment<FragmentResultBinding>(), InterstitialAdDele
                 viewBinding.word[index].submitLetter(this, LetterView.Flag.Submit)
             }
 
-            viewBinding.word.flipAll()
+            viewBinding.word.flipAll {
+                viewBinding.buttonAnswer.fadeOut(invisible = true)
+            }
         }
     }
 
