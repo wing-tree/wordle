@@ -7,7 +7,7 @@
     <string name="ask">ask</string>
     <string name="done">done</string>
     <string name="enter">enter</string>
-    <string name="examples">examples</string>
+    <string name="examples">Examples</string>
     <string name="hard_mode">Hard Mode</string>
     <string name="hard_mode_description">Any revealed hints must be used in subsequent guesses</string>
     <string name="high_contrast_mode">High Contrast Mode</string>

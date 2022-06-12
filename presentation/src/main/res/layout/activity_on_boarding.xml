@@ -48,6 +48,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="4dp"
             android:text="@string/previous"
+            android:textAllCaps="true"
             android:textColor="@color/teal_200"
             android:textSize="14dp" />
 
@@ -65,7 +66,8 @@
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="4dp"
             android:text="@string/next"
-            android:textColor="@color/teal_200"
+            android:textAllCaps="true"
+            android:textColor="@color/cyan_200"
             android:textSize="14dp" />
 
     </FrameLayout>
