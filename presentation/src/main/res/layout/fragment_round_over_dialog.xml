@@ -7,6 +7,7 @@
         android:id="@+id/relative_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="24dp"
         android:background="@drawable/background_round_over">
 
         <TextView
@@ -15,34 +16,42 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:gravity="center"
-            android:text="ROUND OVER"/>
+            android:text="ROUND OVER"
+            android:textColor="@color/text"
+            android:textSize="22dp"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/material_button_try_again"
+            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text_view_title"
             android:layout_centerHorizontal="true"
-            android:text="TRY AGAIN"/>
+            android:layout_marginTop="16dp"
+            android:text="TRY AGAIN" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/material_button_add_round"
+            style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/material_button_try_again"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
             android:text="ADD ROUND"/>
 
     </RelativeLayout>
 
     <com.google.android.material.button.MaterialButton
-        style="@style/Widget.Material3.Button.TextButton"
         android:id="@+id/material_button_no_thanks"
+        style="@style/Widget.Material3.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/relative_layout"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/font_family_maplestory"
         android:text="NO THANKS"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white" />
 
 </RelativeLayout>
