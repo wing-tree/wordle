@@ -2,6 +2,7 @@ package com.wing.tree.android.wordle.presentation.view.main
 
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.activity.viewModels
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -204,6 +205,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
                 animationDuration = Duration.LONG
                 animationInterpolator = AccelerateDecelerateInterpolator()
                 charStrategy = Strategy.NormalAnimation()
+                typeface = ResourcesCompat.getFont(context, R.font.font_family_maplestory)
             }
         }
     }
