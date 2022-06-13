@@ -10,6 +10,7 @@
         <entry key="presentation/src/main/res/drawable/background_credits.xml" value="0.3764102564102564" />
         <entry key="presentation/src/main/res/drawable/background_image_button.xml" value="0.18020833333333333" />
         <entry key="presentation/src/main/res/drawable/background_key_view.xml" value="0.21458333333333332" />
+        <entry key="presentation/src/main/res/drawable/background_keyboard_view.xml" value="0.2135" />
         <entry key="presentation/src/main/res/drawable/background_letter.xml" value="0.2" />
         <entry key="presentation/src/main/res/drawable/background_letter_view.xml" value="0.21458333333333332" />
         <entry key="presentation/src/main/res/drawable/background_letter_view_focused.xml" value="0.3925925925925926" />
@@ -48,8 +49,9 @@
         <entry key="presentation/src/main/res/layout/fragment_main.xml" value="0.246875" />
         <entry key="presentation/src/main/res/layout/fragment_on_boarding.xml" value="0.1984375" />
         <entry key="presentation/src/main/res/layout/fragment_on_boarding_page_on.xml" value="0.2557291666666667" />
+        <entry key="presentation/src/main/res/layout/fragment_on_boarding_page_one.xml" value="0.2821557971014493" />
         <entry key="presentation/src/main/res/layout/fragment_on_boarding_page_two.xml" value="0.2557291666666667" />
-        <entry key="presentation/src/main/res/layout/fragment_play.xml" value="0.33272557309982526" />
+        <entry key="presentation/src/main/res/layout/fragment_play.xml" value="0.575381517924044" />
         <entry key="presentation/src/main/res/layout/fragment_result.xml" value="0.23802083333333332" />
         <entry key="presentation/src/main/res/layout/fragment_round_over_dialog.xml" value="0.2821557971014493" />
         <entry key="presentation/src/main/res/layout/fragment_settings.xml" value="0.19895833333333332" />

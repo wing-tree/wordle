@@ -51,6 +51,7 @@
     <color name="letter_matched">@color/green_500</color>
 
     <color name="background_credits">#61000000</color>
+    <color name="background_keyboard_view">@color/white</color>
     <color name="button">@color/green_500</color>
     <color name="divider">#E0E0E0</color> <!-- #1F000000 -->
     <color name="icon">@color/dark_grey</color>

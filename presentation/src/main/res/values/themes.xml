@@ -27,7 +27,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/key_view_height</item>
         <item name="android:layout_gravity">center</item>
-        <item name="android:background">@drawable/ripple_key_view</item>
+
         <item name="android:gravity">center</item>
         <item name="android:textSize">@dimen/key_view_text_size</item>
         <item name="android:textStyle">bold</item>
@@ -40,9 +40,10 @@
         <item name="android:layout_marginStart">2dp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="elevation">1dp</item>
+        <item name="android:background">@drawable/ripple_key_view</item>
+        <item name="android:elevation">1dp</item>
         <item name="android:gravity">center</item>
+        <item name="elevation">1dp</item>
     </style>
 
     <style name="Widget.MaterialComponents.TextView.LetterView" parent="Widget.MaterialComponents.TextView">
