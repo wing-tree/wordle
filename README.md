@@ -25,7 +25,6 @@ https://user-images.githubusercontent.com/80195353/174056021-8c242a0d-6234-4f2f-
 - AAC (Android Architecture Components)
 - Clean Architecture(Multi Modules)
 - Kotlin Coroutine, Flow
-- Jetpack Compose
 - Hilt
-- Room
-- Firebase(Crashlytics, Firestore)
+- Firebase(Crashlytics)
+- Proto Datastore
