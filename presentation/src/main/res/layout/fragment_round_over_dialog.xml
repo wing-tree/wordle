@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/relative_layout"
@@ -16,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:gravity="center"
-            android:text="ROUND OVER"
+            android:text="@string/round_over"
             android:textColor="@color/text"
             android:textSize="22dp"/>
 
@@ -28,7 +29,7 @@
             android:layout_below="@+id/text_view_title"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:text="TRY AGAIN" />
+            android:text="@string/try_again" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/material_button_add_round"
@@ -38,7 +39,9 @@
             android:layout_below="@+id/material_button_try_again"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
-            android:text="ADD ROUND"/>
+            android:text="@string/add_round"
+            app:icon="@drawable/ic_round_paid_24"
+            app:iconTint="@color/yellow_500" />
 
     </RelativeLayout>
 
@@ -51,7 +54,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/font_family_maplestory"
-        android:text="NO THANKS"
+        android:text="@string/no_thanks"
         android:textColor="@color/white" />
 
 </RelativeLayout>

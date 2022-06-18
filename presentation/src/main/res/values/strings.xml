@@ -2,6 +2,7 @@
 <resources>
     <string name="app_name">Wordle</string>
 
+    <string name="add_round">Add Round</string>
     <string name="an_error_occurred">an error occurred</string>
     <string name="answer">answer</string>
     <string name="ask">ask</string>
@@ -16,12 +17,15 @@
     <string name="maximum_win_streak">maximum\nwin streak</string>
     <string name="next">next</string>
     <string name="next_word">next word</string>
+    <string name="no_thanks">No Thanks</string>
     <string name="play">play</string>
     <string name="played">played</string>
     <string name="previous">previous</string>
+    <string name="round_over">Round Over</string>
     <string name="share_the_app">share the app</string>
     <string name="submit">submit</string>
     <string name="thank_you_for_your_valuable_review">Thank you for your valuable review</string>
+    <string name="try_again">Try Again</string>
     <string name="version">Version</string>
     <string name="vibrate">Vibrate</string>
     <string name="winning_streak">winning\nstreak</string>

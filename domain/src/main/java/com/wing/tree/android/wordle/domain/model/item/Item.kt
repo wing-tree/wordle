@@ -5,7 +5,7 @@ enum class Item(val credits: Int) {
     Hint(Credits.HINT),
     OneMoreTry(Credits.ONE_MORE_TRY);
 
-    private object Credits {
+    object Credits {
         const val ERASER = 40
         const val HINT = 80
         const val ONE_MORE_TRY = 120

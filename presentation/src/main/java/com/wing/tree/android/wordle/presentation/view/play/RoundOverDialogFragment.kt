@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import com.wing.tree.android.wordle.domain.model.item.Item
+import com.wing.tree.android.wordle.domain.model.item.ItemCount.Default.ONE_MORE_TRY
 import com.wing.tree.android.wordle.presentation.databinding.FragmentRoundOverDialogBinding
 import com.wing.tree.android.wordle.presentation.extention.gone
 import com.wing.tree.android.wordle.presentation.extention.visible
@@ -44,6 +46,9 @@ class RoundOverDialogFragment : BaseDialogFragment<FragmentRoundOverDialogBindin
             } else {
                 materialButtonAddRound.visible()
 
+                val text = "(${Item.Credits.ONE_MORE_TRY}) ${materialButtonAddRound.text}"
+
+                materialButtonAddRound.text = text
                 materialButtonAddRound.setOnClickListener {
                     onClickListener?.onOneMoreTryClick(dialogFragment)
                 }
