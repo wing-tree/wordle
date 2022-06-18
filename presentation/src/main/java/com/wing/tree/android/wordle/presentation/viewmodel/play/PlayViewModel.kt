@@ -24,6 +24,7 @@ import com.wing.tree.android.wordle.presentation.model.play.*
 import com.wing.tree.android.wordle.presentation.util.setValueAfter
 import com.wing.tree.wordle.core.exception.HardModeConditionNotMetException
 import com.wing.tree.wordle.core.exception.NotEnoughCreditException
+import com.wing.tree.wordle.core.exception.NotEnoughLettersException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
@@ -199,6 +200,7 @@ class PlayViewModel @Inject constructor(
         val currentLine = playBoard.value?.currentLine ?: return
 
         if (currentLine.isNotFilled) {
+            commitCallback(kotlin.Result.failure(NotEnoughLettersException()))
             return
         }
 

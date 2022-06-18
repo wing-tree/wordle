@@ -18,6 +18,7 @@
     <string name="next">next</string>
     <string name="next_word">next word</string>
     <string name="no_thanks">No Thanks</string>
+    <string name="not_enough_letters">Not Enough Letters</string>
     <string name="play">play</string>
     <string name="played">played</string>
     <string name="previous">previous</string>

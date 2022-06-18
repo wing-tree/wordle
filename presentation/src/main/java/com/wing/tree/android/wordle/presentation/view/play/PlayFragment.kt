@@ -30,13 +30,12 @@ import com.wing.tree.android.wordle.presentation.viewmodel.play.PlayViewModel
 import com.wing.tree.wordle.core.constant.BLANK
 import com.wing.tree.wordle.core.constant.MAXIMUM_ROUND
 import com.wing.tree.wordle.core.exception.HardModeConditionNotMetException
+import com.wing.tree.wordle.core.exception.NotEnoughLettersException
 import com.wing.tree.wordle.core.exception.WordNotFoundException
 import com.wing.tree.wordle.core.util.half
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -74,6 +73,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
     private val isAdsRemoved = AtomicBoolean(false)
     private val ordinalNumbers by lazy { resources.getStringArray(R.array.ordinal_numbers) }
+    private val toastIsShowing = AtomicBoolean(false)
     private val vibrates = AtomicBoolean(true)
 
     @Inject
@@ -118,14 +118,34 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             itemFloatingActionButtonHint.credits = Item.Hint.credits
 
             itemFloatingActionButtonEraser.setOnClickListener {
+                if (vibrates.get()) {
+                    vibrator.vibrate()
+                }
+
+                it.scaleUpDown()
+
                 viewModel.consumeItem(Item.Eraser)
             }
 
             itemFloatingActionButtonHint.setOnClickListener {
+                if (vibrates.get()) {
+                    vibrator.vibrate()
+                }
+
+                it.scaleUpDown()
+
                 viewModel.consumeItem(Item.Hint)
             }
 
-            buttonSubmit.setOnClickListener {
+            buttonSubmit.setOnClickListener { view ->
+                if (view.isPressed) {
+                    if (vibrates.get()) {
+                        vibrator.vibrate()
+                    }
+
+                    view.scaleUpDown()
+                }
+
                 viewModel.submit {
                     it.onFailure { throwable ->
                         when(throwable) {
@@ -148,6 +168,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
                                 showMaterialCardViewToast(text)
                             }
+                            is NotEnoughLettersException -> showMaterialCardViewToast(getString(R.string.not_enough_letters))
                             is WordNotFoundException -> showMaterialCardViewToast(getString(R.string.word_not_found))
                         }
 
@@ -162,6 +183,10 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
             imageViewBackspace.setOnClickListener {
                 if (it.isPressed) {
+                    if (vibrates.get()) {
+                        vibrator.vibrate()
+                    }
+
                     it.scaleUpDown()
                 }
 
@@ -187,7 +212,7 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenResumed {
+        viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 activityViewModel.settings.collectLatest { settings ->
                     vibrates.set(settings.vibrates)
@@ -200,12 +225,6 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
         }
 
         viewModel.playBoard.observe(viewLifecycleOwner) {
-            if (it.currentLine.isFilled) {
-                viewBinding.keyboardView.enableReturnKey()
-            } else {
-                viewBinding.keyboardView.disableReturnKey()
-            }
-
             playBoardListAdapter.submitPlayBoard(it) {
                 it.runsAnimation.set(true)
 
@@ -244,11 +263,9 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
 
                     showToast(text)
                 }
-                is ViewState.Loading -> { viewModel.disableKeyboard() }
-                is ViewState.Play -> { viewModel.enableKeyboard() }
-                is ViewState.Ready -> {
-                    viewModel.disableKeyboard()
-                }
+                is ViewState.Loading -> viewModel.disableKeyboard()
+                is ViewState.Play -> viewModel.enableKeyboard()
+                is ViewState.Ready -> viewModel.disableKeyboard()
                 is ViewState.RoundOver -> {
                     RoundOverDialogFragment.newInstance(viewState.isRoundAdded).also {
                         it.show(childFragmentManager, it.tag)
@@ -307,12 +324,20 @@ class PlayFragment: BaseFragment<FragmentPlayBinding>(),
     }
 
     private fun showMaterialCardViewToast(text: String) {
+        if (toastIsShowing.get()) {
+            return
+        }
+
         with(viewBinding) {
             textViewToast.text = text
+            toastIsShowing.set(true)
+
             materialCardViewToast.fadeIn(Duration.LONG) {
                 lifecycleScope.launch {
                     delay(Duration.LONG)
-                    materialCardViewToast.fadeOut(Duration.MEDIUM)
+                    materialCardViewToast.fadeOut(Duration.MEDIUM) {
+                        toastIsShowing.set(false)
+                    }
                 }
             }
         }
