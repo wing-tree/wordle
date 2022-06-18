@@ -95,8 +95,8 @@
                     android:layout_height="18dp"
                     android:clickable="false"
                     android:focusable="false"
-                    app:srcCompat="@drawable/ic_coins_96px"
-                    app:tint="@color/gold"
+                    app:srcCompat="@drawable/ic_round_paid_24"
+                    app:tint="@color/yellow_500"
                     tools:ignore="ContentDescription" />
 
                 <com.yy.mobile.rollingtextview.RollingTextView

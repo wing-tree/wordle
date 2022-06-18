@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.wing.tree.android.wordle.presentation.adapter.billing.SkuDetailsItemDecoration
 import com.wing.tree.android.wordle.presentation.adapter.billing.SkuDetailsListAdapter
 import com.wing.tree.android.wordle.presentation.databinding.FragmentBillingBinding
 import com.wing.tree.android.wordle.presentation.view.base.BaseFragment
@@ -32,6 +33,7 @@ class BillingFragment : BaseFragment<FragmentBillingBinding>() {
     override fun bind(viewBinding: FragmentBillingBinding) {
         with(viewBinding) {
             recyclerView.apply {
+                addItemDecoration(SkuDetailsItemDecoration())
                 adapter = skuDetailsListAdapter
                 layoutManager = LinearLayoutManager(context)
             }
