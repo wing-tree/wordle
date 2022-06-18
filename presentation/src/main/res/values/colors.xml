@@ -13,6 +13,7 @@
     <color name="gold">#FFD700</color>
     <color name="jet">#343434</color>
 
+    <color name="red_50">#FFFFEBEE</color>
     <color name="pink_200">#F48FB1</color>
     <color name="pink_300">#F06292</color>
     <color name="pink_500">#E91E63</color>
@@ -40,7 +41,7 @@
 
     <color name="surface">@color/white</color>
 
-    <color name="key_undefined">@color/white</color>
+    <color name="key_undefined">@color/red_50</color>
     <color name="key_not_in">@color/grey_700</color>
     <color name="key_mismatched">@color/yellow_500</color>
     <color name="key_matched">@color/green_500</color>
