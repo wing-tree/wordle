@@ -1,5 +1,7 @@
 package com.wing.tree.android.wordle.presentation.view.settings
 
+import android.content.Intent
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
@@ -23,6 +25,7 @@ import com.wing.tree.android.wordle.presentation.viewmodel.settings.SettingsView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
@@ -90,6 +93,16 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
                             primaryText = getString(R.string.version),
                             secondaryText = requireContext().versionName
                         ),
+                        Settings.Preference(
+                            id = 7L,
+                            drawable = getDrawable(R.drawable.ic_round_privacy_tip_24),
+                            isClickable = true,
+                            primaryText = getString(R.string.privacy_policy)
+                        ).apply {
+                            setOnClick {
+                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(PRIVACY_POLICY_URL)))
+                            }
+                        },
                     )
 
                     settingsListAdapter.submitList(list)
@@ -106,4 +119,8 @@ class SettingsFragment : BaseFragment<FragmentSettingsBinding>() {
     }
 
     private fun getDrawable(@DrawableRes id: Int) = ContextCompat.getDrawable(requireContext(), id)
+
+    companion object {
+        private const val PRIVACY_POLICY_URL = "https://pages.flycricket.io/word-story-1/privacy.html"
+    }
 }
