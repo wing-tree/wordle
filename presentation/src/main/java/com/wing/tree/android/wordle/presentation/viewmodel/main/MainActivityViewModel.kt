@@ -14,6 +14,7 @@ import com.wing.tree.android.wordle.domain.usecase.core.getOrDefault
 import com.wing.tree.android.wordle.domain.usecase.onboarding.IsFirstTimeUseCase
 import com.wing.tree.android.wordle.domain.usecase.onboarding.PutFirstTimeUseCase
 import com.wing.tree.android.wordle.domain.usecase.settings.GetSettingsUseCase
+import com.wing.tree.android.wordle.domain.usecase.word.InsertWordsUseCase
 import com.wing.tree.wordle.billing.callbacks.BillingClientStateCallbacks
 import com.wing.tree.wordle.billing.callbacks.PurchaseCallbacks
 import com.wing.tree.wordle.billing.delegate.BillingDelegate
@@ -35,17 +36,26 @@ class MainActivityViewModel @Inject constructor(
     private val purchaseCreditsUseCase: PurchaseCreditsUseCase,
     private val putFirstTimeUseCase: PutFirstTimeUseCase,
     private val putRemoveAdsPurchasedUseCase: PutRemoveAdsPurchasedUseCase,
+    insertWordsUseCase: InsertWordsUseCase,
     getCreditsUseCase: GetCreditsUseCase,
     getSettingsUseCase: GetSettingsUseCase,
     isRemoveAdsPurchasedUseCaseUseCase: IsRemoveAdsPurchasedUseCase,
     application: Application
 ) : AndroidViewModel(application), BillingDelegate by BillingDelegateImpl {
-    init {
-        runBlocking {  }
-        initBilling(application.applicationContext)
-    }
-
     private val ioDispatcher = Dispatchers.IO
+
+    init {
+        initBilling(application.applicationContext)
+        viewModelScope.launch(ioDispatcher) {
+            insertWordsUseCase.invoke(listOf(
+                "viper", "spike", "pearl", "grape", "badge",
+                "humor", "pedal", "daddy", "tulip", "crape",
+                "rocky", "paste", "venom", "color", "bingo",
+                "flake", "prism", "nerdy", "denim", "spice",
+                "cyber"
+            ))
+        }
+    }
 
     private val _skuDetailsList = MutableLiveData<List<SkuDetails>>()
     val skuDetailsList: LiveData<List<SkuDetails>> get() = _skuDetailsList

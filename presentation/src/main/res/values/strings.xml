@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Word Story</string>
+    <string name="app_name">Wordee!</string>
 
     <string name="add_round">Add Round</string>
     <string name="an_error_occurred">an error occurred</string>

@@ -6,4 +6,5 @@ interface WordRepository {
     suspend fun contains(letters: String) : Boolean
     suspend fun get(index: Int) : Word
     suspend fun random(): Word
+    suspend fun insertAll(words: List<String>)
 }

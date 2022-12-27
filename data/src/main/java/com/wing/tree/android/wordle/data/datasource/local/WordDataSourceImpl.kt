@@ -19,6 +19,10 @@ class WordDataSourceImpl @Inject constructor(database: Database) : WordDataSourc
         return dao.get(letters)
     }
 
+    override suspend fun insertAll(words: List<Word>) {
+        dao.insertAll(words)
+    }
+
     override suspend fun random(): Word {
         return dao.random()
     }

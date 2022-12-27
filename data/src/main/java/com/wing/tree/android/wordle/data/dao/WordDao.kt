@@ -1,6 +1,8 @@
 package com.wing.tree.android.wordle.data.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.wing.tree.android.wordle.data.entity.Word
 import kotlinx.coroutines.flow.Flow
@@ -8,6 +10,9 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WordDao {
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    suspend fun insertAll(words: List<Word>)
+
     @Query("SELECT COUNT(`index`) FROM word")
     suspend fun count(): Int
 

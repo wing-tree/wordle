@@ -1,6 +1,7 @@
 package com.wing.tree.android.wordle.data.repository
 
 import com.wing.tree.android.wordle.data.datasource.local.WordDataSource
+import com.wing.tree.android.wordle.data.entity.Word as Entity
 import com.wing.tree.android.wordle.domain.model.Word
 import com.wing.tree.android.wordle.domain.repository.WordRepository
 import com.wing.tree.android.wordle.domain.util.isNotNull
@@ -23,5 +24,9 @@ class WordRepositoryImpl @Inject constructor(private val dataSource: WordDataSou
         return runCatching {
             dataSource.random()
         }.getOrThrow()
+    }
+
+    override suspend fun insertAll(words: List<String>) {
+        dataSource.insertAll(words.map { Entity(value = it) })
     }
 }

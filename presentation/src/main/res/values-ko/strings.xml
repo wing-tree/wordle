@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">워디!</string>
+
+    <string name="add_round">라운드 추가</string>
+    <string name="an_error_occurred">오류가 발생했습니다</string>
+    <string name="answer">정답</string>
+    <string name="ask">물어보기</string>
+    <string name="done">완료</string>
+    <string name="enter">입력</string>
+    <string name="examples">예시</string>
+    <string name="hard_mode">하드 모드</string>
+    <string name="hard_mode_description">공개된 모든 글자는 다음 시도 때 포함되어야 합니다.</string>
+    <string name="high_contrast_mode">진한 경계선 모드</string>
+    <string name="high_contrast_mode_description">구분색을 강조합니다</string>
+    <string name="how_to_play">플레이 방법</string>
+    <string name="maximum_win_streak">최대\n연승</string>
+    <string name="next">다음</string>
+    <string name="next_word">다음 단계</string>
+    <string name="no_thanks">괜찮아요</string>
+    <string name="not_enough_letters">단어 수가 모자랍니다</string>
+    <string name="play">플레이</string>
+    <string name="played">플레이</string>
+    <string name="previous">이전</string>
+    <string name="privacy_policy">개인정보처리방침</string>
+    <string name="round_over">라운드 오버</string>
+    <string name="share_the_app">공유하기</string>
+    <string name="submit">제출</string>
+    <string name="thank_you_for_your_valuable_review">소중한 리뷰 감사합니다</string>
+    <string name="try_again">재도전</string>
+    <string name="version">버전</string>
+    <string name="vibrate">진동</string>
+    <string name="winning_streak">연승</string>
+    <string name="won">승리</string>
+    <string name="word_not_found">단어를 찾을 수 없습니다</string>
+    <string name="write_review">리뷰 쓰기</string>
+
+    <string-array name="ordinal_numbers">
+        <item>1st</item>
+        <item>2nd</item>
+        <item>3rd</item>
+        <item>4th</item>
+        <item>5th</item>
+        <item>6th+</item>
+    </string-array>
+
+    <string name="hard_mode_000"> 는 다음 글자여야 합니다 </string>
+    <string name="hard_mode_001">다음 글자가 포함되어야 합니다 </string>
+
+    <string name="how_to_play_000">
+        여섯 번의 시도로 <b>WORDLE</b>을 맞춰보세요.\n\n
+        각 제출은 유효한 5글자 단어여야 합니다. 입력 버튼을 눌러 제출하세요.\n\n
+        시도할 때마다 글자의 색상이 변경되어 추측이 단어에 얼마나 근접했는지 보여줍니다.
+    </string>
+    <string name="how_to_play_001">문자 <b>W</b>가 단어와 올바른 위치에 있습니다.</string>
+    <string name="how_to_play_002">문자 <b>I</b>가 단어에 있지만 잘못된 위치에 있습니다.</string>
+    <string name="how_to_play_003">글자 <b>U</b>는 단어에 포함되지 않습니다.</string>
+
+    <string name="review_000">소중한 리뷰 감사합니다</string>
+</resources>

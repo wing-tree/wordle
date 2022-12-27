@@ -6,5 +6,6 @@ interface WordDataSource {
     suspend fun count(): Int
     suspend fun get(index: Int): Word
     suspend fun get(letters: String): Word?
+    suspend fun insertAll(words: List<Word>)
     suspend fun random(): Word
 }

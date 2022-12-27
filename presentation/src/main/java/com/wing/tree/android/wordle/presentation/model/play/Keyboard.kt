@@ -12,7 +12,7 @@ class Keyboard {
     val alphabets = Array(alphabet.size) { Key.Alphabet(alphabet[it]) }
     val runsAnimation = AtomicBoolean(false)
 
-    private fun erasable(answer: String): List<Key.Alphabet> = alphabets.filter(Predicate(answer))
+    fun erasable(answer: String): List<Key.Alphabet> = alphabets.filter(Predicate(answer))
 
     fun erase(answer: String) {
         val seed = System.currentTimeMillis()
